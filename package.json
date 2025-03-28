@@ -29,6 +29,7 @@
   },
   "devDependencies": {
     "@nuxtjs/tailwindcss": "^6.13.2",
-    "@types/node": "^22.13.11"
+    "@types/node": "^22.13.11",
+    "autoprefixer": "^10.4.21"
   }
 }
