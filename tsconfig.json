@@ -3,12 +3,30 @@
   "extends": "./.nuxt/tsconfig.json",
   "compilerOptions": {
     "types": [
-      "node"
+      "node",
+      "aos"
     ],
     "strict": true,
     "allowJs": true,
     "target": "ESNext",
     "module": "ESNext",
-    "moduleResolution": "Node"
-  }
+    "moduleResolution": "Bundler",
+    "allowImportingTsExtensions": true,
+    "resolveJsonModule": true
+  },
+  "include": [
+    "./**/*.ts",
+    "./**/*.vue",
+    "./composables/**/*.ts",
+    "./pages/**/*.vue",
+    "./components/**/*.vue",
+    "./**/*.json",
+    ".nuxt/nuxt.d.ts",
+    ".nuxt/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    ".output"
+  ]
 }

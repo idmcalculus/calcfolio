@@ -20,8 +20,8 @@
   
 		<div class="flex gap-4 text-sm">
 		  <a
-			v-if="live"
-			:href="live"
+			v-if="link"
+			:href="link"
 			target="_blank"
 			class="hover:underline text-blue-600 dark:text-blue-400"
 		  >
@@ -46,7 +46,7 @@
 	description: string
 	tags: string[]
 	image: string
+	link?: string
 	github?: string
-	live?: string
   }>()
 </script>

@@ -15,7 +15,8 @@ export default defineNuxtConfig({
   ],
 
   css: [
-    './assets/css/tailwind.css'
+    './assets/css/tailwind.css',
+    'aos/dist/aos.css'
   ],
 
   fonts: {
@@ -37,7 +38,18 @@ export default defineNuxtConfig({
   },
 
   tailwindcss: {
-    viewer: false,
+    cssPath: './assets/css/tailwind.css',
+    configPath: 'tailwind.config.js',
+    exposeConfig: true,
+    viewer: false
+  },
+
+  postcss: {
+    plugins: {
+      'postcss-nesting': {},
+      tailwindcss: {},
+      autoprefixer: {},
+    },
   },
 
   runtimeConfig: {
@@ -48,5 +60,14 @@ export default defineNuxtConfig({
 
   typescript: {
     strict: true
+  },
+
+  vite: {
+    server: {
+      hmr: {
+        timeout: 5000,
+        protocol: 'ws'
+      }
+    }
   }
 })

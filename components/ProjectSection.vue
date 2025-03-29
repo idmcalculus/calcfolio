@@ -11,7 +11,7 @@
 		  :tags="project.tags"
 		  :image="project.image"
 		  :github="project.github"
-		  :live="project.live"
+		  :live="project.link"
 		/>
 	  </div>
 	</section>
@@ -32,31 +32,34 @@
 	tags: string[]
 	image: string
 	github?: string
-	live?: string
+	link?: string
   }
   
   const projects = ref<Project[]>([
 	{
-	  title: 'Aeeioe’s Website',
-	  description: 'A modern, responsive website for Aeeioe, showcasing products and services.',
-	  tags: ['Vue.js', 'WordPress', 'Tailwind'],
-	  image: '/assets/aeeioe.jpg',
-	  github: 'https://github.com/example/aeeioe',
-	  live: 'https://aeeioe.com'
+		title: "AEEIOE",
+		description: "An e-commerce platform for fashion and lifestyle products",
+		image: "https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?q=80&w=800&auto=format",
+		tags: ["Vue.js", "Node.js", "MongoDB"],
+		link: "https://aeeioe.com",
+		github: "https://github.com/idmcalculus/aeeioe"
 	},
 	{
-	  title: 'Catch The Ghost App',
-	  description: 'A productivity app with real-time sync, built with React Native and Firebase.',
-	  tags: ['React Native', 'Firebase'],
-	  image: '/assets/ghost.jpg',
-	  github: 'https://github.com/example/ghost'
+		title: "Ghost CMS Theme",
+		description: "A minimal, responsive theme for Ghost blogging platform",
+		image: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=800&auto=format",
+		tags: ["HTML", "CSS", "JavaScript", "Ghost"],
+		link: "https://ghost-theme-demo.com",
+		github: "https://github.com/idmcalculus/ghost-theme"
 	},
 	{
-	  title: 'Dress Measurement App',
-	  description: 'A next-gen measuring app that uses ARKit on iOS to measure body dimensions accurately.',
-	  tags: ['Swift', 'iOS', 'ARKit'],
-	  image: '/assets/dress.jpg'
-	},
+		title: "Dress Store",
+		description: "Mobile-first e-commerce application for a dress boutique",
+		image: "https://images.unsplash.com/photo-1445205170230-053b83016050?q=80&w=800&auto=format",
+		tags: ["React Native", "Express", "PostgreSQL"],
+		link: "https://dressstore.com",
+		github: "https://github.com/idmcalculus/dress-store"
+	}
 	// ... add more projects as needed
   ])
 </script>

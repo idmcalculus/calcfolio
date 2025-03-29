@@ -53,7 +53,7 @@
 	  role: 'Product Designer',
 	  message: 'Working with Damilola was a game changer. His clarity and leadership elevated our entire workflow.',
 	  source: 'linkedin',
-	  avatar: '/assets/jane.jpg',
+	  avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=200&auto=format',
 	  url: 'https://linkedin.com/in/janedoe'
 	},
 	{
@@ -61,14 +61,14 @@
 	  role: 'Tech Lead, Versa Nigeria',
 	  message: 'One of the sharpest developers I’ve worked with. Brings calm and speed to every sprint.',
 	  source: 'email',
-	  avatar: '/assets/michael.jpg'
+	  avatar: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?q=80&w=200&auto=format'
 	},
 	{
 	  name: 'Tina Brooks',
 	  role: 'Startup Founder',
 	  message: 'Our MVP wouldn’t have shipped without his guidance. Truly grateful.',
 	  source: 'twitter',
-	  avatar: '/assets/tina.jpg',
+	  avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=200&auto=format',
 	  url: 'https://twitter.com/tinabrooks'
 	}
   ])
