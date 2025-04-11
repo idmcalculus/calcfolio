@@ -1,0 +1,33 @@
+{
+  // https://nuxt.com/docs/guide/concepts/typescript
+  "extends": "./.nuxt/tsconfig.json",
+  "compilerOptions": {
+    "types": [
+      "node",
+      "aos",
+      "vitest/globals" // Added Vitest global types
+    ],
+    "strict": true,
+    "allowJs": true,
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "allowImportingTsExtensions": true,
+    "resolveJsonModule": true
+  },
+  "include": [
+    "./**/*.ts",
+    "./**/*.vue",
+    "./composables/**/*.ts",
+    "./pages/**/*.vue",
+    "./components/**/*.vue",
+    "./**/*.json",
+    ".nuxt/nuxt.d.ts",
+    ".nuxt/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    ".output"
+  ]
+}
