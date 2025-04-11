@@ -1,0 +1,23 @@
+{
+    "name": "idmcalculus/backend",
+    "description": "Slim + Symfony Mailer + PDO/SQLite backend for portfolio contact form",
+    "type": "project",
+    "require": {
+        "php": "^8.3",
+        "slim/slim": "^4.14",
+        "slim/psr7": "^1.7",
+        "symfony/mailer": "^7.2",
+        "symfony/http-client": "^7.2"
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Damilola Michael Ige",
+            "email": "idm.calculus@gmail.com"
+        }
+    ]
+}
