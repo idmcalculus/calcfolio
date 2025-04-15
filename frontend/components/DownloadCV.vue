@@ -1,5 +1,5 @@
 <template>
-  <section class="text-center my-10" data-aos="fade-up">
+  <section class="text-center" :data-aos="aos">
     <button
       :class="[
         'px-6 py-3 bg-primary text-white transition hover:bg-red-600',
@@ -20,11 +20,14 @@ import AOS from 'aos'
 interface Props {
   width?: string
   buttonText?: string
+  aos?: string
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const props = withDefaults(defineProps<Props>(), {
   width: '',
-  buttonText: 'View My Full CV'
+  buttonText: 'View My Full CV',
+  aos: 'fade-up'
 })
 
 const showCVModal = inject<Ref<boolean>>('showCVModal')

@@ -112,19 +112,25 @@ onUnmounted(() => {
 
 <style scoped>
 .text-gradient {
-  /* Updated gradient based on user spec */
-  background: linear-gradient(89.81deg, #9845E8 -1.72%, #33D2FF 54.05%, #DD5789 99.78%);
+  background: linear-gradient(
+    89.81deg,
+    #9845E8 -1.72%,
+    #33D2FF 54.05%,
+    #DD5789 99.78%,
+    #9845E8 150%
+  );
+  background-size: 200% auto;
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
+  animation: shine 3s linear infinite;
 }
 
-/* Fallback for browsers that don't support background-clip */
-@supports not (background-clip: text) {
-  .text-gradient {
-    color: #3b82f6; /* Fallback to blue */
+@keyframes shine {
+  to {
+    background-position: 200% center;
   }
-} 
+}
 
 .typing-text {
   display: inline-block;

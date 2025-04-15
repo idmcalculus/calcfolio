@@ -7,10 +7,10 @@
 		<ExperienceTimeline />
 	
 		<!-- Download CV button below timeline -->
-		<DownloadCV />
+		<DownloadCV class="my-10" />
 	
 		<!-- Project Section -->
-		<ProjectSection />
+		<ProjectSection :limit="4" />
 	
 		<!-- Skills Section -->
 		<SkillsSection />
