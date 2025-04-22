@@ -80,12 +80,33 @@
   
   const projects = ref<Project[]>([
 	{
+		title: "Jumis Cake Studio",
+		description: "A full-stack e-commerce platform made with love for my wife's premium bakery - Jumis Cake Studio. Features online ordering, product customization, secure payments via Stripe and PayPal, and a modern user interface built with React and Shadcn UI.",
+		fallbackImage: "https://images.unsplash.com/photo-1588195538326-c5b1e9f80a1b?q=80&w=800&auto=format",
+		tags: ["React", "TypeScript", "Vite", "HTML5", "CSS3", "Tailwind CSS", "Shadcn UI", "Radix UI", "React Router", "TanStack Query", "React Hook Form", "Zod", "Prisma", "PostgreSQL", "Stripe", "PayPal", "Node.js", "Bun", "ESLint", "Git"],
+		github: "https://github.com/idmcalculus/jumis-cake-studio"
+	},
+	{
 		title: "Word Game Challenge",
 		description: "An open-source word-guessing game using vanilla JavaScript and a modular architecture, ensuring responsiveness. To enhance the user experience, I implemented real-time letter validation and an interactive colour-coded feedback system. I integrated the Datamuse API with custom filtering algorithms to create an adaptive word dictionary with appropriate difficulty levels for words of varying lengths. Additionally, I built a performance-optimized game state management system with local storage integration, which included real-time scoring, game statistics tracking, and persistent high-score functionality.",
 		fallbackImage: "https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?q=80&w=800&auto=format",
 		tags: ["HTML", "CSS", "JavaScript", "APIs", "state management", "modular design", "responsive design", "interactive feedback"],
 		link: "https://word-game-challenge.vercel.app/",
 		github: "https://github.com/idmcalculus/wordGameChallenge"
+	},
+	{
+		title: "AEEIEE",
+		description: "A professional, modern and responsive website for my company, Aeeiee, showcasing our products, services and more. I led the development of the custom WordPress theme and implemented various interactive features using React and PHP.",
+		fallbackImage: "https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?q=80&w=800&auto=format",
+		tags: ["WordPress", "Node.js", "jQuery", "PHP", "HTML5", "CSS3", "SCSS", "Bootstrap", "MySQL", "Gutenberg", "REST API", "Docker", "AWS (S3, CloudFront)", "CI/CD", "Git"],
+		link: "https://aeeiee.com"
+	},
+	{
+		title: "Catch The Ghost App",
+		description: "A productivity app built with React Native and Firebase. I designed the user interface and implemented the real-time data synchronization feature using Firebase.",
+		fallbackImage: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=800&auto=format",
+		tags: ["Swift", "SwiftUI", "UIKit", "CoreData", "Firebase", "Xcode", "iOS", "Swift Package Manager", "Combine", "AVFoundation", "StoreKit", "App Store Connect", "Git", "TestFlight"],
+		link: "https://www.aeeiee.com/catch-the-ghost/"
 	},
 	{
 		title: "Precis",
@@ -101,20 +122,6 @@
 		tags: ["JavaScript", "Node.js", "HTML5", "CSS3", "SCSS", "React 19", "React Query", "React Router DOM", "Formik", "Yup", "React Select", "React Slick", "Axios", "Jest", "React Testing Library", "Express.js", "MongoDB", "Mongoose", "JWT", "Morgan", "Multer", "Swagger UI", "Cors", "Docker", "Git", "npm", "ESLint", "Babel", "AWS S3", "MongoDB Atlas", "Fly.io", "GitHub Actions", "CI/CD"],
 		link: "https://task-manager-api.fly.dev/",
 		github: "https://github.com/idmcalculus/tasktivate"
-	},
-	{
-		title: "AEEIEE",
-		description: "A professional, modern and responsive website for my company, Aeeiee, showcasing our products, services and more. I led the development of the custom WordPress theme and implemented various interactive features using React and PHP.",
-		fallbackImage: "https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?q=80&w=800&auto=format",
-		tags: ["WordPress", "Node.js", "jQuery", "PHP", "HTML5", "CSS3", "SCSS", "Bootstrap", "MySQL", "Gutenberg", "REST API", "Docker", "AWS (S3, CloudFront)", "CI/CD", "Git"],
-		link: "https://aeeiee.com"
-	},
-	{
-		title: "Catch The Ghost App",
-		description: "A productivity app built with React Native and Firebase. I designed the user interface and implemented the real-time data synchronization feature using Firebase.",
-		fallbackImage: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=800&auto=format",
-		tags: ["Swift", "SwiftUI", "UIKit", "CoreData", "Firebase", "Xcode", "iOS", "Swift Package Manager", "Combine", "AVFoundation", "StoreKit", "App Store Connect", "Git", "TestFlight"],
-		link: "https://www.aeeiee.com/catch-the-ghost/"
 	},
 	{
 		title: "Dress Measurement App",

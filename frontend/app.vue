@@ -83,3 +83,9 @@ const showCVModal = ref(false)
 // Make showCVModal available to all components
 provide('showCVModal', showCVModal)
 </script>
+
+<style>
+html {
+  scroll-behavior: smooth;
+}
+</style>

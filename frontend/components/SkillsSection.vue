@@ -29,14 +29,12 @@
   onMounted(() => AOS.init({ duration: 800 }))
   
   const skills = ref([
-    'JavaScript', 'TypeScript', 'Node.js', 'React', 'Vue', 'Angular', 'Next.js', 'NestJS', 'Nuxt.js', 'Express', 'JQuery',
-    'Python', 'Flask', 'Django', 'Swift', 'SwiftUI', 'UIKit', 'PHP', 'Laravel', 'Symfony', 'CodeIgniter', 'Composer',
-    'npm', 'Yarn', 'bun', 'HTML', 'CSS', 'Sass', 'Tailwind CSS', 'Material UI', 'Bootstrap', 'Storybook.js',
-    'Jest', 'Jasmine', 'Mocha', 'Pytest', 'unittest', 'XCTest', 'PHPUnit', 'PostgreSQL', 'MySQL', 'MongoDB', 'DynamoDB',
-    'Redis', 'SQLite', 'TypeORM', 'Sequelize', 'Mongoose', 'Prisma', 'Knex.js', 'RESTful APIs', 'GraphQL', 'Git',
-    'AWS', 'Google Cloud', 'Vercel', 'Netlify', 'Heroku', 'Firebase', 'Github', 'Gitlab', 'Bitbucket', 'CI/CD',
-    'AWS CDK', 'Pulumi', 'Terraform',  'Github Actions', 'Docker', 'Kubernetes', 'WebSockets',
-    'Serverless', 'Microservices', 'Monoliths', 'DevOps', 'Agile', 'Scrum', 'TDD', 'Generative AI'
+    'JavaScript', 'TypeScript', 'Node.js', 'React', 'Vue', 'Angular', 'Next.js', 'NestJS', 'Redux', 'React Query', 'Nuxt.js', 'Express', 'JQuery',
+    'Python', 'Flask', 'Django', 'Swift', 'SwiftUI', 'UIKit', 'PHP', 'Laravel', 'Symfony', 'CodeIgniter', 'Composer', 'HTML', 'CSS', 'Sass', 'Tailwind CSS',
+    'npm', 'Yarn', 'bun', 'Material UI', 'Bootstrap', 'Storybook.js', 'Jest', 'Jasmine', 'Mocha', 'Pytest', 'unittest', 'XCTest', 'PHPUnit', 'Vitest', 'Vite', 'Webpack',
+    'PostgreSQL', 'MySQL', 'MongoDB', 'DynamoDB', 'Redis', 'SQLite', 'TypeORM', 'Sequelize', 'Mongoose', 'Prisma', 'Knex.js', 'EloquentORM', 'SQLAlchemy', 'DjangoORM',
+    'RESTful APIs', 'GraphQL', 'Git', 'AWS', 'Google Cloud', 'Vercel', 'Netlify', 'Heroku', 'Firebase', 'Github', 'Gitlab', 'Bitbucket', 'CI/CD',
+    'AWS CDK', 'Pulumi', 'Terraform',  'Github Actions', 'Docker', 'Kubernetes', 'WebSockets', 'Serverless', 'Microservices', 'Monoliths', 'DevOps', 'Agile', 'Scrum', 'TDD', 'Generative AI'
   ])
 
   const skillLinks: Record<string, string> = {
@@ -120,6 +118,14 @@
     'XCTest': 'https://developer.apple.com/documentation/xctest',
     'unittest': 'https://docs.python.org/3/library/unittest.html',
     'Jasmine': 'https://jasmine.github.io/',
+    'Redux': 'https://redux.js.org/introduction/getting-started',
+    'React Query': 'https://react-query.tanstack.com/overview',
+    'EloquentORM': 'https://laravel.com/docs/eloquent',
+    'SQLAlchemy': 'https://docs.sqlalchemy.org/en/20/index.html',
+    'DjangoORM': 'https://docs.djangoproject.com/en/stable/topics/db/models/',
+    'Vitest': 'https://vitest.dev/guide/',
+    'Vite': 'https://vitejs.dev/guide/',
+    'Webpack': 'https://webpack.js.org/concepts/',
   }
 
   const iconMap: Record<string, string> = {
@@ -133,7 +139,7 @@
     'iOS Development': 'lucide:smartphone',
     'Jest': 'simple-icons:jest',
     'Mocha': 'simple-icons:mocha',
-    'Pytest': 'simple-icons:python',
+    'Pytest': 'simple-icons:pytest',
     'Docker': 'simple-icons:docker',
     'Ansible': 'simple-icons:ansible',
     'MySQL': 'simple-icons:mysql',
@@ -173,7 +179,7 @@
     'npm': 'simple-icons:npm',
     'Yarn': 'simple-icons:yarn',
     'Serverless': 'simple-icons:serverless',
-    'DynamoDB': 'simple-icons:dynamodb',
+    'DynamoDB': 'simple-icons:amazondynamodb',
     'Redis': 'simple-icons:redis',
     'SQLite': 'simple-icons:sqlite',
     'TypeORM': 'simple-icons:typeorm',
@@ -191,10 +197,18 @@
     'Google Cloud': 'simple-icons:googlecloud',
     'Storybook.js': 'simple-icons:storybook',
     'Jasmine': 'simple-icons:jasmine',
-    'Generative AI': '',
     'PHPUnit': 'simple-icons:php',
     'XCTest': 'simple-icons:swift',
     'unittest': 'simple-icons:python',
+    'Redux': 'simple-icons:redux',
+    'React Query': 'simple-icons:reactquery',
+    'EloquentORM': 'simple-icons:laravel',
+    'SQLAlchemy': 'simple-icons:sqlalchemy',
+    'DjangoORM': 'simple-icons:django',
+    'Vitest': 'simple-icons:vitest',
+    'Vite': 'simple-icons:vite',
+    'Webpack': 'simple-icons:webpack',
+    'Generative AI': '',
     'Monoliths': '',
     'Microservices': '',
     'DevOps': '',
