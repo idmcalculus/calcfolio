@@ -17,9 +17,9 @@
   },
   "include": [
     "./**/*.ts",
-    "./**/*.vue",
     "./composables/**/*.ts",
     "./pages/**/*.vue",
+    "./layouts/**/*.vue",
     "./components/**/*.vue",
     "./**/*.json",
     ".nuxt/nuxt.d.ts",

@@ -69,6 +69,8 @@
 <script setup lang="ts">
   import { ref } from 'vue'
   import { useRuntimeConfig } from '#app'
+  import { useReCaptcha } from 'vue-recaptcha-v3'
+  import { useToast } from 'vue-toastification' // Import useToast
 
   const config = useRuntimeConfig()
   const apiUrl = config.public.backendUrl
@@ -81,29 +83,75 @@
   })
 
   const loading = ref(false)
-  const responseMsg = ref('')
+  const responseMsg = ref('') // Keep for potential inline messages if needed, or remove
   const success = ref(false)
+  const toast = useToast() // Get toast interface
+
+  // --- reCAPTCHA Setup ---
+  const recaptchaInstance = useReCaptcha()
+
+  const getRecaptchaToken = async () => {
+    if (!recaptchaInstance) {
+      console.error('reCAPTCHA instance not available. Check plugin initialization.');
+      throw new Error('reCAPTCHA not loaded');
+    }
+    await recaptchaInstance.recaptchaLoaded() // Wait for the script to load
+    const token = await recaptchaInstance.executeRecaptcha('contact_form') // 'contact_form' is the action name
+    return token
+  }
+  // --- End reCAPTCHA Setup ---
 
   const handleSubmit = async () => {
     loading.value = true
     responseMsg.value = ''
+    success.value = false // Reset success state
 
     try {
+      // --- Get reCAPTCHA token ---
+      const recaptchaToken = await getRecaptchaToken()
+      if (!recaptchaToken) {
+        throw new Error('Failed to get reCAPTCHA token.')
+      }
+      // --- End Get reCAPTCHA token ---
+
       const res = await fetch(`${apiUrl}/contact`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(form.value)
+        // Include the token in the request body
+        body: JSON.stringify({ ...form.value, recaptcha_token: recaptchaToken })
       })
 
-      const data = await res.json()
-      success.value = data.success
-      responseMsg.value = data.message
-
-      if (data.success) {
-        form.value = { name: '', email: '', subject: '', message: '' }
+      // Check response status first
+      if (!res.ok) {
+        // Try to parse error JSON, default to status text if parsing fails
+        let errorMsg = `HTTP error! status: ${res.status}`;
+        try {
+          const errorData = await res.json();
+          errorMsg = errorData.message || errorMsg; // Use message from backend if available
+        } catch { // Remove unused variable declaration
+          // Ignore parsing error, use the original HTTP status error message
+        }
+        throw new Error(errorMsg);
       }
-    } catch {
-      responseMsg.value = 'Something went wrong. Please try again.'
+
+      // Only parse JSON body if response is ok
+      const responseData = await res.json()
+      // Use toast for feedback
+      if (responseData.success) {
+        toast.success(responseData.message || 'Message sent successfully!');
+        form.value = { name: '', email: '', subject: '', message: '' }; // Reset form
+        success.value = true;
+        responseMsg.value = ''; // Clear any inline message
+      } else {
+        toast.error(responseData.message || 'Submission failed. Please check your input.');
+        success.value = false;
+        responseMsg.value = responseData.message; // Optionally keep inline message
+      }
+    } catch (error: unknown) { // Type error as unknown
+      console.error('Contact form submission error:', error);
+      const errorMsg = error instanceof Error ? error.message : 'An unexpected error occurred. Please try again.';
+      toast.error(errorMsg); // Show error toast
+      responseMsg.value = errorMsg; // Optionally show inline message
       success.value = false
     } finally {
       loading.value = false

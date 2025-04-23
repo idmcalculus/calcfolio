@@ -38,8 +38,12 @@ export default defineNuxtConfig({
   },
 
   runtimeConfig: {
+    // Variables configured here are available inside Nitro routes (server-side)
+    // public variables are exposed to the client-side
     public: {
       backendUrl: process.env.BACKEND_URL || 'http://localhost:8080',
+      // Add the reCAPTCHA v3 Site Key from environment variables
+      recaptchaSiteKey: process.env.NUXT_PUBLIC_RECAPTCHA_SITE_KEY || '', // Add your site key via env var NUXT_PUBLIC_RECAPTCHA_SITE_KEY
     },
   },
 

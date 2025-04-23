@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from 'vitest'
 import { shallowMount } from '@vue/test-utils'
 import { ref } from 'vue'
-import App from './app.vue' // Assuming app.vue is the root component
+import App from './layouts/deafult.vue' // Assuming app.vue is the root component
 
 // Mock Nuxt features and components
 const MockNuxtLink = {
