@@ -28,12 +28,17 @@ $pdo = Capsule::connection()->getPdo();
 try {
     // 1. Add 'is_read' column to 'messages' table
     echo "Attempting to add 'is_read' column to 'messages' table...\n";
-    // Check if column exists first to make script idempotent
-    $stmt = $pdo->query("PRAGMA table_info(messages);");
-    $columns = $stmt->fetchAll(PDO::FETCH_COLUMN, 1); // Fetch column names
+    // Check if column exists using information_schema (PostgreSQL compatible)
+    $stmt = $pdo->prepare("SELECT 1 FROM information_schema.columns 
+                           WHERE table_schema = 'public' -- Or your specific schema if not public
+                           AND table_name = 'messages' 
+                           AND column_name = 'is_read';");
+    $stmt->execute();
+    $columnExists = $stmt->fetchColumn();
 
-    if (!in_array('is_read', $columns)) {
-        $pdo->exec("ALTER TABLE messages ADD COLUMN is_read INTEGER DEFAULT 0;");
+    if (!$columnExists) {
+        // Use BOOLEAN for clarity, though INTEGER works. DEFAULT FALSE is clearer.
+        $pdo->exec("ALTER TABLE messages ADD COLUMN is_read BOOLEAN DEFAULT FALSE;"); 
         echo "'is_read' column added successfully.\n";
     } else {
         echo "'is_read' column already exists.\n";
@@ -41,8 +46,9 @@ try {
 
     // 2. Create 'admins' table if it doesn't exist
     echo "Attempting to create 'admins' table...\n";
+    // Use SERIAL PRIMARY KEY for PostgreSQL auto-increment
     $pdo->exec("CREATE TABLE IF NOT EXISTS admins (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        id SERIAL PRIMARY KEY, 
         username TEXT UNIQUE NOT NULL,
         password_hash TEXT NOT NULL,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
