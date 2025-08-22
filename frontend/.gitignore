@@ -32,3 +32,4 @@ logs
 # Claude settings
 .claude/
 .claude
+.vercel

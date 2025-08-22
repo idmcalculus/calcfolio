@@ -15,7 +15,7 @@
       <p class="text-base md:text-lg text-gray-700 dark:text-gray-300 leading-relaxed">
         I'm the tech equivalent of a Swiss Army knife—sharp, versatile, and always ready for the next challenge. My journey started with math competitions, and now I thrive at the intersection of data, code, and clouds (both the fluffy and AWS kind).
         I've engineered solutions across the web, built iOS apps, and constructed robust cloud architectures. From Data Analyst to Data Engineer and Full Stack Developer, I wield a full arsenal: JavaScript, TypeScript, Swift, Python, Java, PHP, Node.js, React, AWS, GCP and every data tool under the sun. I wrangle big data into actionable insights and build pipelines sleek enough to make Excel jealous.
-        I also love sharing the fun, mentoring new talent, and championing Agile and CI/CD—because life's too short for manual deployments
+        I also love sharing the fun, mentoring new talent, and championing Agile and CI/CD—because life's too short for manual deployments!
       </p>
     </div>
 
