@@ -62,39 +62,20 @@ EOF
 # Expose Caddy's port
 EXPOSE 9000
 
-# Install supervisor to manage multiple processes
-RUN apk add --no-cache supervisor
-
-# Configure PHP-FPM to listen on TCP instead of socket
+# Configure PHP-FPM to listen on TCP instead of socket  
 RUN echo "listen = 127.0.0.1:9001" >> /usr/local/etc/php-fpm.d/www.conf
 
-# Create supervisor config
-RUN mkdir -p /etc/supervisor/conf.d
-COPY <<EOF /etc/supervisor/conf.d/supervisord.conf
-[supervisord]
-nodaemon=true
-user=root
-logfile=/var/log/supervisor/supervisord.log
-pidfile=/var/run/supervisord.pid
+# Create startup script
+COPY <<EOF /usr/local/bin/start.sh
+#!/bin/sh
+echo "Starting PHP-FPM..."
+php-fpm &
 
-[program:php-fpm]
-command=php-fpm8.3 -F
-stdout_logfile=/dev/stdout
-stdout_logfile_maxbytes=0
-stderr_logfile=/dev/stderr
-stderr_logfile_maxbytes=0
-autorestart=true
-startretries=3
-
-[program:caddy]
-command=caddy run --config /etc/caddy/Caddyfile --adapter caddyfile
-stdout_logfile=/dev/stdout
-stdout_logfile_maxbytes=0
-stderr_logfile=/dev/stderr
-stderr_logfile_maxbytes=0
-autorestart=true
-startretries=3
+echo "Starting Caddy..."
+exec caddy run --config /etc/caddy/Caddyfile --adapter caddyfile
 EOF
 
-# Start both PHP-FPM and Caddy using supervisor
-CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
+RUN chmod +x /usr/local/bin/start.sh
+
+# Start both services using the startup script
+CMD ["/usr/local/bin/start.sh"]
