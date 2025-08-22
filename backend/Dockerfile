@@ -1,16 +1,20 @@
 FROM php:8.3-cli
 
 # Install required system dependencies and PHP extensions
-RUN apt-get update && apt-get install -y \
+RUN apt-get update && apt-get install -y --no-install-recommends \
     libpq-dev \
+    libpq5 \
     git \
     unzip \
+    ca-certificates \
     bash \
     && docker-php-ext-install pdo_pgsql \
+    && apt-get purge -y --auto-remove libpq-dev \
     && rm -rf /var/lib/apt/lists/*
 
 # Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+ENV COMPOSER_ALLOW_SUPERUSER=1
 
 WORKDIR /app
 
@@ -28,7 +32,7 @@ EXPOSE 8080
 RUN echo '#!/bin/sh' > /app/start.sh && \
     echo 'PORT=${PORT:-8080}' >> /app/start.sh && \
     echo 'echo "Starting PHP server on port $PORT"' >> /app/start.sh && \
-    echo 'php -S 0.0.0.0:$PORT -t src' >> /app/start.sh && \
+    echo 'php -S 0.0.0.0:$PORT -t src src/index.php' >> /app/start.sh && \
     chmod +x /app/start.sh
 
 # Start PHP built-in server with dynamic port

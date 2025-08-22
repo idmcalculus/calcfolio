@@ -24,9 +24,16 @@ $dotenv->load();
 
 // --- Session Configuration ---
 // Ensure sessions use secure settings
-ini_set('session.cookie_httponly', 1);
-ini_set('session.cookie_secure', isset($_SERVER['HTTPS'])); // Set secure flag if using HTTPS
-ini_set('session.use_strict_mode', 1); // Prevent session fixation
+ini_set('session.cookie_httponly', '1');
+$forwardedProto = $_SERVER['HTTP_X_FORWARDED_PROTO'] ?? '';
+$isHttps = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') || strtolower($forwardedProto) === 'https';
+$inProd = ($_ENV['APP_ENV'] ?? 'development') === 'production';
+
+// Cross-site cookies (frontend on a different origin) require SameSite=None; Secure
+$useSecure = ($inProd || $isHttps) ? '1' : '0';
+ini_set('session.cookie_secure', $useSecure);
+ini_set('session.cookie_samesite', $useSecure === '1' ? 'None' : 'Lax');
+ini_set('session.use_strict_mode', '1'); // Prevent session fixation
 session_start(); // Start the session
 
 $app = AppFactory::create();
@@ -34,31 +41,39 @@ $app = AppFactory::create();
 // (Optional) Add error middleware for debugging
 $app->addErrorMiddleware(true, true, true);
 
-// CORS middleware - Allow requests from localhost:3000 (for development)
-$app->add(function (Request $request, $handler) {
+// CORS middleware (allowlist via CORS_ALLOWED_ORIGINS env; comma-separated)
+$allowedOrigins = array_map('trim', explode(',', $_ENV['CORS_ALLOWED_ORIGINS'] ?? 'http://localhost:3000'));
+
+$app->add(function (Request $request, $handler) use ($allowedOrigins) {
     $origin = $request->getHeaderLine('Origin');
-    $allowedOrigins = ['http://localhost:3000', 'https://calcfolio.com'];
-    
+    $originAllowed = $origin && in_array($origin, $allowedOrigins, true);
+
     // Handle preflight OPTIONS requests
-    if ($request->getMethod() === 'OPTIONS') {
-        $response = new \Slim\Psr7\Response();
-        if (in_array($origin, $allowedOrigins)) {
+    if (strtoupper($request->getMethod()) === 'OPTIONS') {
+        // 204 No Content is a common/safe response for preflight
+        $response = new \Slim\Psr7\Response(204);
+
+        if ($originAllowed) {
+            $allowHeaders = $request->getHeaderLine('Access-Control-Request-Headers') ?: 'Content-Type, Authorization, X-Requested-With';
             $response = $response
                 ->withHeader('Access-Control-Allow-Origin', $origin)
+                ->withHeader('Vary', 'Origin')
                 ->withHeader('Access-Control-Allow-Credentials', 'true')
                 ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PATCH, DELETE, OPTIONS')
-                ->withHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With')
-                ->withHeader('Access-Control-Max-Age', '3600');
+                ->withHeader('Access-Control-Allow-Headers', $allowHeaders)
+                ->withHeader('Access-Control-Max-Age', '86400') // cache preflight for 24h
+                ->withHeader('Content-Length', '0');
         }
         return $response;
     }
-    
+
     // Handle actual requests
     $response = $handler->handle($request);
-    
-    if (in_array($origin, $allowedOrigins)) {
+
+    if ($originAllowed) {
         $response = $response
             ->withHeader('Access-Control-Allow-Origin', $origin)
+            ->withHeader('Vary', 'Origin')
             ->withHeader('Access-Control-Allow-Credentials', 'true')
             ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PATCH, DELETE, OPTIONS')
             ->withHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
