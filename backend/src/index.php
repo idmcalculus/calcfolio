@@ -448,13 +448,21 @@ $app->get('/admin/messages/stats', function (Request $request, Response $respons
     }
 
     try {
-        // Query to get count per year/month. Adjust date function based on DB (strftime for SQLite)
-        // Consider DB timezone settings if applicable
-        $stats = Message::selectRaw("strftime('%Y-%m', created_at) as month, COUNT(*) as count")
-                        ->groupBy('month')
-                        ->orderBy('month', 'asc') // Order chronologically
-                        // ->where('created_at', '>=', date('Y-m-d H:i:s', strtotime('-12 months'))) // Optional: Limit to last 12 months
-                        ->get();
+        // Query to get count per year/month - use different syntax for different DB drivers
+        $driver = Capsule::connection()->getDriverName();
+        
+        if ($driver === 'sqlite') {
+            $stats = Message::selectRaw("strftime('%Y-%m', created_at) as month, COUNT(*) as count")
+                            ->groupBy('month')
+                            ->orderBy('month', 'asc')
+                            ->get();
+        } else {
+            // PostgreSQL syntax
+            $stats = Message::selectRaw("to_char(created_at, 'YYYY-MM') as month, COUNT(*) as count")
+                            ->groupBy('month')
+                            ->orderBy('month', 'asc')
+                            ->get();
+        }
 
         // Format for Chart.js
         $labels = $stats->pluck('month')->map(function ($monthYear) {
