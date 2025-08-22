@@ -58,7 +58,7 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue' // Import computed
-import { navigateTo, useRuntimeConfig } from '#app'
+import { navigateTo } from '#app'
 import { useToast } from 'vue-toastification'
 
 // Define page meta to use a different layout if needed, or disable auth middleware for this page

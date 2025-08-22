@@ -219,7 +219,6 @@
 
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue';
-// Removed unused imports - now using useApi composable
 import { useToast } from 'vue-toastification';
 import MessageViewModal from './MessageViewModal.vue';
 import ConfirmationModal from './ConfirmationModal.vue'; // Import ConfirmationModal
@@ -236,20 +235,6 @@ interface Message {
   is_read: boolean;
   created_at: string;
   updated_at: string;
-}
-
-interface PaginationInfo {
-  total: number;
-  per_page: number;
-  current_page: number;
-  last_page: number;
-  from: number;
-  to: number;
-}
-
-interface ApiResponse {
-  data: Message[];
-  pagination: PaginationInfo;
 }
 
 const { admin } = useApi();

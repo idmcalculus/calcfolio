@@ -1,7 +1,7 @@
 <template>
   <div class="message-chart-container p-4">
     <h3 class="text-lg font-semibold mb-4">Messages per Month</h3>
-    <div v-if="pending" class="text-center py-6">Loading chart data...</div>
+    <div v-if="status === 'pending'" class="text-center py-6">Loading chart data...</div>
     <div v-else-if="error" class="text-center py-6 text-red-500">Error loading chart data: {{ error.message }}</div>
     <div v-else-if="chartData.labels.length > 0">
       <Bar :data="chartData" :options="chartOptions" />
@@ -16,20 +16,14 @@
 import { ref, computed } from 'vue';
 import { Bar } from 'vue-chartjs';
 import { Chart as ChartJS, Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale } from 'chart.js';
-import { useFetch, useRuntimeConfig } from '#app';
 
 // Register Chart.js components
 ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale);
 
-interface ChartApiResponse {
-  labels: string[];
-  data: number[];
-}
-
 const { admin } = useApi();
 
 // Fetch chart data
-const { data: apiResponse, pending, error } = await admin.messages.stats({
+const { data: apiResponse, status, error } = await admin.messages.stats({
   lazy: false,
   server: false, // Fetch client-side
 });

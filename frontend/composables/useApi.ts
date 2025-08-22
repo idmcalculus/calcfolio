@@ -64,7 +64,7 @@ export const useApi = () => {
     headers: {
       'Accept': 'application/json',
       'Content-Type': 'application/json',
-      ...options.headers,
+      ...(options.headers && typeof options.headers === 'object' ? options.headers as Record<string, string> : {}),
     },
     ...options,
   })
