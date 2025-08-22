@@ -53,8 +53,8 @@ COPY <<EOF /etc/caddy/Caddyfile
 }
 
 :9000 {
-    root * /app/src # Assuming your index.php is in src/
-    php_fastcgi unix//run/php/php-fpm.sock
+    root * /app/src
+    php_fastcgi 127.0.0.1:9001
     file_server
 }
 EOF
@@ -62,7 +62,39 @@ EOF
 # Expose Caddy's port
 EXPOSE 9000
 
-# Start Caddy and PHP-FPM
-# Use supervisord or a simple script if more complex startup needed
-# For simplicity, run Caddy which will keep the container alive
-CMD ["caddy", "run", "--config", "/etc/caddy/Caddyfile", "--adapter", "caddyfile"]
+# Install supervisor to manage multiple processes
+RUN apk add --no-cache supervisor
+
+# Configure PHP-FPM to listen on TCP instead of socket
+RUN echo "listen = 127.0.0.1:9001" >> /usr/local/etc/php-fpm.d/www.conf
+
+# Create supervisor config
+RUN mkdir -p /etc/supervisor/conf.d
+COPY <<EOF /etc/supervisor/conf.d/supervisord.conf
+[supervisord]
+nodaemon=true
+user=root
+logfile=/var/log/supervisor/supervisord.log
+pidfile=/var/run/supervisord.pid
+
+[program:php-fpm]
+command=php-fpm8.3 -F
+stdout_logfile=/dev/stdout
+stdout_logfile_maxbytes=0
+stderr_logfile=/dev/stderr
+stderr_logfile_maxbytes=0
+autorestart=true
+startretries=3
+
+[program:caddy]
+command=caddy run --config /etc/caddy/Caddyfile --adapter caddyfile
+stdout_logfile=/dev/stdout
+stdout_logfile_maxbytes=0
+stderr_logfile=/dev/stderr
+stderr_logfile_maxbytes=0
+autorestart=true
+startretries=3
+EOF
+
+# Start both PHP-FPM and Caddy using supervisor
+CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
