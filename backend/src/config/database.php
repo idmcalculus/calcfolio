@@ -18,9 +18,10 @@ $connectionConfig = [
     'sslmode' => 'prefer',
 ];
 
-// Check if Railway's DATABASE_URL is provided
-if (isset($_ENV['DATABASE_URL'])) {
-    $dbUrl = parse_url($_ENV['DATABASE_URL']);
+// Check if Railway's DATABASE_URL is provided (try both $_ENV and getenv)
+$databaseUrl = $_ENV['DATABASE_URL'] ?? getenv('DATABASE_URL');
+if ($databaseUrl) {
+    $dbUrl = parse_url($databaseUrl);
 
     $connectionConfig['host'] = $dbUrl['host'];
     $connectionConfig['port'] = $dbUrl['port'];
@@ -31,12 +32,12 @@ if (isset($_ENV['DATABASE_URL'])) {
     // $connectionConfig['sslmode'] = 'require'; 
 } else {
     // Fallback to individual env vars if DATABASE_URL is not set
-    $connectionConfig['host'] = $_ENV['PGHOST'] ?? $connectionConfig['host'];
-    $connectionConfig['port'] = $_ENV['PGPORT'] ?? $connectionConfig['port'];
-    $connectionConfig['database'] = $_ENV['PGDATABASE'] ?? $connectionConfig['database'];
-    $connectionConfig['username'] = $_ENV['PGUSER'] ?? $connectionConfig['username'];
-    $connectionConfig['password'] = $_ENV['PGPASSWORD'] ?? $connectionConfig['password'];
-    $connectionConfig['sslmode'] = $_ENV['PGSSLMODE'] ?? $connectionConfig['sslmode'];
+    $connectionConfig['host'] = $_ENV['PGHOST'] ?? getenv('PGHOST') ?? $connectionConfig['host'];
+    $connectionConfig['port'] = $_ENV['PGPORT'] ?? getenv('PGPORT') ?? $connectionConfig['port'];
+    $connectionConfig['database'] = $_ENV['PGDATABASE'] ?? getenv('PGDATABASE') ?? $connectionConfig['database'];
+    $connectionConfig['username'] = $_ENV['PGUSER'] ?? getenv('PGUSER') ?? $connectionConfig['username'];
+    $connectionConfig['password'] = $_ENV['PGPASSWORD'] ?? getenv('PGPASSWORD') ?? $connectionConfig['password'];
+    $connectionConfig['sslmode'] = $_ENV['PGSSLMODE'] ?? getenv('PGSSLMODE') ?? $connectionConfig['sslmode'];
 }
 
 $capsule->addConnection($connectionConfig);

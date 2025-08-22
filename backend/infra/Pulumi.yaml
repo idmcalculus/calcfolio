@@ -1,0 +1,3 @@
+name: calcfolio-backend
+runtime: python
+description: AWS infrastructure for Calcfolio backend (Python)

@@ -8,58 +8,70 @@ use Illuminate\Database\Capsule\Manager as Capsule;
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../../');
 $dotenv->load();
 
-// Load database configuration
+// Load database configuration (this returns the full config array)
 $dbConfig = require __DIR__ . '/../config/database.php';
 
-// Setup Eloquent Capsule Manager
+// Setup Eloquent Capsule Manager with the complete config
 $capsule = new Capsule;
-$capsule->addConnection([
-    'driver'   => $dbConfig['driver'],
-    'database' => $dbConfig['database'],
-    'prefix'   => $dbConfig['prefix'] ?? '',
-], 'default');
+$capsule->addConnection($dbConfig, 'default');
 
 $capsule->setAsGlobal();
 $capsule->bootEloquent();
 
-// Get the PDO connection
-$pdo = Capsule::connection()->getPdo();
-
 try {
-    // 1. Add 'is_read' column to 'messages' table
-    echo "Attempting to add 'is_read' column to 'messages' table...\n";
-    // Check if column exists using information_schema (PostgreSQL compatible)
-    $stmt = $pdo->prepare("SELECT 1 FROM information_schema.columns 
-                           WHERE table_schema = 'public' -- Or your specific schema if not public
-                           AND table_name = 'messages' 
-                           AND column_name = 'is_read';");
-    $stmt->execute();
-    $columnExists = $stmt->fetchColumn();
+    echo "Starting database schema migration...\n\n";
 
-    if (!$columnExists) {
-        // Use BOOLEAN for clarity, though INTEGER works. DEFAULT FALSE is clearer.
-        $pdo->exec("ALTER TABLE messages ADD COLUMN is_read BOOLEAN DEFAULT FALSE;"); 
-        echo "'is_read' column added successfully.\n";
+    // 1. Create 'messages' table
+    echo "Creating 'messages' table...\n";
+    if (!Capsule::schema()->hasTable('messages')) {
+        Capsule::schema()->create('messages', function ($table) {
+            $table->id();
+            $table->string('name');
+            $table->string('email');
+            $table->string('subject');
+            $table->text('message');
+            $table->string('status')->default('pending'); // Default status
+            $table->string('message_id')->unique()->nullable();
+            $table->boolean('is_read')->default(false);
+            $table->timestamps();
+        });
+        echo "'messages' table created successfully.\n";
     } else {
-        echo "'is_read' column already exists.\n";
+        echo "'messages' table already exists.\n";
     }
 
-    // 2. Create 'admins' table if it doesn't exist
-    echo "Attempting to create 'admins' table...\n";
-    // Use SERIAL PRIMARY KEY for PostgreSQL auto-increment
-    $pdo->exec("CREATE TABLE IF NOT EXISTS admins (
-        id SERIAL PRIMARY KEY, 
-        username TEXT UNIQUE NOT NULL,
-        password_hash TEXT NOT NULL,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-    );");
-    echo "'admins' table checked/created successfully.\n";
+    // 2. Create 'admins' table
+    echo "Creating 'admins' table...\n";
+    if (!Capsule::schema()->hasTable('admins')) {
+        Capsule::schema()->create('admins', function ($table) {
+            $table->id();
+            $table->string('username')->unique();
+            $table->string('password_hash');
+            $table->timestamps();
+        });
+        echo "'admins' table created successfully.\n";
+    } else {
+        echo "'admins' table already exists.\n";
+    }
 
-    echo "\nSchema migration completed.\n";
+    // 3. Create 'event_logs' table
+    echo "Creating 'event_logs' table...\n";
+    if (!Capsule::schema()->hasTable('event_logs')) {
+        Capsule::schema()->create('event_logs', function ($table) {
+            $table->id();
+            $table->string('event_type');
+            $table->json('payload')->nullable();
+            $table->timestamp('created_at')->useCurrent();
+        });
+        echo "'event_logs' table created successfully.\n";
+    } else {
+        echo "'event_logs' table already exists.\n";
+    }
 
-} catch (\PDOException $e) {
-    echo "Error during schema migration: " . $e->getMessage() . "\n";
+    echo "\n✅ Database schema migration completed successfully!\n";
+
+} catch (\Exception $e) {
+    echo "❌ Error during schema migration: " . $e->getMessage() . "\n";
     exit(1); // Exit with error code
 }
 

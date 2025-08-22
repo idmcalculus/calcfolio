@@ -6,9 +6,9 @@ require __DIR__ . '/../vendor/autoload.php';
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\Factory\AppFactory;
-use Symfony\Component\Mailer\Mailer;
-use Symfony\Component\Mailer\Transport;
-use Symfony\Component\Mime\Email;
+use Resend;
+use App\Services\EmailService;
+use App\Services\WebhookVerifier;
 use App\Models\Admin; // Add Admin model
 use App\Models\Message;
 use App\Models\EventLog;
@@ -34,23 +34,40 @@ $app = AppFactory::create();
 // (Optional) Add error middleware for debugging
 $app->addErrorMiddleware(true, true, true);
 
-// Example CORS middleware (if frontend is on a different domain)
-// Example CORS middleware (if frontend is on a different domain)
-// Allow credentials for session cookies
+// CORS middleware - Allow requests from localhost:3000 (for development)
 $app->add(function (Request $request, $handler) {
+    $origin = $request->getHeaderLine('Origin');
+    $allowedOrigins = ['http://localhost:3000', 'https://calcfolio.com'];
+    
+    // Handle preflight OPTIONS requests
+    if ($request->getMethod() === 'OPTIONS') {
+        $response = new \Slim\Psr7\Response();
+        if (in_array($origin, $allowedOrigins)) {
+            $response = $response
+                ->withHeader('Access-Control-Allow-Origin', $origin)
+                ->withHeader('Access-Control-Allow-Credentials', 'true')
+                ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PATCH, DELETE, OPTIONS')
+                ->withHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With')
+                ->withHeader('Access-Control-Max-Age', '3600');
+        }
+        return $response;
+    }
+    
+    // Handle actual requests
     $response = $handler->handle($request);
-    // Be more specific with origin in production if possible
-    return $response
-        ->withHeader('Access-Control-Allow-Origin', $request->getHeaderLine('Origin') ?: '*') // Allow request origin or wildcard
-        ->withHeader('Access-Control-Allow-Credentials', 'true') // Allow cookies
-        ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PATCH, DELETE, OPTIONS') // Add PATCH, DELETE
-        ->withHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With'); // Add X-Requested-With
-});
+    
+    if (in_array($origin, $allowedOrigins)) {
+        $response = $response
+            ->withHeader('Access-Control-Allow-Origin', $origin)
+            ->withHeader('Access-Control-Allow-Credentials', 'true')
+            ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PATCH, DELETE, OPTIONS')
+            ->withHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
+    }
 
-// Add OPTIONS route for preflight requests
-$app->options('/{routes:.+}', function ($request, $response, $args) {
     return $response;
 });
+
+// Remove the separate OPTIONS route as it's handled in middleware now
 
 // Initialize Eloquent
 $capsule = new Capsule;
@@ -162,29 +179,16 @@ $app->post('/contact', function (Request $request, Response $response) {
         // Generate unique message ID
         $messageId = uniqid('msg_', true);
 
-        // Configure transport with explicit options
-        $transport = Transport::fromDsn($_ENV['SMTP_DSN']);
-        $mailer = new Mailer($transport);
-
-        // Configure emails with tracking headers
-        $adminEmail = (new Email())
-            ->from($_ENV['FROM_EMAIL'])
-            ->to($_ENV['ADMIN_EMAIL'])
-            ->subject('New Contact Message: ' . $data['subject'])
-            ->text("From: {$data['name']} <{$data['email']}>\n\n{$data['message']}");
-        $adminEmail->getHeaders()->addTextHeader('X-SES-MESSAGE-TAGS', 'message_id=' . $messageId);
-        $adminEmail->getHeaders()->addTextHeader('X-SES-CONFIGURATION-SET', $_ENV['SES_CONFIGURATION_SET']);
-
-        // Auto-reply to sender (use lowercased email)
-        $autoReply = (new Email())
-            ->from($_ENV['FROM_EMAIL'])
-            ->to($email) // Use sanitized email
-            ->subject('Thanks for contacting me!')
-            ->text("Hi {$data['name']},\n\nThanks for reaching out. I'll get back to you soon!\n\nBest,\nDamilola");
+        // Initialize Resend EmailService
+        $emailService = new EmailService();
 
         try {
-            $mailer->send($adminEmail);
-            $mailer->send($autoReply);
+            // Send both emails using Resend
+            $adminEmailResult = $emailService->sendContactNotification($data, $messageId);
+            $autoReplyResult = $emailService->sendAutoReply([
+                'name' => $data['name'],
+                'email' => $email // Use sanitized email
+            ], $messageId);
 
             // Save to database using Eloquent (use lowercased email)
             Message::create([
@@ -199,17 +203,8 @@ $app->post('/contact', function (Request $request, Response $response) {
             $response->getBody()->write(json_encode($payload));
             return $response->withHeader('Content-Type', 'application/json');
         } catch (Exception $e) {
-            throw new Exception('Mailer error: ' . $e->getMessage());
+            throw new Exception('Email delivery failed: ' . $e->getMessage());
         }
-    } catch (\Symfony\Component\Mailer\Exception\TransportExceptionInterface $e) {
-        error_log('SMTP Transport error: ' . $e->getMessage());
-        $payload = [
-            'success' => false,
-            'message' => 'Email delivery failed',
-            'debug' => $e->getMessage()
-        ];
-        $response->getBody()->write(json_encode($payload));
-        return $response->withHeader('Content-Type', 'application/json')->withStatus(500);
     } catch (Exception $e) {
         error_log('General error: ' . $e->getMessage());
         $payload = [
@@ -232,48 +227,67 @@ $app->get('/message/{messageId}', function (Request $request, Response $response
     return $response->withHeader('Content-Type', 'application/json');
 });
 
-// Modify webhook endpoint to support testing
-$app->post('/ses-webhook', function (Request $request, Response $response) {
-    $notification = json_decode($request->getBody()->getContents(), true);
+// Resend webhook endpoint
+$app->post('/resend-webhook', function (Request $request, Response $response) {
+    $payload = $request->getBody()->getContents();
+    $signature = $request->getHeaderLine('resend-signature');
+    
+    // Verify webhook signature
+    $verifier = new WebhookVerifier();
+    if (!$verifier->verify($payload, $signature)) {
+        error_log('Resend webhook signature verification failed');
+        return $response->withStatus(401);
+    }
+    
+    $event = json_decode($payload, true);
     
     // Log webhook event
     EventLog::create([
-        'event_type' => 'ses_webhook',
-        'payload' => $notification
+        'event_type' => 'resend_webhook',
+        'payload' => $event
     ]);
     
-    // Log incoming webhook for debugging
-    error_log('Webhook received: ' . json_encode($notification));
+    error_log('Resend webhook received: ' . $payload);
     
-    if (isset($notification['Message'])) {
-        // Handle both string and array Message formats
-        $message = is_string($notification['Message']) 
-            ? json_decode($notification['Message'], true)
-            : $notification['Message'];
-            
-        $messageId = $message['mail']['tags']['message_id'] ?? null;
-        $eventType = $message['eventType'] ?? '';
-        
-        error_log("Processing event: $eventType for message: $messageId");
-        
-        if ($messageId) {
-            $status = match($eventType) {
-                'Delivery' => Message::STATUS_DELIVERED,
-                'Bounce' => Message::STATUS_BOUNCED,
-                'Open' => Message::STATUS_OPENED,
-                'Click' => Message::STATUS_CLICKED,
-                'Complaint' => Message::STATUS_COMPLAINED,
-                default => null
-            };
-
-            if ($status) {
-                Message::where('message_id', $messageId)
-                    ->update(['status' => $status]);
+    // Extract message ID from tags
+    $messageId = null;
+    if (isset($event['data']['tags'])) {
+        foreach ($event['data']['tags'] as $tag) {
+            if ($tag['name'] === 'message_id') {
+                $messageId = $tag['value'];
+                break;
             }
+        }
+    }
+    
+    // Process event
+    $eventType = $event['type'] ?? '';
+    
+    error_log("Processing Resend event: $eventType for message: $messageId");
+    
+    if ($messageId) {
+        $status = match($eventType) {
+            'email.delivered' => Message::STATUS_DELIVERED,
+            'email.bounced' => Message::STATUS_BOUNCED,
+            'email.opened' => Message::STATUS_OPENED,
+            'email.clicked' => Message::STATUS_CLICKED,
+            'email.complained' => Message::STATUS_COMPLAINED,
+            default => null
+        };
+
+        if ($status) {
+            Message::where('message_id', $messageId)
+                ->update(['status' => $status]);
         }
     }
 
     return $response->withStatus(200);
+});
+
+// Keep legacy SES webhook for transition (can be removed later)
+$app->post('/ses-webhook', function (Request $request, Response $response) {
+    error_log('Warning: Legacy SES webhook called - please update to use /resend-webhook');
+    return $response->withStatus(410); // Gone - endpoint deprecated
 });
 
 

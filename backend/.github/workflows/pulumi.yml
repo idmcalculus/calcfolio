@@ -1,0 +1,94 @@
+name: Pulumi Backend CI/CD
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'backend/**'
+      - '.github/workflows/pulumi.yml'
+  pull_request:
+    paths:
+      - 'backend/**'
+      - '.github/workflows/pulumi.yml'
+
+env:
+  AWS_REGION: us-east-2
+  PULUMI_STACK_NAME: dev
+  ECR_REPOSITORY_NAME: calcfolio-backend-repo
+  IMAGE_TAG: ${{ github.sha }}
+  PYTHON_VERSION: '3.9' # Specify your Python version
+
+jobs:
+  build-and-deploy-backend:
+    name: Build, Push Docker Image, and Deploy Backend Infra (Python)
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+      pull-requests: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials from AWS OIDC
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::YOUR_AWS_ACCOUNT_ID:role/YOUR_GITHUB_ACTIONS_ROLE_NAME
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Build, tag, and push image to Amazon ECR
+        id: build-image
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        run: |
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY_NAME:$IMAGE_TAG ./backend
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY_NAME:$IMAGE_TAG
+          echo "image_uri=$ECR_REGISTRY/$ECR_REPOSITORY_NAME:$IMAGE_TAG" >> $GITHUB_OUTPUT
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install Pulumi CLI
+        uses: pulumi/actions@v5
+        # command: version # Pulumi CLI is installed by default with this action
+
+      - name: Configure Pulumi for AWS (Python)
+        working-directory: backend/infra
+        run: |
+          pip install -r requirements.txt
+          pulumi login # Assumes PULUMI_ACCESS_TOKEN is set
+          pulumi stack select ${{ env.PULUMI_STACK_NAME }} --create-if-missing
+          pulumi config set aws:region ${{ env.AWS_REGION }}
+          pulumi config set --secret dbPassword ${{ secrets.BACKEND_DB_PASSWORD }}
+          pulumi config set --secret sesSmtpUsername ${{ secrets.BACKEND_SES_SMTP_USERNAME }}
+          pulumi config set --secret sesSmtpPassword ${{ secrets.BACKEND_SES_SMTP_PASSWORD }}
+          pulumi config set --secret recaptchaSecretKey ${{ secrets.BACKEND_RECAPTCHA_KEY }}
+          pulumi config set --secret sesWebhookSecret ${{ secrets.BACKEND_SES_WEBHOOK_SECRET }}
+          pulumi config set calcfolio-backend:appRunnerImageTag ${{ env.IMAGE_TAG }}
+        env:
+          PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
+
+      - name: Pulumi Preview (PR)
+        if: github.event_name == 'pull_request'
+        working-directory: backend/infra
+        run: pulumi preview --diff --comment-on-pr
+        env:
+          PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
+
+      - name: Pulumi Up (Push to main)
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        working-directory: backend/infra
+        run: pulumi up --yes --skip-preview
+        env:
+          PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}

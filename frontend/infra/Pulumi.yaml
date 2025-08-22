@@ -1,0 +1,3 @@
+name: calcfolio-frontend
+runtime: python
+description: AWS infrastructure for Calcfolio frontend (S3, CloudFront) (Python)

@@ -1,0 +1,15 @@
+config:
+  aws:region: us-east-2 # Or your preferred AWS region
+  calcfolio-backend:dbName: "contactdb" # Or your preferred DB name, e.g., railway
+  calcfolio-backend:dbUsername: "dbadmin"
+  # For dbPassword, sesSmtpUsername, sesSmtpPassword, recaptchaSecretKey, sesWebhookSecret:
+  # Use `pulumi config set --secret dbPassword <your-db-password>`
+  # Use `pulumi config set --secret sesSmtpUsername <your-ses-smtp-user>`
+  # Use `pulumi config set --secret sesSmtpPassword <your-ses-smtp-password>`
+  # Use `pulumi config set --secret recaptchaSecretKey <your-recaptcha-key>`
+  # Use `pulumi config set --secret sesWebhookSecret <your-ses-webhook-secret>`
+  calcfolio-backend:fromEmail: "idm.calculus@gmail.com" # Must be verified in SES
+  calcfolio-backend:adminEmail: "igedami.calculus@gmail.com"
+  calcfolio-backend:sesConfigurationSet: "test" # Ensure this configuration set exists in SES
+  # The imageTag will typically be set by the CI/CD pipeline after building and pushing the image
+  calcfolio-backend:appRunnerImageTag: "latest"

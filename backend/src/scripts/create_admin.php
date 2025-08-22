@@ -17,16 +17,12 @@ $password = $argv[2];
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../../');
 $dotenv->load();
 
-// Load database configuration
+// Load database configuration (this returns the full config array)
 $dbConfig = require __DIR__ . '/../config/database.php';
 
-// Setup Eloquent Capsule Manager
+// Setup Eloquent Capsule Manager with the complete config
 $capsule = new Capsule;
-$capsule->addConnection([
-    'driver'   => $dbConfig['driver'],
-    'database' => $dbConfig['database'],
-    'prefix'   => $dbConfig['prefix'] ?? '',
-], 'default');
+$capsule->addConnection($dbConfig, 'default');
 
 $capsule->setAsGlobal();
 $capsule->bootEloquent();

@@ -1,0 +1,100 @@
+name: Pulumi Frontend CI/CD
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'frontend/**'
+      - '.github/workflows/pulumi.yml' # Corrected path
+  pull_request:
+    paths:
+      - 'frontend/**'
+      - '.github/workflows/pulumi.yml' # Corrected path
+
+env:
+  AWS_REGION: us-east-2
+  PULUMI_STACK_NAME: dev
+  NUXT_PUBLIC_API_BASE_URL: "" # This should be the output from the backend deployment
+  PYTHON_VERSION: '3.9' # Specify your Python version
+
+jobs:
+  deploy-frontend-infra:
+    name: Build Frontend and Deploy Infra (Python)
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+      pull-requests: write
+    outputs:
+      frontend_url: ${{ steps.pulumi_up.outputs.websiteUrl }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set Backend API URL
+        run: |
+          echo "NUXT_PUBLIC_API_BASE_URL_VALUE=https://your-backend-apprunner-url.awsapprunner.com" >> $GITHUB_ENV
+          # TODO: Fetch this dynamically from backend deployment output
+
+      - name: Setup Bun (for Nuxt build)
+        uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: latest
+
+      - name: Install frontend dependencies
+        working-directory: ./frontend
+        run: bun install
+
+      - name: Build Nuxt application
+        working-directory: ./frontend
+        run: bun run build
+        env:
+          NUXT_PUBLIC_API_BASE_URL: ${{ env.NUXT_PUBLIC_API_BASE_URL_VALUE }}
+
+      - name: Configure AWS credentials from AWS OIDC
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::YOUR_AWS_ACCOUNT_ID:role/YOUR_GITHUB_ACTIONS_ROLE_NAME
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install Pulumi CLI
+        uses: pulumi/actions@v5
+
+      - name: Configure Pulumi for AWS (Python)
+        working-directory: frontend/infra
+        run: |
+          pip install -r requirements.txt
+          pulumi login
+          pulumi stack select ${{ env.PULUMI_STACK_NAME }} --create-if-missing
+          pulumi config set aws:region ${{ env.AWS_REGION }}
+        env:
+          PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
+
+      - name: Pulumi Preview (PR)
+        if: github.event_name == 'pull_request'
+        working-directory: frontend/infra
+        run: pulumi preview --diff --comment-on-pr
+        env:
+          PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
+
+      - name: Pulumi Up (Push to main)
+        id: pulumi_up
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        working-directory: frontend/infra
+        run: |
+          pulumi up --yes --skip-preview
+          # Export the websiteUrl output for other jobs/steps if needed
+          # This specific method of outputting from a script step might need adjustment
+          # A more robust way is to use pulumi stack output directly if the action supports it easily
+          # For now, we rely on the job output defined above.
+          # website_url_output=$(pulumi stack output websiteUrl)
+          # echo "::set-output name=websiteUrl::$website_url_output"
+        env:
+          PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
