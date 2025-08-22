@@ -1,5 +1,5 @@
 // composables/useApi.ts
-export interface ApiResponse<T = any> {
+export interface ApiResponse<T = unknown> {
   success: boolean
   message?: string
   data?: T
@@ -59,8 +59,8 @@ export const useApi = () => {
   const baseURL = config.public.backendUrl
 
   // Common options for all API calls
-  const getOptions = (options: any = {}) => ({
-    credentials: 'include',
+  const getOptions = (options: Record<string, unknown> = {}) => ({
+    credentials: 'include' as const,
     headers: {
       'Accept': 'application/json',
       'Content-Type': 'application/json',
@@ -88,7 +88,7 @@ export const useApi = () => {
       })
     },
 
-    checkAuth: (options: any = {}) => {
+    checkAuth: (options: Record<string, unknown> = {}) => {
       return useFetch<{ authenticated: boolean }>('/admin/check', {
         ...getOptions(),
         baseURL,
@@ -112,7 +112,7 @@ export const useApi = () => {
   // Admin messages API
   const admin = {
     messages: {
-      list: (params: Record<string, any> = {}, options: any = {}) => {
+      list: (params: Record<string, unknown> = {}, options: Record<string, unknown> = {}) => {
         // Clean up params - remove null/undefined values
         const cleanParams = Object.fromEntries(
           Object.entries(params).filter(([_, value]) => 
@@ -128,7 +128,7 @@ export const useApi = () => {
         })
       },
 
-      stats: (options: any = {}) => {
+      stats: (options: Record<string, unknown> = {}) => {
         return useFetch<MessageStatsResponse>('/admin/messages/stats', {
           ...getOptions(),
           baseURL,
@@ -136,7 +136,7 @@ export const useApi = () => {
         })
       },
 
-      get: (id: number, options: any = {}) => {
+      get: (id: number, options: Record<string, unknown> = {}) => {
         return useFetch<Message>(`/admin/messages/${id}`, {
           ...getOptions(),
           baseURL,
