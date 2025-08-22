@@ -26,12 +26,10 @@ interface ChartApiResponse {
   data: number[];
 }
 
-const config = useRuntimeConfig();
-const apiUrl = config.public.backendUrl;
+const { admin } = useApi();
 
 // Fetch chart data
-const { data: apiResponse, pending, error } = await useFetch<ChartApiResponse>(`${apiUrl}/admin/messages/stats`, {
-  credentials: 'include', // Send cookies
+const { data: apiResponse, pending, error } = await admin.messages.stats({
   lazy: false,
   server: false, // Fetch client-side
 });

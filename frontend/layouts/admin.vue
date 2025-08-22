@@ -42,35 +42,19 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
-import { navigateTo, useRuntimeConfig } from '#app';
+import { navigateTo } from '#app';
 import { useDarkMode } from '~/composables/useDarkMode';
 
 // Dark mode state and toggle function
 const { isDark, toggleDark } = useDarkMode();
 
-const config = useRuntimeConfig();
-const apiUrl = config.public.backendUrl;
+const { auth } = useApi();
 const loading = ref(false);
 
 const handleLogout = async () => {
   loading.value = true;
   try {
-    const res = await fetch(`${apiUrl}/admin/logout`, {
-      method: 'POST',
-      credentials: 'include', // Send cookies
-       headers: {
-        'Accept': 'application/json',
-      }
-    });
-
-    if (!res.ok) {
-      // Attempt to parse error, but proceed with logout navigation regardless
-       console.error('Logout request failed:', res.status);
-       try {
-         const errorData = await res.json();
-         console.error('Logout error data:', errorData);
-       } catch { /* Ignore parsing error */ }
-    }
+    await auth.logout();
     // Even if backend logout fails, force redirect to login on client
     await navigateTo('/admin/login');
 

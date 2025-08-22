@@ -68,12 +68,10 @@
 
 <script setup lang="ts">
   import { ref } from 'vue'
-  import { useRuntimeConfig } from '#app'
   import { useReCaptcha } from 'vue-recaptcha-v3'
   import { useToast } from 'vue-toastification' // Import useToast
 
-  const config = useRuntimeConfig()
-  const apiUrl = config.public.backendUrl
+  const { contact } = useApi()
 
   const form = ref({
     name: '',
@@ -114,28 +112,10 @@
       }
       // --- End Get reCAPTCHA token ---
 
-      const res = await fetch(`${apiUrl}/contact`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        // Include the token in the request body
-        body: JSON.stringify({ ...form.value, recaptcha_token: recaptchaToken })
+      const responseData = await contact.submit({
+        ...form.value,
+        recaptcha_token: recaptchaToken
       })
-
-      // Check response status first
-      if (!res.ok) {
-        // Try to parse error JSON, default to status text if parsing fails
-        let errorMsg = `HTTP error! status: ${res.status}`;
-        try {
-          const errorData = await res.json();
-          errorMsg = errorData.message || errorMsg; // Use message from backend if available
-        } catch { // Remove unused variable declaration
-          // Ignore parsing error, use the original HTTP status error message
-        }
-        throw new Error(errorMsg);
-      }
-
-      // Only parse JSON body if response is ok
-      const responseData = await res.json()
       // Use toast for feedback
       if (responseData.success) {
         toast.success(responseData.message || 'Message sent successfully!');
@@ -145,7 +125,7 @@
       } else {
         toast.error(responseData.message || 'Submission failed. Please check your input.');
         success.value = false;
-        responseMsg.value = responseData.message; // Optionally keep inline message
+        responseMsg.value = responseData.message || 'Submission failed'; // Optionally keep inline message
       }
     } catch (error: unknown) { // Type error as unknown
       console.error('Contact form submission error:', error);

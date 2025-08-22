@@ -219,7 +219,7 @@
 
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue';
-import { useFetch, useRuntimeConfig } from '#app';
+// Removed unused imports - now using useApi composable
 import { useToast } from 'vue-toastification';
 import MessageViewModal from './MessageViewModal.vue';
 import ConfirmationModal from './ConfirmationModal.vue'; // Import ConfirmationModal
@@ -252,8 +252,7 @@ interface ApiResponse {
   pagination: PaginationInfo;
 }
 
-const config = useRuntimeConfig();
-const apiUrl = config.public.backendUrl;
+const { admin } = useApi();
 
 // --- State for fetching and controls ---
 const currentPage = ref(1);
@@ -282,26 +281,18 @@ const selectAll = computed({
 });
 
 // --- Data Fetching ---
-// Computed property for API URL with query parameters
-const messagesUrl = computed(() => {
-  const params = new URLSearchParams();
-  params.append('page', currentPage.value.toString());
-  params.append('limit', itemsPerPage.value.toString());
-  if (filterRead.value !== null) {
-    params.append('is_read', filterRead.value);
-  }
-  params.append('sort', sortBy.value);
-  params.append('order', sortOrder.value);
-  if (searchTerm.value) {
-    params.append('search', searchTerm.value);
-  }
-  return `${apiUrl}/admin/messages?${params.toString()}`;
-});
+// Computed property for query parameters
+const queryParams = computed(() => ({
+  page: currentPage.value,
+  limit: itemsPerPage.value,
+  ...(filterRead.value !== null && { is_read: filterRead.value }),
+  sort: sortBy.value,
+  order: sortOrder.value,
+  ...(searchTerm.value && { search: searchTerm.value }),
+}));
 
-// Use useFetch to get messages
-const { data: apiResponse, pending, error, refresh } = await useFetch<ApiResponse>(messagesUrl, { // Use refresh now
-  credentials: 'include', // Send cookies for authentication
-  // watch: [messagesUrl], // watch is implicitly handled by computed URL dependency
+// Use the API composable to get messages
+const { data: apiResponse, pending, error, refresh } = await admin.messages.list(queryParams, {
   lazy: false, // Fetch data immediately on component setup
   server: false, // Ensure fetching happens client-side after auth middleware runs
 });
@@ -360,22 +351,12 @@ const executeBulkAction = async (action: BulkAction) => {
   bulkActionError.value = null;
 
   try {
-    const res = await fetch(`${apiUrl}/admin/messages/bulk`, {
-      method: 'PATCH',
-      credentials: 'include',
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-      },
-      body: JSON.stringify({
-        action: action,
-        ids: selectedIds.value
-      })
+    const data = await admin.messages.bulkAction({
+      action: action,
+      ids: selectedIds.value
     });
 
-    const data = await res.json();
-
-    if (!res.ok || !data.success) {
+    if (!data.success) {
       throw new Error(data.message || `Failed to perform action: ${action}`);
     }
 

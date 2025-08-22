@@ -67,8 +67,7 @@ definePageMeta({
   layout: 'admin-minimal' // Assuming a minimal layout without navbars etc.
 })
 
-const config = useRuntimeConfig()
-const apiUrl = config.public.backendUrl
+const { auth } = useApi()
 
 const username = ref('')
 const password = ref('')
@@ -90,23 +89,12 @@ const handleLogin = async () => {
   errorMsg.value = ''
 
   try {
-    const res = await fetch(`${apiUrl}/admin/login`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-      },
-      // Important: Include credentials for session cookie handling
-      credentials: 'include',
-      body: JSON.stringify({
-        username: username.value,
-        password: password.value
-      })
+    const data = await auth.login({
+      username: username.value,
+      password: password.value
     })
 
-    const data = await res.json()
-
-    if (!res.ok || !data.success) {
+    if (!data.success) {
       throw new Error(data.message || 'Login failed. Please check your credentials.')
     }
 

@@ -1,8 +1,8 @@
-import { defineNuxtRouteMiddleware, navigateTo, useRuntimeConfig } from '#app'
+import { defineNuxtRouteMiddleware, navigateTo } from '#app'
 
 export default defineNuxtRouteMiddleware(async (to) => {
   // Skip middleware on server side or if not an admin route
-  if (import.meta.server || !to.path.startsWith('/admin')) { // Use import.meta.server
+  if (import.meta.server || !to.path.startsWith('/admin')) {
     return
   }
 
@@ -11,28 +11,14 @@ export default defineNuxtRouteMiddleware(async (to) => {
     return
   }
 
-  const config = useRuntimeConfig()
-  const apiUrl = config.public.backendUrl
+  const { auth } = useApi()
 
   try {
-    // Check authentication status with the backend
-    // Ensure credentials (cookies) are included in the fetch request
-    const res = await fetch(`${apiUrl}/admin/check`, {
-      credentials: 'include', // Important for sending session cookies
-      headers: {
-        'Accept': 'application/json',
-      }
-    });
+    const { data } = await auth.checkAuth({
+      server: false, // Client-side only
+    })
 
-    if (!res.ok) {
-      // Handle network errors or non-JSON responses from backend check
-      console.error('Admin auth check failed:', res.status, res.statusText);
-      return navigateTo('/admin/login'); // Redirect on error
-    }
-
-    const data = await res.json();
-
-    if (!data.authenticated) {
+    if (!data.value?.authenticated) {
       console.log('User not authenticated, redirecting to login.');
       return navigateTo('/admin/login');
     }
