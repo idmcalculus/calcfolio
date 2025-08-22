@@ -75,10 +75,22 @@ const testimonials = ref<Testimonial[]>([
   {
     name: 'David Ovienmhada',
     role: 'Founder and CEO, Aeeiee Inc., Atlanta, GA',
-    message: 'Damilola is an inquisitive and thorough Full Stack Software Engineer. He is particularly proficient in iOS Development with Swift, UIKit, and Swift UI. He would make a great addition to your team!',
+    message: `Damilola is an inquisitive and thorough Full Stack Software Engineer. He is particularly proficient in iOS Development with Swift, UIKit, and Swift UI. He would make a great addition to your team!`,
     source: 'linkedin',
-    avatar: 'https://media.licdn.com/dms/image/v2/C5103AQFVVn-wyfe0tg/profile-displayphoto-shrink_800_800/profile-displayphoto-shrink_800_800/0/1517566998788?e=1749081600&v=beta&t=lLypC8J9jZT9AQTl6hOBKQU7169tPgon-i1yH2cTqqg',
+    avatar: 'https://media.licdn.com/dms/image/v2/C5103AQFVVn-wyfe0tg/profile-displayphoto-shrink_800_800/profile-displayphoto-shrink_800_800/0/1517566998788?e=1758758400&v=beta&t=3QDaFspv8ML0DkGKS-qFByVux17xP-5XJyQfgG22w_E',
     url: 'https://www.linkedin.com/in/ovienmhada'
+  },
+  {
+    name: 'Omkar Totade',
+    role: 'Senior Software Engineer, Aeeiee Inc., Atlanta, GA',
+    message: `I had the pleasure of working with Damilola from 2020 until late last year, and during that time, he consistently impressed me with his adaptability, technical skills, and team-first mindset. We collaborated on a range of projects—from web development and custom WordPress plugins to building full websites using the Gutenberg editor. Most recently, Damilola played a key role on my iOS team in building Catch the Ghost, our company’s flagship productivity app.
+
+What stands out about Damilola is his ability to quickly pick up new technologies and start contributing right away. When he joined us in 2020, he hit the ground running by developing a critical WordPress plugin for a high-impact project. Later, even with limited experience in iOS development, he eagerly transitioned to our app team and was instrumental in implementing key features that streamlined user onboarding.
+
+Damilola is not only a talented and fast-learning engineer, but also a fantastic teammate—always positive, collaborative, and open to tackling new challenges. I highly recommend him for any software engineering role.`,
+    source: 'linkedin',
+    avatar: 'https://media.licdn.com/dms/image/v2/D4E03AQEHmiaaeY8ETA/profile-displayphoto-shrink_800_800/B4EZO2JHDtHsAc-/0/1733927662321?e=1758758400&v=beta&t=uUoOWIuamrPGdiPPOiFFgUbGwYWSUjkSThnEgmVDTII',
+    url: 'https://www.linkedin.com/in/omkartotade'
   },
   {
     name: 'Oloruntobi Awoderu',
@@ -91,7 +103,7 @@ Beyond his technical skills, Damilola is a fantastic team player. He communicate
 
 I highly recommend Damilola for any role he chooses to pursue. His work ethic, technical acumen, and ability to drive results make him a standout professional; any team would be lucky to have him.`,
     source: 'linkedin',
-    avatar: 'https://media.licdn.com/dms/image/v2/C5603AQH3olw6ZduFZw/profile-displayphoto-shrink_800_800/profile-displayphoto-shrink_800_800/0/1646503267395?e=1749081600&v=beta&t=dTLm0gbdJcYji8BsSNOeK8nWLdqayBN2uTdPM59uNVo',
+    avatar: 'https://media.licdn.com/dms/image/v2/C5603AQH3olw6ZduFZw/profile-displayphoto-shrink_800_800/profile-displayphoto-shrink_800_800/0/1646503267395?e=1758758400&v=beta&t=GWwiyjVxg8fufBTKgpAGf4uLSyWOFY-ohTelPU5bVrs',
     url: 'https://www.linkedin.com/in/oloruntobiawoderu/'
   },
   {
@@ -99,7 +111,7 @@ I highly recommend Damilola for any role he chooses to pursue. His work ethic, t
     role: 'Lead UI/UX Designer, Aeeiee Inc., Atlanta, GA',
     message: 'I worked with Damilola for a few years and can confidently say he’s an excellent software engineer. He consistently delivers high-quality work and meets deadlines. His technical expertise is solid, and he’s always reliable in completing tasks. One of the things that stands him out is how approachable and easy he is to work with—his friendly and collaborative nature makes any team better. He’s someone you would want on your team or project.',
     source: 'linkedin',
-    avatar: 'https://media.licdn.com/dms/image/v2/D4D03AQF7DVlv_qbcxg/profile-displayphoto-shrink_800_800/profile-displayphoto-shrink_800_800/0/1697040829676?e=1749081600&v=beta&t=XjDKbmA_XlpbCEelT8RhhqJXIPfxnu2tIGuLq7vdlPM',
+    avatar: 'https://media.licdn.com/dms/image/v2/D4D03AQF7DVlv_qbcxg/profile-displayphoto-shrink_800_800/profile-displayphoto-shrink_800_800/0/1697040829676?e=1758758400&v=beta&t=Pf2bLPnA_0G4SDqe-r5VC_MfIY8qfS7-wF1GS-Gv0GM',
     url: 'https://www.linkedin.com/in/adekemiborode/'
   },
   {
@@ -115,7 +127,7 @@ His dedication to the project extended beyond coding; he played a key role in br
 
 In short, Damilola is not only a highly skilled iOS developer but also a team player who adds significant value to any project he’s a part of. His technical expertise, creative problem-solving, and collaborative nature make him an asset to any team. I highly recommend him for any future endeavours.`,
     source: 'linkedin',
-    avatar: 'https://media.licdn.com/dms/image/v2/D4D03AQH__ygR48LW2w/profile-displayphoto-shrink_800_800/profile-displayphoto-shrink_800_800/0/1727384832120?e=1749081600&v=beta&t=Tf6nTJs9JlrU47p5q5bQ87Ksx8zdET5KwAEjYqcjNfk',
+    avatar: 'https://media.licdn.com/dms/image/v2/D4D03AQHCNhesegVOXw/profile-displayphoto-shrink_800_800/B4DZdrbdbsGYAk-/0/1749854053209?e=1758758400&v=beta&t=9P3WVxOhykVqxCrVZVuma-l9yFi4m-eYK0oXsn2u6kw',
     url: 'https://www.linkedin.com/in/anesi-igebu/'
   },
   {
@@ -125,7 +137,7 @@ In short, Damilola is not only a highly skilled iOS developer but also a team pl
 
 What stands out about Damilola is his eagerness for quickly mastering new technologies. This adaptability, combined with his communication skills, makes him a great teammate. His strong foundation in fullstack development, coupled with his growing expertise in mobile development, positions him as a versatile engineer who can contribute significantly to a wide range of projects, and any organization would be fortunate to have him on their team.`,
     source: 'linkedin',
-    avatar: 'https://media.licdn.com/dms/image/v2/D4D03AQGBoGLkLcWjiw/profile-displayphoto-shrink_800_800/profile-displayphoto-shrink_800_800/0/1689161163754?e=1749081600&v=beta&t=6xNYtXsgXTH537xXbxE9Wsb-KbyLYGgwT240sOTedgY',
+    avatar: 'https://media.licdn.com/dms/image/v2/D4D03AQGBoGLkLcWjiw/profile-displayphoto-shrink_800_800/profile-displayphoto-shrink_800_800/0/1689161163754?e=1758758400&v=beta&t=ndswA1P4d29guDvzeLl-dkRTWABQUcvC8y3fYdE4ylc',
     url: 'https://www.linkedin.com/in/itunuraimi/'
   },
   {
@@ -139,7 +151,7 @@ What sets Damilola apart is not just his technical ability but his collaborative
 
 Damilola’s combination of technical expertise, problem-solving skills, and team-first attitude makes him an invaluable asset to any team. I highly recommend him for future endeavors, as I am confident he will excel in any role he takes on.`,
     source: 'linkedin',
-    avatar: 'https://media.licdn.com/dms/image/v2/D4D03AQEMkaP8TyxIjg/profile-displayphoto-shrink_800_800/profile-displayphoto-shrink_800_800/0/1720646770162?e=1749081600&v=beta&t=8HeYYxlDp_QLhQB14BKuXKyJz3z0pPbE31HJdMA3yfk',
+    avatar: 'https://media.licdn.com/dms/image/v2/D4D03AQEMkaP8TyxIjg/profile-displayphoto-shrink_800_800/profile-displayphoto-shrink_800_800/0/1720646770162?e=1758758400&v=beta&t=_CzzONKeGU8kR8Pdr9-KncC-a6XJESEdHLY0tFB5TUI',
     url: 'https://www.linkedin.com/in/osuobiem/'
   },
 ])

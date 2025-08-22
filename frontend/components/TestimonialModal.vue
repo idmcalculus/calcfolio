@@ -34,12 +34,12 @@
               </button>
 
               <!-- Avatar -->
-              <img 
+              <NuxtImg 
                 v-if="avatar" 
                 :src="avatar" 
                 alt="Avatar" 
                 class="w-32 h-32 rounded-full mb-4 object-cover"
-              >
+              />
 
               <p class="text-base text-gray-700 dark:text-gray-300 mb-6 whitespace-pre-line italic">
                 "{{ message }}"

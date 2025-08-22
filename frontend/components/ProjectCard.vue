@@ -1,6 +1,6 @@
 <template>
 	<div class="p-4 bg-transparent overflow-hidden transition-all hover:shadow-lg hover:scale-105">
-	  <img :src="image" :alt="title" class="w-full h-64 object-cover rounded-md" >
+	  <NuxtImg :src="image" :alt="title" class="w-full h-64 object-cover rounded-md" />
   
 	  <div class="pt-4">
 		<div class="flex items-center justify-between mb-2">

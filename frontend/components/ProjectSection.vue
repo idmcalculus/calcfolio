@@ -55,6 +55,11 @@
   }
   
   function getProjectImage(project: Project): Promise<string> {
+	// If no link available, return fallback image directly
+	if (!project.link) {
+		return Promise.resolve(project.fallbackImage)
+	}
+
 	// Try to get screenshot from actual website
 	const screenshotUrl = `https://api.screenshotone.com/take?
 							url=${project.link}
@@ -97,14 +102,14 @@
 	{
 		title: "AEEIEE",
 		description: "A professional, modern and responsive website for my company, Aeeiee, showcasing our products, services and more. I led the development of the custom WordPress theme and implemented various interactive features using React and PHP.",
-		fallbackImage: "https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?q=80&w=800&auto=format",
+		fallbackImage: "/assets/images/aeeiee.png",
 		tags: ["WordPress", "Node.js", "jQuery", "PHP", "HTML5", "CSS3", "SCSS", "Bootstrap", "MySQL", "Gutenberg", "REST API", "Docker", "AWS (S3, CloudFront)", "CI/CD", "Git"],
 		link: "https://aeeiee.com"
 	},
 	{
 		title: "Catch The Ghost App",
 		description: "A productivity app built with React Native and Firebase. I designed the user interface and implemented the real-time data synchronization feature using Firebase.",
-		fallbackImage: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=800&auto=format",
+		fallbackImage: "/assets/images/ctg.png",
 		tags: ["Swift", "SwiftUI", "UIKit", "CoreData", "Firebase", "Xcode", "iOS", "Swift Package Manager", "Combine", "AVFoundation", "StoreKit", "App Store Connect", "Git", "TestFlight"],
 		link: "https://www.aeeiee.com/catch-the-ghost/"
 	},
@@ -126,7 +131,7 @@
 	{
 		title: "Dress Measurement App",
 		description: "Mobile-first e-commerce application for a dress boutique",
-		fallbackImage: "https://images.unsplash.com/photo-1445205170230-053b83016050?q=80&w=800&auto=format",
+		fallbackImage: "/assets/images/dm.png",
 		tags: ["Swift", "UIKit", "SQLite", "Xcode", "iOS", "CocoaPods", "CloudKit", "App Store Connect", "Git", "TestFlight"],
 		link: "https://www.aeeiee.com/dress-measurement/"
 	},

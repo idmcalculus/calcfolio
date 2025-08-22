@@ -1,6 +1,6 @@
 <template>
   <section
-    class="hero-section container mx-auto max-w-screen-xl px-6 py-16 md:py-24 flex flex-col md:flex-row items-center gap-8 md:gap-16" 
+    class="hero-section container mx-auto max-w-screen-xl px-6 my-16 flex flex-col md:flex-row items-center gap-8 md:gap-16" 
     data-aos="fade-up"
   >
     <!-- Left Column: Text Content -->
@@ -13,7 +13,9 @@
       </h1>
       <SectionDivider />
       <p class="text-base md:text-lg text-gray-700 dark:text-gray-300 leading-relaxed">
-        I'm a software engineer based in Toronto, Canada and also a communication and journalism student. I enjoy creating things that live on the internet, whether that be websites, applications, or anything in between. I have been freelancing for a year now while studying at the university and I've manage to gain a decent amount of experience and valuable knowledge from all different kinds of fields throughout my projects/work.
+        I'm the tech equivalent of a Swiss Army knife—sharp, versatile, and always ready for the next challenge. My journey started with math competitions, and now I thrive at the intersection of data, code, and clouds (both the fluffy and AWS kind).
+        I've engineered solutions across the web, built iOS apps, and constructed robust cloud architectures. From Data Analyst to Data Engineer and Full Stack Developer, I wield a full arsenal: JavaScript, TypeScript, Swift, Python, Java, PHP, Node.js, React, AWS, GCP and every data tool under the sun. I wrangle big data into actionable insights and build pipelines sleek enough to make Excel jealous.
+        I also love sharing the fun, mentoring new talent, and championing Agile and CI/CD—because life's too short for manual deployments
       </p>
     </div>
 
@@ -22,11 +24,11 @@
       <div class="flex flex-col items-center">
        <!-- Container for image -->
        <div class="relative">
-          <img
+          <NuxtImg
             src="/images/profile.svg"
             alt="Damilola Michael Ige"
             class="object-cover object-center"
-          >
+          />
         </div>
         
         <!-- Social links -->

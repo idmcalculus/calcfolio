@@ -8,12 +8,12 @@
     </div>
 
     <!-- Avatar -->
-    <img 
+    <NuxtImg 
       v-if="avatar" 
       :src="avatar" 
       alt="Avatar" 
       class="w-12 h-12 rounded-full mb-4 object-cover"
-    >
+    />
 
     <div class="text-sm text-gray-700 dark:text-gray-300 mb-6 flex-grow">
       <p class="italic">
