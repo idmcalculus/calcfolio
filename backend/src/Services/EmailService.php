@@ -30,7 +30,7 @@ class EmailService
                 'subject' => 'New Contact Message: ' . $data['subject'],
                 'text' => $this->buildAdminEmailBody($data),
                 'tags' => [
-                    ['name' => 'message_id', 'value' => $messageId],
+                    ['name' => 'message_id', 'value' => $this->sanitizeTagValue($messageId)],
                     ['name' => 'type', 'value' => 'admin_notification'],
                     ['name' => 'source', 'value' => 'contact_form']
                 ]
@@ -55,7 +55,7 @@ class EmailService
                 'subject' => 'Thanks for contacting me!',
                 'text' => $this->buildAutoReplyBody($data['name']),
                 'tags' => [
-                    ['name' => 'message_id', 'value' => $messageId],
+                    ['name' => 'message_id', 'value' => $this->sanitizeTagValue($messageId)],
                     ['name' => 'type', 'value' => 'auto_reply'],
                     ['name' => 'source', 'value' => 'contact_form']
                 ]
@@ -82,6 +82,16 @@ class EmailService
     private function buildAutoReplyBody(string $name): string
     {
         return "Hi {$name},\n\nThanks for reaching out. I'll get back to you soon!\n\nBest,\nDamilola";
+    }
+
+    /**
+     * Sanitize tag values for Resend API
+     * Tags should only contain ASCII letters, numbers, underscores, or dashes
+     */
+    private function sanitizeTagValue(string $value): string
+    {
+        // Replace any character that isn't a letter, number, underscore, or dash with underscore
+        return preg_replace('/[^A-Za-z0-9_-]/', '_', $value);
     }
 
     /**

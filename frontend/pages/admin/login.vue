@@ -27,9 +27,9 @@
           <!-- Toggle Button -->
           <button 
             type="button"
-            @click="togglePasswordVisibility"
             class="absolute inset-y-0 right-0 flex items-center px-3 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
             aria-label="Toggle password visibility"
+            @click="togglePasswordVisibility"
           >
             <!-- Eye Icon (Conditional) -->
             <svg v-if="!showPassword" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
@@ -98,7 +98,6 @@ const handleLogin = async () => {
       throw new Error(data.message || 'Login failed. Please check your credentials.')
     }
 
-    // Login successful, navigate to the admin dashboard
     // Login successful, navigate to the admin dashboard
     toast.success('Login successful!'); // Optional success toast
     await navigateTo('/admin/dashboard')

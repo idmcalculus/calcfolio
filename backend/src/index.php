@@ -216,8 +216,8 @@ $app->post('/contact', function (Request $request, Response $response) {
              throw new Exception('Invalid email format provided.');
         }
 
-        // Generate unique message ID
-        $messageId = uniqid('msg_', true);
+        // Generate unique message ID (sanitize for Resend tags - only ASCII letters, numbers, underscores, dashes)
+        $messageId = 'msg_' . uniqid() . '_' . bin2hex(random_bytes(4));
 
         // Initialize Resend EmailService
         $emailService = new EmailService();
