@@ -21,18 +21,15 @@ RUN composer install --no-dev --optimize-autoloader
 # Copy application code
 COPY src ./src
 
-# Expose port (Railway will set PORT env var)
-EXPOSE $PORT
+# Expose port (Railway will set PORT env var dynamically)
+EXPOSE 8080
 
 # Create startup script that uses Railway's PORT environment variable
-COPY <<EOF /app/start.sh
-#!/bin/bash
-PORT=\${PORT:-8080}
-echo "Starting PHP server on port \$PORT"
-php -S 0.0.0.0:\$PORT -t src
-EOF
-
-RUN chmod +x /app/start.sh
+RUN echo '#!/bin/sh' > /app/start.sh && \
+    echo 'PORT=${PORT:-8080}' >> /app/start.sh && \
+    echo 'echo "Starting PHP server on port $PORT"' >> /app/start.sh && \
+    echo 'php -S 0.0.0.0:$PORT -t src' >> /app/start.sh && \
+    chmod +x /app/start.sh
 
 # Start PHP built-in server with dynamic port
 CMD ["/app/start.sh"]
