@@ -5,6 +5,21 @@
       <h1 class="text-xl font-semibold">Admin Dashboard</h1>
       <!-- Right side controls -->
       <div class="flex items-center space-x-4">
+         <!-- View Main Site Button -->
+         <NuxtLink 
+           to="/" 
+           class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded text-sm transition-colors flex items-center space-x-2"
+           aria-label="View main site"
+         >
+           <ClientOnly>
+             <Icon name="lucide:external-link" size="16" />
+             <template #fallback>
+               <span class="inline-block w-[16px] h-[16px]"/>
+             </template>
+           </ClientOnly>
+           <span>View Site</span>
+         </NuxtLink>
+
          <!-- Dark Mode Toggle -->
          <button
             class="flex p-2 rounded-full hover:text-primary hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"

@@ -1,6 +1,37 @@
 <template>
   <div class="container mx-auto p-6 max-w-screen-xl">
-    <h2 class="text-2xl font-semibold mb-6">Messages Dashboard</h2>
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
+      <h2 class="text-2xl font-semibold mb-4 sm:mb-0">Messages Dashboard</h2>
+      
+      <!-- Quick Actions -->
+      <div class="flex flex-col sm:flex-row gap-3">
+        <NuxtLink 
+          to="/" 
+          class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded text-sm transition-colors flex items-center justify-center space-x-2"
+        >
+          <ClientOnly>
+            <Icon name="lucide:external-link" size="16" />
+            <template #fallback>
+              <span class="inline-block w-[16px] h-[16px]"/>
+            </template>
+          </ClientOnly>
+          <span>View Main Site</span>
+        </NuxtLink>
+        
+        <NuxtLink 
+          to="/contact" 
+          class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded text-sm transition-colors flex items-center justify-center space-x-2"
+        >
+          <ClientOnly>
+            <Icon name="lucide:mail" size="16" />
+            <template #fallback>
+              <span class="inline-block w-[16px] h-[16px]"/>
+            </template>
+          </ClientOnly>
+          <span>Contact Form</span>
+        </NuxtLink>
+      </div>
+    </div>
 
     <!-- Message Chart -->
     <div class="mb-8 bg-white dark:bg-gray-800 rounded shadow">
