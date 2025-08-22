@@ -1,7 +1,10 @@
 FROM php:8.3-cli
 
-# Install PostgreSQL extension
-RUN apt-get update && apt-get install -y libpq-dev \
+# Install required system dependencies and PHP extensions
+RUN apt-get update && apt-get install -y \
+    libpq-dev \
+    git \
+    unzip \
     && docker-php-ext-install pdo_pgsql \
     && rm -rf /var/lib/apt/lists/*
 
