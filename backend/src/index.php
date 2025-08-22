@@ -19,8 +19,31 @@ use ReCaptcha\ReCaptcha; // Add ReCaptcha
 use ReCaptcha\RequestMethod\CurlPost; // Add ReCaptcha method
 
 // Load environment variables
+
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/..');
 $dotenv->load();
+
+// --- Global CORS: send headers early and short-circuit OPTIONS ---
+$allowedOriginsGlobal = array_map('trim', explode(',', $_ENV['CORS_ALLOWED_ORIGINS'] ?? 'http://localhost:3000'));
+$origin = $_SERVER['HTTP_ORIGIN'] ?? '';
+$originAllowed = $origin && in_array($origin, $allowedOriginsGlobal, true);
+
+if ($originAllowed) {
+    $reqHeaders = $_SERVER['HTTP_ACCESS_CONTROL_REQUEST_HEADERS'] ?? 'Content-Type, Authorization, X-Requested-With';
+    header('Access-Control-Allow-Origin: ' . $origin);
+    header('Vary: Origin');
+    header('Access-Control-Allow-Credentials: true');
+    header('Access-Control-Allow-Methods: GET, POST, PATCH, DELETE, OPTIONS');
+    header('Access-Control-Allow-Headers: ' . $reqHeaders);
+    header('Access-Control-Max-Age: 86400');
+}
+
+// If this is a preflight request, return immediately before any output
+if (($_SERVER['REQUEST_METHOD'] ?? '') === 'OPTIONS') {
+    http_response_code(204);
+    header('Content-Length: 0');
+    exit();
+}
 
 // --- Session Configuration ---
 // Ensure sessions use secure settings
