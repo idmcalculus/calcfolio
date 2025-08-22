@@ -18,10 +18,12 @@ use Illuminate\Support\Facades\DB; // For raw queries if needed
 use ReCaptcha\ReCaptcha; // Add ReCaptcha
 use ReCaptcha\RequestMethod\CurlPost; // Add ReCaptcha method
 
-// Load environment variables
-
-$dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/..');
-$dotenv->load();
+// Load environment variables (optional for production)
+$dotenvPath = __DIR__ . '/..';
+if (file_exists($dotenvPath . '/.env')) {
+    $dotenv = Dotenv\Dotenv::createImmutable($dotenvPath);
+    $dotenv->load();
+}
 
 // --- Global CORS: send headers early and short-circuit OPTIONS ---
 $allowedOriginsGlobal = array_map('trim', explode(',', $_ENV['CORS_ALLOWED_ORIGINS'] ?? 'http://localhost:3000'));

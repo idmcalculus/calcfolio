@@ -4,9 +4,12 @@ require __DIR__ . '/../../vendor/autoload.php';
 
 use Illuminate\Database\Capsule\Manager as Capsule;
 
-// Load environment variables
-$dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../../');
-$dotenv->load();
+// Load environment variables (optional for production)
+$dotenvPath = __DIR__ . '/../../';
+if (file_exists($dotenvPath . '.env')) {
+    $dotenv = Dotenv\Dotenv::createImmutable($dotenvPath);
+    $dotenv->load();
+}
 
 // Load database configuration (this returns the full config array)
 $dbConfig = require __DIR__ . '/../config/database.php';

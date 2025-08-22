@@ -13,9 +13,12 @@ if ($argc < 3) {
 $username = $argv[1];
 $password = $argv[2];
 
-// Load environment variables
-$dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../../');
-$dotenv->load();
+// Load environment variables (optional for production)
+$dotenvPath = __DIR__ . '/../../';
+if (file_exists($dotenvPath . '.env')) {
+    $dotenv = Dotenv\Dotenv::createImmutable($dotenvPath);
+    $dotenv->load();
+}
 
 // Load database configuration (this returns the full config array)
 $dbConfig = require __DIR__ . '/../config/database.php';
