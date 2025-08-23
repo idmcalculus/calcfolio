@@ -22,7 +22,7 @@
           <div class="relative mb-4 md:mb-6 h-[50vh] md:h-[60vh] border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
             <iframe
               ref="previewFrame"
-              :src="'/resumes/Damilola_Michael_Ige.pdf#toolbar=1&view=FitH'"
+              :src="'/resumes/Damilola Michael Ige Software Engineer CV.pdf#toolbar=1&view=FitH?embedded=true&'"
               class="w-full h-full"
               title="Resume Preview"
               type="application/pdf"
@@ -35,7 +35,7 @@
               <div class="text-center p-4">
                 <p class="text-gray-600 dark:text-gray-300 mb-4">PDF preview may not be available on some mobile devices.</p>
                 <a
-                  href="/resumes/Damilola_Michael_Ige.pdf"
+                  href="/resumes/Damilola Michael Ige Software Engineer CV.pdf?embedded=true&"
                   class="bg-primary text-white px-4 py-2 rounded hover:bg-red-600 transition"
                   target="_blank"
                 >
@@ -48,14 +48,14 @@
           <!-- Download Buttons -->
           <div class="flex flex-col sm:flex-row gap-3 justify-center mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
             <a
-              href="/resumes/Damilola_Michael_Ige.pdf"
+              href="/resumes/Damilola Michael Ige Software Engineer CV.pdf?embedded=true&"
               download
               class="bg-primary text-white px-4 py-2 rounded text-center hover:bg-red-600 transition"
             >
               Download PDF
             </a>
             <a
-              href="/resumes/Damilola_Michael_Ige.docx"
+              href="/resumes/Damilola Michael Ige Software Engineer CV.docx?embedded=true&"
               download
               class="border border-primary text-primary px-4 py-2 rounded text-center hover:bg-primary hover:text-white transition"
             >
