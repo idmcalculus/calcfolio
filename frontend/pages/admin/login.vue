@@ -59,7 +59,6 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue' // Import computed
 import { navigateTo } from '#app'
-import { useToast } from 'vue-toastification'
 
 // Define page meta to use a different layout if needed, or disable auth middleware for this page
 definePageMeta({
@@ -74,7 +73,7 @@ const password = ref('')
 const showPassword = ref(false) // State for password visibility
 const loading = ref(false)
 const errorMsg = ref('') // Keep for potential inline message
-const toast = useToast() // Get toast interface
+// Removed toast for testing - will use console logging instead
 
 // Computed property for password input type
 const passwordFieldType = computed(() => (showPassword.value ? 'text' : 'password'));
@@ -99,14 +98,14 @@ const handleLogin = async () => {
     }
 
     // Login successful, navigate to the admin dashboard
-    toast.success('Login successful!'); // Optional success toast
+    console.log('Login successful!'); // Optional success log
     await navigateTo('/admin/dashboard')
 
   } catch (error: unknown) {
     console.error('Admin login error:', error)
     const message = error instanceof Error ? error.message : 'An unexpected error occurred.'
     errorMsg.value = message // Show inline error
-    toast.error(message); // Show toast error
+    console.error('Login error:', message); // Show console error
   } finally {
     loading.value = false
   }

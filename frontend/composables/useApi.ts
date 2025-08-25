@@ -1,9 +1,37 @@
-// composables/useApi.ts
+/**
+ * Composable for API operations with consistent patterns for both reactive data fetching
+ * and imperative actions following Nuxt 3 best practices.
+ *
+ * Architecture:
+ * - useFetch: For reactive data that components consume (lists, stats, status checks)
+ * - $fetch: For imperative actions (login, logout, form submissions, CRUD operations)
+ */
+
+// ===== TYPE DEFINITIONS =====
+
 export interface ApiResponse<T = unknown> {
   success: boolean
   message?: string
   data?: T
   error?: string
+}
+
+export interface ServerError {
+  type: string
+  code: string
+  message: string
+  timestamp: string
+  debug?: {
+    exception: string
+    file: string
+    line: number
+    trace: string
+  }
+}
+
+export interface ApiErrorResponse {
+  success: false
+  error: ServerError
 }
 
 export interface LoginRequest {
@@ -54,103 +82,386 @@ export interface Message {
   updated_at: string
 }
 
+// Enhanced type safety for API options
+export interface ApiOptions {
+  headers?: Record<string, string>
+  [key: string]: unknown
+}
+
+export interface MessageListParams extends Record<string, unknown> {
+  page?: number
+  limit?: number
+  is_read?: string | number | null
+  sort?: string
+  order?: string // Allow string to be more flexible with existing code
+  search?: string
+}
+
+// Type for fetch options to avoid 'any'
+interface FetchOptions {
+  credentials: 'include'
+  headers: Record<string, string>
+  [key: string]: unknown
+}
+
+// Enhanced Error type
+interface EnhancedError extends Error {
+  serverError?: ServerError
+  statusCode?: number
+  errorType?: string
+  errorCode?: string
+}
+
+// Type for request options
+interface RequestOptions {
+  method?: string
+  baseURL?: string
+  body?: unknown
+  [key: string]: unknown
+}
+
+// ===== MAIN COMPOSABLE =====
+
 export const useApi = () => {
   const config = useRuntimeConfig()
   const baseURL = config.public.backendUrl
 
-  // Common options for all API calls
-  const getOptions = (options: Record<string, unknown> = {}) => ({
+  // ===== HELPER FUNCTIONS =====
+
+  /**
+   * Common options builder with consistent defaults for all API calls
+   * @param options - Additional options to merge
+   * @returns Merged options with defaults
+   */
+  const getBaseOptions = (options: ApiOptions = {}): FetchOptions => ({
     credentials: 'include' as const,
     headers: {
       'Accept': 'application/json',
       'Content-Type': 'application/json',
-      ...(options.headers && typeof options.headers === 'object' ? options.headers as Record<string, string> : {}),
+      ...options.headers,
     },
     ...options,
   })
 
-  // Auth API calls
+  /**
+   * Clean query parameters by removing null/undefined/empty values
+   * @param params - Raw parameters object
+   * @returns Cleaned parameters
+   */
+  const cleanQueryParams = (params: Record<string, unknown>): Record<string, unknown> => {
+    return Object.fromEntries(
+      Object.entries(params).filter(([_, value]) =>
+        value !== null && value !== undefined && value !== ''
+      )
+    )
+  }
+
+  /**
+   * Enhanced error handling utility
+   * @param error - The error from fetch operation
+   * @throws Enhanced error with server details
+   */
+  const handleApiError = (error: unknown): never => {
+    // Log for debugging in development
+    if (import.meta.dev) {
+      console.group('🚨 API Error Details')
+      console.error('Original error:', error)
+      console.error('Error type:', typeof error)
+      console.error('Error properties:', error && typeof error === 'object' ? Object.keys(error) : 'N/A')
+      if (error && typeof error === 'object' && 'data' in error) {
+        console.error('Error data:', (error as { data: unknown }).data)
+      }
+      console.groupEnd()
+    }
+
+    // Check if it's a server error response with structured error data
+    if (error && typeof error === 'object' && 'data' in error) {
+      const errorData = (error as { data: unknown }).data
+      if (errorData && typeof errorData === 'object' && 'success' in errorData && !errorData.success && 'error' in errorData) {
+        const serverError = (errorData as ApiErrorResponse).error
+        
+        // Create a descriptive error message
+        const errorMessage = serverError.message || 'An error occurred'
+        const errorDetails = import.meta.dev && serverError.debug
+          ? `\n\nDebug Info: ${serverError.debug.exception} in ${serverError.debug.file}:${serverError.debug.line}`
+          : ''
+        
+        const enhancedError = new Error(`${errorMessage}${errorDetails}`) as EnhancedError
+        enhancedError.serverError = serverError
+        enhancedError.statusCode = (error as { statusCode?: number }).statusCode || 500
+        enhancedError.errorType = serverError.type
+        enhancedError.errorCode = serverError.code
+        
+        throw enhancedError
+      }
+    }
+    
+    // Check for network/CORS errors
+    const errorMessage = error instanceof Error ? error.message : String(error)
+    const errorName = error instanceof Error ? error.name : 'Unknown'
+    
+    if (errorName === 'FetchError' || errorMessage.includes('fetch')) {
+      // Try to provide more helpful error messages
+      if (errorMessage.includes('CORS')) {
+        throw new Error('Network error: Unable to connect to server. Please check your connection and try again.')
+      }
+      
+      const statusCode = error && typeof error === 'object' && 'statusCode' in error
+        ? (error as { statusCode: number }).statusCode
+        : undefined
+      
+      if (statusCode) {
+        const statusMessage = getStatusMessage(statusCode)
+        throw new Error(`Server error (${statusCode}): ${statusMessage}`)
+      }
+      
+      throw new Error('Network error: Unable to connect to server. Please check your connection and try again.')
+    }
+    
+    // Fallback for other types of errors
+    throw error instanceof Error ? error : new Error('An unexpected error occurred')
+  }
+
+  /**
+   * Get user-friendly message for HTTP status codes
+   * @param statusCode - HTTP status code
+   * @returns User-friendly message
+   */
+  const getStatusMessage = (statusCode: number): string => {
+    const statusMessages: Record<number, string> = {
+      400: 'Bad request - please check your input',
+      401: 'Authentication required - please log in',
+      403: 'Access forbidden - insufficient permissions',
+      404: 'Resource not found',
+      405: 'Method not allowed - invalid request type',
+      422: 'Validation error - please check your input',
+      429: 'Too many requests - please try again later',
+      500: 'Internal server error - please try again later',
+      502: 'Bad gateway - server temporarily unavailable',
+      503: 'Service unavailable - please try again later'
+    }
+    
+    return statusMessages[statusCode] || 'Unknown error occurred'
+  }
+
+  /**
+   * Log API request for debugging
+   * @param url - Request URL
+   * @param options - Request options
+   */
+  const logApiRequest = (url: string, options: RequestOptions) => {
+    if (import.meta.dev) {
+      console.group(`🔄 API Request: ${options.method || 'GET'} ${url}`)
+      console.log('Options:', options)
+      console.log('Timestamp:', new Date().toISOString())
+      console.groupEnd()
+    }
+  }
+
+  /**
+   * Log API response for debugging
+   * @param url - Request URL
+   * @param response - Response data
+   * @param error - Error if any
+   */
+  const logApiResponse = (url: string, response?: unknown, error?: unknown) => {
+    if (import.meta.dev) {
+      console.group(`${error ? '❌' : '✅'} API Response: ${url}`)
+      if (error) {
+        console.error('Error:', error)
+        if (error && typeof error === 'object' && 'serverError' in error) {
+          console.error('Server Error Details:', (error as EnhancedError).serverError)
+        }
+      } else {
+        console.log('Response:', response)
+      }
+      console.log('Timestamp:', new Date().toISOString())
+      console.groupEnd()
+    }
+  }
+
+  // ===== API METHODS =====
+
+  /**
+   * Authentication API - Uses $fetch for imperative actions (login/logout)
+   * and useFetch for reactive auth state checking
+   */
   const auth = {
-    login: (credentials: LoginRequest) => {
-      return $fetch<ApiResponse>('/admin/login', {
-        ...getOptions(),
+    /**
+     * Login action - Uses $fetch for one-time imperative action
+     * @param credentials - Username and password
+     * @returns Promise with login response
+     */
+    login: async (credentials: LoginRequest): Promise<ApiResponse> => {
+      const url = '/admin/login'
+      const options = {
+        ...getBaseOptions(),
         baseURL,
-        method: 'POST',
+        method: 'POST' as const,
         body: credentials,
-      })
+      }
+      
+      logApiRequest(url, options)
+      
+      try {
+        const response = await $fetch<ApiResponse>(url, options)
+        logApiResponse(url, response)
+        return response
+      } catch (error) {
+        logApiResponse(url, undefined, error)
+        return handleApiError(error)
+      }
     },
 
-    logout: () => {
-      return $fetch<ApiResponse>('/admin/logout', {
-        ...getOptions(),
+    /**
+     * Logout action - Uses $fetch for one-time imperative action
+     * @returns Promise with logout response
+     */
+    logout: async (): Promise<ApiResponse> => {
+      const url = '/admin/logout'
+      const options = {
+        ...getBaseOptions(),
         baseURL,
-        method: 'POST',
-      })
+        method: 'POST' as const,
+      }
+      
+      logApiRequest(url, options)
+      
+      try {
+        const response = await $fetch<ApiResponse>(url, options)
+        logApiResponse(url, response)
+        return response
+      } catch (error) {
+        logApiResponse(url, undefined, error)
+        return handleApiError(error)
+      }
     },
 
+    /**
+     * Check authentication status - Uses useFetch for reactive state
+     * @param options - Additional useFetch options
+     * @returns Reactive auth status
+     */
     checkAuth: (options: Record<string, unknown> = {}) => {
       return useFetch<{ authenticated: boolean }>('/admin/check', {
-        ...getOptions(),
+        ...getBaseOptions(),
         baseURL,
+        server: false, // Client-side only for auth checks
         ...options,
       })
     },
   }
 
-  // Contact form API
+  /**
+   * Contact form API - Uses $fetch for form submission actions
+   */
   const contact = {
-    submit: (formData: ContactFormRequest) => {
-      return $fetch<ApiResponse>('/contact', {
-        ...getOptions(),
+    /**
+     * Submit contact form - Uses $fetch for one-time form submission
+     * @param formData - Contact form data with reCAPTCHA token
+     * @returns Promise with submission response
+     */
+    submit: async (formData: ContactFormRequest): Promise<ApiResponse> => {
+      const url = '/contact'
+      const options = {
+        ...getBaseOptions(),
         baseURL,
-        method: 'POST',
+        method: 'POST' as const,
         body: formData,
-      })
+      }
+      
+      logApiRequest(url, options)
+      
+      try {
+        const response = await $fetch<ApiResponse>(url, options)
+        logApiResponse(url, response)
+        return response
+      } catch (error) {
+        logApiResponse(url, undefined, error)
+        return handleApiError(error)
+      }
     },
   }
 
-  // Admin messages API
+  /**
+   * Admin messages API - Mixed approach:
+   * - useFetch for data fetching (list, stats, individual records)
+   * - $fetch for actions (bulk operations)
+   */
   const admin = {
     messages: {
-      list: (params: Record<string, unknown> = {}, options: Record<string, unknown> = {}) => {
-        // Clean up params - remove null/undefined values
-        const cleanParams = Object.fromEntries(
-          Object.entries(params).filter(([_, value]) => 
-            value !== null && value !== undefined && value !== ''
-          )
-        )
+      /**
+       * List messages with pagination/filtering - Uses useFetch for reactive data
+       * @param params - Query parameters for filtering and pagination
+       * @param options - Additional useFetch options
+       * @returns Reactive paginated message list
+       */
+      list: (params: MessageListParams = {}, options: Record<string, unknown> = {}) => {
+        const cleanedParams = cleanQueryParams(params as Record<string, unknown>)
 
         return useFetch<PaginatedResponse<Message>>('/admin/messages', {
-          ...getOptions(),
+          ...getBaseOptions(),
           baseURL,
-          query: cleanParams,
+          query: cleanedParams,
+          server: false, // Client-side for authenticated routes
+          lazy: false,   // Immediate fetch
           ...options,
         })
       },
 
+      /**
+       * Get message statistics - Uses useFetch for reactive dashboard data
+       * @param options - Additional useFetch options
+       * @returns Reactive message statistics
+       */
       stats: (options: Record<string, unknown> = {}) => {
         return useFetch<MessageStatsResponse>('/admin/messages/stats', {
-          ...getOptions(),
+          ...getBaseOptions(),
           baseURL,
+          server: false, // Client-side for authenticated routes
           ...options,
         })
       },
 
+      /**
+       * Get individual message - Uses useFetch for reactive record fetching
+       * @param id - Message ID
+       * @param options - Additional useFetch options
+       * @returns Reactive message data
+       */
       get: (id: number, options: Record<string, unknown> = {}) => {
         return useFetch<Message>(`/admin/messages/${id}`, {
-          ...getOptions(),
+          ...getBaseOptions(),
           baseURL,
+          server: false, // Client-side for authenticated routes
           ...options,
         })
       },
 
-      bulkAction: (request: BulkActionRequest) => {
-        return $fetch<ApiResponse>('/admin/messages/bulk', {
-          ...getOptions(),
+      /**
+       * Bulk action on messages - Uses $fetch for imperative action
+       * @param request - Bulk action request (mark read/unread, delete)
+       * @returns Promise with action response
+       */
+      bulkAction: async (request: BulkActionRequest): Promise<ApiResponse> => {
+        const url = '/admin/messages/bulk'
+        const options = {
+          ...getBaseOptions(),
           baseURL,
-          method: 'PATCH',
+          method: 'PATCH' as const,
           body: request,
-        })
+        }
+        
+        logApiRequest(url, options)
+        
+        try {
+          const response = await $fetch<ApiResponse>(url, options)
+          logApiResponse(url, response)
+          return response
+        } catch (error) {
+          logApiResponse(url, undefined, error)
+          return handleApiError(error)
+        }
       },
     },
   }

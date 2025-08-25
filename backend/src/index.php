@@ -6,9 +6,11 @@ require __DIR__ . '/../vendor/autoload.php';
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\Factory\AppFactory;
-use Resend;
+// Resend library imported via composer autoload
 use App\Services\EmailService;
 use App\Services\WebhookVerifier;
+use App\Middleware\ErrorHandlingMiddleware;
+use App\Handlers\CustomErrorHandler;
 use App\Models\Admin; // Add Admin model
 use App\Models\Message;
 use App\Models\EventLog;
@@ -17,6 +19,8 @@ use Illuminate\Pagination\Paginator; // Add Paginator
 use Illuminate\Support\Facades\DB; // For raw queries if needed
 use ReCaptcha\ReCaptcha; // Add ReCaptcha
 use ReCaptcha\RequestMethod\CurlPost; // Add ReCaptcha method
+use Slim\Exception\HttpNotFoundException;
+use Slim\Exception\HttpMethodNotAllowedException;
 
 // Load environment variables (optional for production)
 $dotenvPath = __DIR__ . '/..';
@@ -25,59 +29,48 @@ if (file_exists($dotenvPath . '/.env')) {
     $dotenv->load();
 }
 
-// --- Global CORS: send headers early and short-circuit OPTIONS ---
-$allowedOriginsGlobal = array_map('trim', explode(',', $_ENV['CORS_ALLOWED_ORIGINS'] ?? 'http://localhost:3000'));
-$origin = $_SERVER['HTTP_ORIGIN'] ?? '';
-$originAllowed = $origin && in_array($origin, $allowedOriginsGlobal, true);
-
-if ($originAllowed) {
-    $reqHeaders = $_SERVER['HTTP_ACCESS_CONTROL_REQUEST_HEADERS'] ?? 'Content-Type, Authorization, X-Requested-With';
-    header('Access-Control-Allow-Origin: ' . $origin);
-    header('Vary: Origin');
-    header('Access-Control-Allow-Credentials: true');
-    header('Access-Control-Allow-Methods: GET, POST, PATCH, DELETE, OPTIONS');
-    header('Access-Control-Allow-Headers: ' . $reqHeaders);
-    header('Access-Control-Max-Age: 86400');
-}
-
-// If this is a preflight request, return immediately before any output
-if (($_SERVER['REQUEST_METHOD'] ?? '') === 'OPTIONS') {
-    http_response_code(204);
-    header('Content-Length: 0');
-    exit();
-}
+// --- CORS handling is now done entirely through Slim middleware ---
 
 // --- Session Configuration ---
-// Ensure sessions use secure settings
-ini_set('session.cookie_httponly', '1');
-$forwardedProto = $_SERVER['HTTP_X_FORWARDED_PROTO'] ?? '';
-$isHttps = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') || strtolower($forwardedProto) === 'https';
-$inProd = ($_ENV['APP_ENV'] ?? 'development') === 'production';
+// Only configure session if it hasn't been started yet and no output has been sent
+if (!session_id() && !headers_sent()) {
+    // Ensure sessions use secure settings
+    ini_set('session.cookie_httponly', '1');
+    $forwardedProto = $_SERVER['HTTP_X_FORWARDED_PROTO'] ?? '';
+    $isHttps = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') || strtolower($forwardedProto) === 'https';
+    $inProd = ($_ENV['APP_ENV'] ?? 'development') === 'production';
 
-// Cross-site cookies (frontend on a different origin) require SameSite=None; Secure
-$useSecure = ($inProd || $isHttps) ? '1' : '0';
-ini_set('session.cookie_secure', $useSecure);
-ini_set('session.cookie_samesite', $useSecure === '1' ? 'None' : 'Lax');
-ini_set('session.use_strict_mode', '1'); // Prevent session fixation
-session_start(); // Start the session
+    // Cross-site cookies (frontend on a different origin) require SameSite=None; Secure
+    $useSecure = ($inProd || $isHttps) ? '1' : '0';
+    ini_set('session.cookie_secure', $useSecure);
+    ini_set('session.cookie_samesite', $useSecure === '1' ? 'None' : 'Lax');
+    ini_set('session.use_strict_mode', '1'); // Prevent session fixation
+    session_start(); // Start the session
+}
 
 $app = AppFactory::create();
 
-// (Optional) Add error middleware for debugging
-$app->addErrorMiddleware(true, true, true);
-
-// CORS middleware (allowlist via CORS_ALLOWED_ORIGINS env; comma-separated)
+// Setup error handling
 $allowedOrigins = array_map('trim', explode(',', $_ENV['CORS_ALLOWED_ORIGINS'] ?? 'http://localhost:3000'));
+$isDevelopment = ($_ENV['APP_ENV'] ?? 'development') !== 'production';
 
+// Add error middleware and set custom error handler
+$errorMiddleware = $app->addErrorMiddleware(true, true, true);
+$customErrorHandler = new CustomErrorHandler($allowedOrigins, $isDevelopment);
+$errorMiddleware->setDefaultErrorHandler($customErrorHandler);
+
+// Add enhanced error handling middleware that ensures CORS headers on all responses
+$app->add(new ErrorHandlingMiddleware($allowedOrigins, $isDevelopment));
+
+// Comprehensive CORS middleware that handles all requests including OPTIONS
 $app->add(function (Request $request, $handler) use ($allowedOrigins) {
     $origin = $request->getHeaderLine('Origin');
     $originAllowed = $origin && in_array($origin, $allowedOrigins, true);
-
+    
     // Handle preflight OPTIONS requests
     if (strtoupper($request->getMethod()) === 'OPTIONS') {
-        // 204 No Content is a common/safe response for preflight
         $response = new \Slim\Psr7\Response(204);
-
+        
         if ($originAllowed) {
             $allowHeaders = $request->getHeaderLine('Access-Control-Request-Headers') ?: 'Content-Type, Authorization, X-Requested-With';
             $response = $response
@@ -86,24 +79,28 @@ $app->add(function (Request $request, $handler) use ($allowedOrigins) {
                 ->withHeader('Access-Control-Allow-Credentials', 'true')
                 ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PATCH, DELETE, OPTIONS')
                 ->withHeader('Access-Control-Allow-Headers', $allowHeaders)
-                ->withHeader('Access-Control-Max-Age', '86400') // cache preflight for 24h
+                ->withHeader('Access-Control-Max-Age', '86400')
+                ->withHeader('Content-Length', '0');
+        } else {
+            // Even for non-allowed origins, return a proper response to avoid browser errors
+            $response = $response
+                ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PATCH, DELETE, OPTIONS')
+                ->withHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With')
                 ->withHeader('Content-Length', '0');
         }
         return $response;
     }
 
-    // Handle actual requests
+    // For non-OPTIONS requests, process normally and add CORS headers to response
     $response = $handler->handle($request);
-
+    
     if ($originAllowed) {
         $response = $response
             ->withHeader('Access-Control-Allow-Origin', $origin)
             ->withHeader('Vary', 'Origin')
-            ->withHeader('Access-Control-Allow-Credentials', 'true')
-            ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PATCH, DELETE, OPTIONS')
-            ->withHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
+            ->withHeader('Access-Control-Allow-Credentials', 'true');
     }
-
+    
     return $response;
 });
 
@@ -333,8 +330,13 @@ $app->post('/ses-webhook', function (Request $request, Response $response) {
 
 // --- Admin Authentication Endpoints ---
 
-// POST /admin/login
-$app->post('/admin/login', function (Request $request, Response $response) {
+// Admin login with method validation - this will properly throw 405 for wrong methods
+$app->map(['GET', 'POST', 'PATCH', 'DELETE'], '/admin/login', function (Request $request, Response $response) {
+    // Only allow POST method
+    if ($request->getMethod() !== 'POST') {
+        throw new HttpMethodNotAllowedException($request);
+    }
+    
     $data = json_decode($request->getBody()->getContents(), true);
     // Trim and potentially lowercase username if it's treated like an email
     $usernameInput = trim($data['username'] ?? '');
@@ -609,5 +611,10 @@ $app->patch('/admin/messages/bulk', function (Request $request, Response $respon
     }
 });
 
+
+// Add a catch-all route for better 404 handling
+$app->any('[/{path:.*}]', function (Request $request, Response $response) {
+    throw new HttpNotFoundException($request);
+});
 
 $app->run();
