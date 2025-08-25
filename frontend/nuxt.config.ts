@@ -54,6 +54,12 @@ export default defineNuxtConfig({
         timeout: 5000,
         protocol: 'ws'
       }
+    },
+    optimizeDeps: {
+      include: ['vue-toastification']
+    },
+    ssr: {
+      noExternal: ['vue-toastification']
     }
   },
 
