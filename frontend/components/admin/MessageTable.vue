@@ -60,7 +60,7 @@
     </div>
 
     <!-- Loading State -->
-    <div v-if="pending" class="text-center py-10">
+    <div v-if="status === 'pending'" class="text-center py-10">
       Loading messages...
     </div>
 
@@ -222,20 +222,7 @@ import { ref, computed, watch } from 'vue';
 import { useToast } from 'vue-toastification';
 import MessageViewModal from './MessageViewModal.vue';
 import ConfirmationModal from './ConfirmationModal.vue'; // Import ConfirmationModal
-
-// Define Message type based on backend structure
-interface Message {
-  id: number;
-  name: string;
-  email: string;
-  subject: string;
-  message: string; // Might not be needed for table view, but good to have
-  status: string; // Original SES status
-  message_id: string | null;
-  is_read: boolean;
-  created_at: string;
-  updated_at: string;
-}
+import type { Message } from '~/composables/useApi';
 
 const { admin } = useApi();
 
@@ -277,7 +264,7 @@ const queryParams = computed(() => ({
 }));
 
 // Use the API composable to get messages
-const { data: apiResponse, pending, error, refresh } = await admin.messages.list(queryParams, {
+const { data: apiResponse, status, error, refresh } = await admin.messages.list(queryParams.value, {
   lazy: false, // Fetch data immediately on component setup
   server: false, // Ensure fetching happens client-side after auth middleware runs
 });
