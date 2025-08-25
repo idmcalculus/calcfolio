@@ -120,7 +120,7 @@ const handleLogin = async () => {
 }
 
 .form-input:focus {
-   border-color: theme('colors.primary'); /* Simple focus border */
+   border-color: theme('colors.primary.DEFAULT'); /* Simple focus border */
 }
 
 .form-label {

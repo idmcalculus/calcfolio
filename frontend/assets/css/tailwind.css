@@ -1,9 +1,89 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+@import "@nuxt/ui";
 
-@layer utilities {
-  .nav-link-active {
-    @apply text-primary font-semibold;
+/* Custom styles to preserve original design */
+html {
+  scroll-behavior: smooth;
+}
+
+.text-gradient {
+  background: linear-gradient(
+    89.81deg,
+    #9845E8 -1.72%,
+    #33D2FF 54.05%,
+    #DD5789 99.78%,
+    #9845E8 150%
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: shine 3s linear infinite;
+}
+
+.typing-text {
+  display: inline-block;
+  border-right: 2px solid currentColor;
+  padding-right: 3px;
+  animation: blink 0.7s steps(1) infinite;
+}
+
+.nav-link-active {
+  color: #F54747;
+}
+
+.gradient-border {
+  position: relative;
+  background: linear-gradient(to right, #EC4899, #A855F7);
+  padding: 3px;
+  border-radius: 9999px;
+  width: fit-content;
+  height: fit-content;
+}
+
+.gradient-border::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 9999px;
+  padding: 3px;
+  background: linear-gradient(to right, #EC4899, #A855F7);
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+@keyframes shine {
+  to {
+    background-position: 200% center;
   }
+}
+
+@keyframes blink {
+  50% {
+    border-color: transparent;
+  }
+}
+
+/* Slide transition styles */
+.slide-enter-active,
+.slide-leave-active {
+  transition: transform 0.3s ease;
+}
+
+.slide-enter-from,
+.slide-leave-to {
+  transform: translateX(100%);
+}
+
+/* Ensure Nuxt UI doesn't override our custom colors */
+.dark .bg-darkBg {
+  background-color: #0d0d0d !important;
+}
+
+.bg-lightBg {
+  background-color: #ffffff !important;
 }

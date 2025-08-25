@@ -219,12 +219,12 @@
 
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue';
-import { useToast } from 'vue-toastification';
 import MessageViewModal from './MessageViewModal.vue';
 import ConfirmationModal from './ConfirmationModal.vue'; // Import ConfirmationModal
 import type { Message } from '~/composables/useApi';
 
 const { admin } = useApi();
+const toast = useToast();
 
 // --- State for fetching and controls ---
 const currentPage = ref(1);
@@ -242,7 +242,6 @@ const isConfirmModalOpen = ref(false);
 // Adjust type to allow undefined or a function returning void/Promise<void>
 const confirmActionCallback = ref<(() => void | Promise<void>) | undefined>(undefined);
 const confirmModalMessage = ref('');
-const toast = useToast();
 
 // --- Select All Logic ---
 const selectAll = computed({
@@ -333,14 +332,22 @@ const executeBulkAction = async (action: BulkAction) => {
     }
 
     // Success: Clear selection and refresh the message list
-    toast.success(data.message || `Action '${action}' completed successfully.`);
+    toast.add({
+      title: 'Success',
+      description: data.message || `Action '${action}' completed successfully.`,
+      color: 'success'
+    });
     selectedIds.value = [];
     await refresh();
 
   } catch (err: unknown) {
      const errorMsg = err instanceof Error ? err.message : 'An unexpected error occurred during bulk action.';
      console.error(`Error performing bulk action (${action}):`, err);
-     toast.error(errorMsg); // Show error toast
+     toast.add({
+       title: 'Error',
+       description: errorMsg,
+       color: 'error'
+     });
      bulkActionError.value = errorMsg; // Optionally show inline error
   } finally {
     bulkActionLoading.value = false;

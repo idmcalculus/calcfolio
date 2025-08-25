@@ -69,9 +69,9 @@
 <script setup lang="ts">
   import { ref } from 'vue'
   import { useReCaptcha } from 'vue-recaptcha-v3'
-  import { useToast } from 'vue-toastification' // Import useToast
 
   const { contact } = useApi()
+  const toast = useToast()
 
   const form = ref({
     name: '',
@@ -83,7 +83,6 @@
   const loading = ref(false)
   const responseMsg = ref('') // Keep for potential inline messages if needed, or remove
   const success = ref(false)
-  const toast = useToast() // Get toast interface
 
   // --- reCAPTCHA Setup ---
   const recaptchaInstance = useReCaptcha()
@@ -118,19 +117,31 @@
       })
       // Use toast for feedback
       if (responseData.success) {
-        toast.success(responseData.message || 'Message sent successfully!');
+        toast.add({
+          title: 'Success',
+          description: responseData.message || 'Message sent successfully!',
+          color: 'success'
+        });
         form.value = { name: '', email: '', subject: '', message: '' }; // Reset form
         success.value = true;
         responseMsg.value = ''; // Clear any inline message
       } else {
-        toast.error(responseData.message || 'Submission failed. Please check your input.');
+        toast.add({
+          title: 'Error',
+          description: responseData.message || 'Submission failed. Please check your input.',
+          color: 'error'
+        });
         success.value = false;
         responseMsg.value = responseData.message || 'Submission failed'; // Optionally keep inline message
       }
     } catch (error: unknown) { // Type error as unknown
       console.error('Contact form submission error:', error);
       const errorMsg = error instanceof Error ? error.message : 'An unexpected error occurred. Please try again.';
-      toast.error(errorMsg); // Show error toast
+      toast.add({
+        title: 'Error',
+        description: errorMsg,
+        color: 'error'
+      });
       responseMsg.value = errorMsg; // Optionally show inline message
       success.value = false
     } finally {

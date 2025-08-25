@@ -10,7 +10,11 @@ export default defineNuxtConfig({
     '@nuxt/image',
     '@nuxt/test-utils',
     '@nuxt/scripts',
-    '@nuxtjs/tailwindcss'
+    '@nuxtjs/tailwindcss',
+    ['@nuxt/ui', {
+      global: false, // Don't apply global styles
+      prefix: 'U' // Prefix all UI components
+    }]
   ],
 
   css: [
@@ -56,10 +60,10 @@ export default defineNuxtConfig({
       }
     },
     optimizeDeps: {
-      include: ['vue-toastification']
+      include: []
     },
     ssr: {
-      noExternal: ['vue-toastification']
+      noExternal: []
     }
   },
 
