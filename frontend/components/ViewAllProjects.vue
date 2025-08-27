@@ -1,6 +1,6 @@
 <template>
-  <section class="text-center" :data-aos="aos">
-    <NuxtLink 
+  <section class="text-center" :data-aos="$nuxt.isHydrating ? undefined : aos">
+    <NuxtLink
       to="/projects"
       :class="[
         'inline-block px-6 py-3 bg-primary text-white transition hover:bg-red-600',

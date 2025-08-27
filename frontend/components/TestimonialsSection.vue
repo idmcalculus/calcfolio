@@ -1,5 +1,5 @@
 <template>
-  <section class="testimonials-section my-12 px-4 md:px-6 max-w-(--breakpoint-xl) mx-auto" data-aos="fade-up">
+  <section class="testimonials-section my-12 px-4 md:px-6 max-w-(--breakpoint-xl) mx-auto" :data-aos="$nuxt.isHydrating ? undefined : 'fade-up'">
     <div class="mb-6 w-full text-center md:text-left">
       <h2 class="text-2xl md:text-3xl font-extrabold">Testimonials</h2>
       <SectionDivider/>
