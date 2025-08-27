@@ -20,7 +20,7 @@ describe('HeroSection', () => {
 
     // Check section max-width
     const section = wrapper.find('section.hero-section')
-    expect(section.classes()).toContain('max-w-screen-xl')
+    expect(section.classes()).toContain('max-w-(--breakpoint-xl)')
 
     // Check main heading text
     const heading = wrapper.find('h1')
@@ -48,7 +48,7 @@ describe('HeroSection', () => {
     expect(img.classes()).toContain('-mt-20') // Check for negative top margin
 
     // Check image wrapper for gradient and size
-    const imgWrapper = wrapper.find('div.bg-gradient-to-br')
+    const imgWrapper = wrapper.find('div.bg-linear-to-br')
     expect(imgWrapper.exists()).toBe(true)
     expect(imgWrapper.classes()).toContain('w-64') // Check wrapper width
     expect(imgWrapper.classes()).toContain('h-64') // Check wrapper height

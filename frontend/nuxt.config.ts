@@ -10,7 +10,6 @@ export default defineNuxtConfig({
     '@nuxt/image',
     '@nuxt/test-utils',
     '@nuxt/scripts',
-    '@nuxtjs/tailwindcss',
     ['@nuxt/ui', {
       global: false, // Don't apply global styles
       prefix: 'U' // Prefix all UI components
@@ -36,7 +35,7 @@ export default defineNuxtConfig({
   postcss: {
     plugins: {
       'postcss-nesting': {},
-      tailwindcss: {},
+      '@tailwindcss/postcss': {},
       autoprefixer: {},
     },
   },

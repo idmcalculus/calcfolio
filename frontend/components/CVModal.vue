@@ -9,7 +9,7 @@
         <div class="fixed inset-0 bg-black/40"/>
         <div class="relative z-50 bg-white dark:bg-zinc-800 rounded-lg shadow-lg p-4 md:p-6 w-full md:w-[90%] max-w-4xl">
           <button 
-            class="absolute top-2 right-2 md:top-3 md:right-3 p-2 text-2xl leading-none text-gray-500 hover:text-red-600 focus:outline-none focus:ring-2 focus:ring-primary rounded-full" 
+            class="absolute top-2 right-2 md:top-3 md:right-3 p-2 text-2xl leading-none text-gray-500 hover:text-red-600 focus:outline-hidden focus:ring-2 focus:ring-primary rounded-full" 
             aria-label="Close modal"
             @click="closeModal"
           >

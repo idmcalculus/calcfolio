@@ -1,15 +1,28 @@
-import { ref, watch } from 'vue'
+import { ref, watch, nextTick } from 'vue'
 
 export const useDarkMode = () => {
-  // Initialize from localStorage or system preference
-  const isDark = ref(loadThemePreference())
+  // Initialize as false to match SSR, will be updated after hydration
+  const isDark = ref(false)
+  const isHydrated = ref(false)
 
-  // Watch for changes and save to localStorage
+  // Initialize theme only on client after component is mounted
+  const initializeTheme = () => {
+    if (import.meta.client && !isHydrated.value) {
+      const theme = loadThemePreference()
+      isDark.value = theme
+      updateTheme(theme)
+      isHydrated.value = true
+    }
+  }
+
+  // Watch for changes and save to localStorage (only after hydration)
   watch(isDark, (newValue) => {
-    // Update localStorage
-    localStorage.setItem('theme', newValue ? 'dark' : 'light')
-    // Update document class for Tailwind
-    updateTheme(newValue)
+    if (import.meta.client && isHydrated.value) {
+      // Update localStorage
+      localStorage.setItem('theme', newValue ? 'dark' : 'light')
+      // Update document class for Tailwind
+      updateTheme(newValue)
+    }
   })
 
   // Toggle function
@@ -17,14 +30,11 @@ export const useDarkMode = () => {
     isDark.value = !isDark.value
   }
 
-  // Initialize theme on page load
-  if (import.meta.client) {
-    updateTheme(isDark.value)
-  }
-
   return {
     isDark,
-    toggleDark
+    toggleDark,
+    initializeTheme,
+    isHydrated
   }
 }
 
@@ -42,10 +52,14 @@ function loadThemePreference(): boolean {
 }
 
 function updateTheme(isDark: boolean) {
+  if (!import.meta.client) return
+  
   // Update document class for Tailwind
-  if (isDark) {
-    document.documentElement.classList.add('dark')
-  } else {
-    document.documentElement.classList.remove('dark')
-  }
+  nextTick(() => {
+    if (isDark) {
+      document.documentElement.classList.add('dark')
+    } else {
+      document.documentElement.classList.remove('dark')
+    }
+  })
 }

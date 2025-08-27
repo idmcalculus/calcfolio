@@ -43,7 +43,7 @@
         </div>
         <button
           type="submit"
-          class="w-full px-4 py-2 font-semibold text-white bg-primary rounded-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary disabled:opacity-50"
+          class="w-full px-4 py-2 font-semibold text-white bg-primary rounded-md hover:bg-red-600 focus:outline-hidden focus:ring-2 focus:ring-offset-2 focus:ring-primary disabled:opacity-50"
           :disabled="loading"
         >
           {{ loading ? 'Logging in...' : 'Login' }}
@@ -67,13 +67,13 @@ definePageMeta({
 })
 
 const { auth } = useApi()
+const toast = useToast()
 
 const username = ref('')
 const password = ref('')
 const showPassword = ref(false) // State for password visibility
 const loading = ref(false)
 const errorMsg = ref('') // Keep for potential inline message
-// Removed toast for testing - will use console logging instead
 
 // Computed property for password input type
 const passwordFieldType = computed(() => (showPassword.value ? 'text' : 'password'));
@@ -97,15 +97,39 @@ const handleLogin = async () => {
       throw new Error(data.message || 'Login failed. Please check your credentials.')
     }
 
-    // Login successful, navigate to the admin dashboard
-    console.log('Login successful!'); // Optional success log
+    // Login successful, show success toast and navigate to the admin dashboard
+    toast.add({
+      title: 'Login Successful',
+      description: 'Welcome back! Redirecting to dashboard...',
+      color: 'success'
+    })
+    
     await navigateTo('/admin/dashboard')
 
   } catch (error: unknown) {
     console.error('Admin login error:', error)
     const message = error instanceof Error ? error.message : 'An unexpected error occurred.'
-    errorMsg.value = message // Show inline error
-    console.error('Login error:', message); // Show console error
+    
+    // Determine if this is a validation error or server error
+    const isValidationError = message.includes('credentials') ||
+                             message.includes('username') ||
+                             message.includes('password') ||
+                             message.includes('invalid') ||
+                             message.includes('incorrect')
+    
+    if (isValidationError) {
+      // Show validation errors inline
+      errorMsg.value = message
+    } else {
+      // Show server errors as toast notifications
+      toast.add({
+        title: 'Server Error',
+        description: message,
+        color: 'error'
+      })
+      // Clear inline error for server errors
+      errorMsg.value = ''
+    }
   } finally {
     loading.value = false
   }
@@ -113,27 +137,60 @@ const handleLogin = async () => {
 </script>
 
 <style scoped lang="postcss">
-/* Reuse form styles from contact page or define specific ones */
 .form-input {
-  @apply w-full px-4 py-3 rounded bg-gray-200 dark:bg-gray-700 text-black dark:text-white outline-none transition-all duration-300 border-2 border-transparent;
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border-radius: 0.375rem;
+  background-color: rgb(229 231 235);
+  color: rgb(0 0 0);
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  transition-property: all;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 300ms;
+  border: 2px solid transparent;
   background-clip: padding-box;
 }
 
+.dark .form-input {
+  background-color: rgb(55 65 81);
+  color: rgb(255 255 255);
+}
+
 .form-input:focus {
-   border-color: theme('colors.primary.DEFAULT'); /* Simple focus border */
+  border-color: var(--color-primary);
 }
 
 .form-label {
-  @apply absolute text-gray-500 dark:text-gray-400 transition-all duration-300 pointer-events-none px-1;
+  position: absolute;
+  color: rgb(107 114 128);
+  transition-property: all;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 300ms;
+  pointer-events: none;
+  padding-left: 0.25rem;
+  padding-right: 0.25rem;
   left: 1rem;
   top: 50%;
   transform: translateY(-50%);
 }
 
+.dark .form-label {
+  color: rgb(156 163 175);
+}
+
 .form-input:focus ~ .form-label,
 .form-input:not(:placeholder-shown) ~ .form-label {
-  @apply text-sm text-primary bg-gray-100 dark:bg-gray-800; /* Adjust background to match page */
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  color: var(--color-primary);
+  background-color: rgb(243 244 246);
   top: 0;
   transform: translateY(-50%) scale(0.85);
+}
+
+.dark .form-input:focus ~ .form-label,
+.dark .form-input:not(:placeholder-shown) ~ .form-label {
+  background-color: rgb(31 41 55);
 }
 </style>

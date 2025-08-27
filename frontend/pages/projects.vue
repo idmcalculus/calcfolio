@@ -1,7 +1,7 @@
 <template>
   <div>
     <!-- Header -->
-    <section class="my-12 px-6 max-w-screen-xl mx-auto text-center" data-aos="fade-up">
+    <section class="my-12 px-6 max-w-(--breakpoint-xl) mx-auto text-center" data-aos="fade-up">
       <h1 class="text-3xl md:text-4xl font-bold mb-4">All Projects</h1>
       <p class="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto mb-8">
         Explore my complete portfolio of projects, from web applications to mobile apps and everything in between.
