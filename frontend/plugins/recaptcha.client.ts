@@ -1,23 +1,22 @@
-import { VueReCaptcha } from 'vue-recaptcha-v3'
-
-export default defineNuxtPlugin((nuxtApp) => {
+export default defineNuxtPlugin(() => {
   const config = useRuntimeConfig()
-  // Explicitly cast the site key to string to help TypeScript
   const siteKey = config.public.recaptchaSiteKey as string;
 
   if (!siteKey) {
     console.warn('reCAPTCHA site key is not configured. Please set NUXT_PUBLIC_RECAPTCHA_SITE_KEY environment variable.')
-    // Skip plugin registration entirely
     return;
   }
 
-  // Pass options object directly, including required loaderOptions
-  nuxtApp.vueApp.use(VueReCaptcha, {
-    siteKey: siteKey,
-    loaderOptions: {
-      // Add specific loader options here if needed later, e.g.:
-      // autoHideBadge: true,
-      // explicitRenderParameters: { badge: 'bottomright' }
-    } // Provide at least an empty object
-  });
+  // Load Google reCAPTCHA script manually
+  if (typeof window !== 'undefined') {
+    const script = document.createElement('script')
+    script.src = `https://www.google.com/recaptcha/api.js?render=${siteKey}`
+    script.async = true
+    script.defer = true
+    document.head.appendChild(script)
+
+    // Make grecaptcha available globally
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    ;(window as any).grecaptcha = (window as any).grecaptcha || {}
+  }
 })

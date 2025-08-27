@@ -71,6 +71,7 @@
 
   const { contact } = useApi()
   const toast = useToast()
+  const config = useRuntimeConfig()
 
   const form = ref({
     name: '',
@@ -84,35 +85,32 @@
   const success = ref(false)
 
   // --- reCAPTCHA Setup ---
-  const config = useRuntimeConfig()
-
   const getRecaptchaToken = async () => {
     // Skip reCAPTCHA entirely if not configured or not in client
     if (!config.public.recaptchaSiteKey || !import.meta.client) {
+      console.log('reCAPTCHA not configured or not in client');
       return null;
     }
-    
+
     try {
-      // Check if the reCAPTCHA plugin is actually available
-      const nuxtApp = useNuxtApp()
-      if (!nuxtApp.vueApp.config.globalProperties.$recaptcha && !nuxtApp.$recaptcha) {
-        console.warn('reCAPTCHA plugin not registered');
-        return null;
+      // Wait for grecaptcha to be available
+      let attempts = 0;
+      const maxAttempts = 50; // 5 seconds max wait
+
+      while (attempts < maxAttempts) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        if (typeof window !== 'undefined' && (window as any).grecaptcha && (window as any).grecaptcha.execute) {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          const token = await (window as any).grecaptcha.execute(config.public.recaptchaSiteKey, { action: 'contact_form' })
+          return token
+        }
+        attempts++
+        await new Promise(resolve => setTimeout(resolve, 100)) // Wait 100ms
       }
-      
-      // Only try to use reCAPTCHA if everything is properly set up
-      const { useReCaptcha } = await import('vue-recaptcha-v3')
-      const recaptchaInstance = useReCaptcha()
-      
-      if (!recaptchaInstance) {
-        return null;
-      }
-      
-      await recaptchaInstance.recaptchaLoaded()
-      const token = await recaptchaInstance.executeRecaptcha('contact_form')
-      return token
-    } catch {
-      // Silently handle the injection error
+
+      throw new Error('reCAPTCHA not loaded within timeout')
+    } catch (error) {
+      console.warn('reCAPTCHA execution failed:', error)
       return null;
     }
   }
@@ -126,6 +124,7 @@
     try {
       // --- Get reCAPTCHA token ---
       const recaptchaToken = await getRecaptchaToken()
+      console.log('reCAPTCHA token:', recaptchaToken);
       // --- End Get reCAPTCHA token ---
 
       const responseData = await contact.submit({
