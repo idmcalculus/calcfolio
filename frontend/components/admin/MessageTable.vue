@@ -3,7 +3,7 @@
     <h3 class="text-xl font-semibold mb-4">Inbox Messages</h3>
 
     <!-- Controls: Filters, Search, etc. -->
-    <div class="controls mb-4 p-4 bg-gray-50 dark:bg-gray-700 rounded shadow-sm grid grid-cols-1 md:grid-cols-3 gap-4">
+    <div class="controls mb-4 p-4 bg-gray-50 dark:bg-gray-700 rounded shadow-xs grid grid-cols-1 md:grid-cols-3 gap-4">
       <!-- Search Input -->
       <div>
         <label for="search" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Search</label>
@@ -12,7 +12,7 @@
           v-model.lazy="searchTerm"
           type="text"
           placeholder="Search name, email, subject..."
-          class="w-full px-3 py-2 rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary text-sm"
+          class="w-full px-3 py-2 rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 focus:outline-hidden focus:ring-1 focus:ring-primary focus:border-primary text-sm"
         >
       </div>
 
@@ -22,7 +22,7 @@
         <select
           id="filter"
           v-model="filterRead"
-          class="w-full px-3 py-2 rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary text-sm"
+          class="w-full px-3 py-2 rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 focus:outline-hidden focus:ring-1 focus:ring-primary focus:border-primary text-sm"
         >
           <option :value="null">All</option>
           <option value="0">Unread</option>
@@ -35,7 +35,7 @@
          <label for="sort" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Sort By</label>
          <select
            id="sort"
-           class="w-full px-3 py-2 rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary text-sm"
+           class="w-full px-3 py-2 rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 focus:outline-hidden focus:ring-1 focus:ring-primary focus:border-primary text-sm"
            @change="updateSort($event)"
          >
            <option value="created_at:desc" :selected="sortBy === 'created_at' && sortOrder === 'desc'">Date Received (Newest)</option>
@@ -140,7 +140,7 @@
     </div>
 
     <!-- Pagination Controls -->
-    <div v-if="pagination && pagination.total > itemsPerPage" class="pagination-controls mt-6 flex items-center justify-between px-4 py-3 bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 sm:px-6 rounded-b shadow-sm">
+    <div v-if="pagination && pagination.total > itemsPerPage" class="pagination-controls mt-6 flex items-center justify-between px-4 py-3 bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 sm:px-6 rounded-b shadow-xs">
       <div class="flex-1 flex justify-between sm:hidden">
         <button
           :disabled="currentPage === 1"
@@ -170,7 +170,7 @@
           </p>
         </div>
         <div>
-          <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
+          <nav class="relative z-0 inline-flex rounded-md shadow-xs -space-x-px" aria-label="Pagination">
             <button
               :disabled="currentPage === 1"
               class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-sm font-medium text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50"
@@ -219,12 +219,12 @@
 
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue';
-import { useToast } from 'vue-toastification';
 import MessageViewModal from './MessageViewModal.vue';
 import ConfirmationModal from './ConfirmationModal.vue'; // Import ConfirmationModal
 import type { Message } from '~/composables/useApi';
 
 const { admin } = useApi();
+const toast = useToast();
 
 // --- State for fetching and controls ---
 const currentPage = ref(1);
@@ -242,7 +242,6 @@ const isConfirmModalOpen = ref(false);
 // Adjust type to allow undefined or a function returning void/Promise<void>
 const confirmActionCallback = ref<(() => void | Promise<void>) | undefined>(undefined);
 const confirmModalMessage = ref('');
-const toast = useToast();
 
 // --- Select All Logic ---
 const selectAll = computed({
@@ -333,14 +332,22 @@ const executeBulkAction = async (action: BulkAction) => {
     }
 
     // Success: Clear selection and refresh the message list
-    toast.success(data.message || `Action '${action}' completed successfully.`);
+    toast.add({
+      title: 'Success',
+      description: data.message || `Action '${action}' completed successfully.`,
+      color: 'success'
+    });
     selectedIds.value = [];
     await refresh();
 
   } catch (err: unknown) {
      const errorMsg = err instanceof Error ? err.message : 'An unexpected error occurred during bulk action.';
      console.error(`Error performing bulk action (${action}):`, err);
-     toast.error(errorMsg); // Show error toast
+     toast.add({
+       title: 'Error',
+       description: errorMsg,
+       color: 'error'
+     });
      bulkActionError.value = errorMsg; // Optionally show inline error
   } finally {
     bulkActionLoading.value = false;

@@ -1,5 +1,5 @@
 <template>
-  <div class="testimonial-card h-full bg-white dark:bg-zinc-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow p-6 flex flex-col">
+  <div class="testimonial-card h-full bg-white dark:bg-zinc-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm p-6 flex flex-col">
     <!-- Source Icon -->
     <div class="absolute top-6 right-6">
       <a v-if="sourceIcon && url" :href="url" target="_blank" rel="noopener" class="text-gray-400 hover:text-primary">
@@ -15,7 +15,7 @@
       class="w-12 h-12 rounded-full mb-4 object-cover"
     />
 
-    <div class="text-sm text-gray-700 dark:text-gray-300 mb-6 flex-grow">
+    <div class="text-sm text-gray-700 dark:text-gray-300 mb-6 grow">
       <p class="italic">
         "{{ truncatedMessage }}"
         <span v-if="hasLongMessage" class="block mt-2">

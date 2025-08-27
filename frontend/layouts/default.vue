@@ -1,10 +1,10 @@
 <template>
   <div :class="{ dark: isDark }">
-    <div class="min-h-screen bg-lightBg text-black dark:bg-darkBg dark:text-white flex flex-col">
+    <div class="min-h-screen bg-light-bg text-black dark:bg-dark-bg dark:text-white flex flex-col">
 
         <!-- Header -->
-        <header class="sticky top-0 z-50 bg-white dark:bg-darkBg w-full">
-          <div class="container mx-auto max-w-screen-xl px-6 py-4 flex items-center justify-between">
+        <header class="sticky top-0 z-50 bg-white dark:bg-dark-bg w-full">
+          <div class="container mx-auto max-w-(--breakpoint-xl) px-6 py-4 flex items-center justify-between">
             <NuxtLink to="/" class="font-bold text-xl">IDM</NuxtLink>
             <div class="flex gap-6 items-center">
               <nav class="hidden md:flex gap-6 items-center">
@@ -66,7 +66,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, provide } from 'vue' // Ensure provide is imported
+import { ref, provide, onMounted } from 'vue' // Ensure provide is imported
 import { useDarkMode } from '~/composables/useDarkMode'
 import MobileMenuDrawer from '~/components/MobileMenuDrawer.vue'
 import ScrollToTop from '~/components/ScrollToTop.vue'
@@ -75,10 +75,15 @@ import CVModal from '~/components/CVModal.vue'
 import AppFooter from '~/components/AppFooter.vue'
 
 // Dark mode composable
-const { isDark, toggleDark } = useDarkMode()
+const { isDark, toggleDark, initializeTheme } = useDarkMode()
 
 const showMenu = ref(false)
 const showCVModal = ref(false)
+
+// Initialize theme after component is mounted (client-side)
+onMounted(() => {
+  initializeTheme()
+})
 
 // Make showCVModal available to all components within this layout
 provide('showCVModal', showCVModal)

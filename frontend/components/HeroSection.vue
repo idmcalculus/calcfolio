@@ -1,6 +1,6 @@
 <template>
   <section
-    class="hero-section container mx-auto max-w-screen-xl px-6 my-16 flex flex-col md:flex-row items-center gap-8 md:gap-16" 
+    class="hero-section container mx-auto max-w-(--breakpoint-xl) px-6 my-16 flex flex-col md:flex-row items-center gap-8 md:gap-16" 
     data-aos="fade-up"
   >
     <!-- Left Column: Text Content -->

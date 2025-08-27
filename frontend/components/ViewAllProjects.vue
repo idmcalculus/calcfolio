@@ -13,22 +13,15 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted } from 'vue'
-import AOS from 'aos'
-
 interface Props {
   width?: string
   buttonText?: string
   aos?: string
 }
 
-const props = withDefaults(defineProps<Props>(), {
+const _props = withDefaults(defineProps<Props>(), {
   width: '',
   buttonText: 'View All Projects',
   aos: 'fade-up'
-})
-
-onMounted(() => {
-  AOS.init({ duration: 800 })
 })
 </script>
