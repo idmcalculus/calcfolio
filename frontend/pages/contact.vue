@@ -124,7 +124,6 @@
     try {
       // --- Get reCAPTCHA token ---
       const recaptchaToken = await getRecaptchaToken()
-      console.log('reCAPTCHA token:', recaptchaToken);
       // --- End Get reCAPTCHA token ---
 
       const responseData = await contact.submit({
