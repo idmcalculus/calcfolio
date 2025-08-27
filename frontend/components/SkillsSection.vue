@@ -1,5 +1,5 @@
 <template>
-  <section class="my-12 px-6 max-w-screen-xl mx-auto" data-aos="fade-up">
+  <section class="my-12 px-6 max-w-(--breakpoint-xl) mx-auto" data-aos="fade-up">
     <div class="w-full text-center md:text-left">
       <h2 class="text-2xl md:text-3xl font-bold">My Skills</h2>
       <SectionDivider />
@@ -31,7 +31,7 @@
     <!-- Skills Display -->
     <div class="relative overflow-visible">
       <!-- Category Description -->
-      <div v-if="currentCategoryData" class="mb-6 p-4 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-gray-800 dark:to-gray-700 rounded-lg border border-blue-200 dark:border-gray-600">
+      <div v-if="currentCategoryData" class="mb-6 p-4 bg-linear-to-r from-blue-50 to-purple-50 dark:from-gray-800 dark:to-gray-700 rounded-lg border border-blue-200 dark:border-gray-600">
         <h3 class="text-lg font-semibold text-gray-800 dark:text-white mb-2">
           <Icon :name="currentCategoryData.icon" class="w-5 h-5 mr-2 inline-block text-blue-600 dark:text-blue-400" />
           {{ currentCategoryData.name }}
@@ -63,7 +63,7 @@
       <!-- Show All Skills Toggle -->
       <div class="text-center mt-8">
         <button
-          class="inline-flex items-center px-6 py-2 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-medium rounded-lg transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
+          class="inline-flex items-center px-6 py-2 bg-linear-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-medium rounded-lg transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
           @click="toggleShowAll"
         >
           <Icon :name="showAllSkills ? 'lucide:eye-off' : 'lucide:eye'" class="w-4 h-4 mr-2" />
@@ -76,10 +76,7 @@
   
 <script setup lang="ts">
   import { ref, computed, onMounted, onUnmounted } from 'vue'
-  import AOS from 'aos'
   import SectionDivider from './SectionDivider.vue'
-  
-  onMounted(() => AOS.init({ duration: 800 }))
 
   // Reactive state
   const activeCategory = ref('programming')

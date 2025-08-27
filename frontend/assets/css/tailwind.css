@@ -1,9 +1,146 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
+@import '@nuxt/ui';
 
-@layer utilities {
-  .nav-link-active {
-    @apply text-primary font-semibold;
+@utilities;
+
+@custom-variant dark (&:is(.dark *));
+
+@theme {
+  --color-primary-50: #fef2f2;
+  --color-primary-100: #fee2e2;
+  --color-primary-200: #fecaca;
+  --color-primary-300: #fca5a5;
+  --color-primary-400: #f87171;
+  --color-primary-500: #f54747;
+  --color-primary-600: #dc2626;
+  --color-primary-700: #b91c1c;
+  --color-primary-800: #991b1b;
+  --color-primary-900: #7f1d1d;
+  --color-primary-950: #450a0a;
+  --color-primary: #f54747;
+
+  --color-accent: #6c63ff;
+  --color-dark-bg: #0d0d0d;
+  --color-light-bg: #ffffff;
+
+  --font-sans: Manrope, sans-serif;
+
+  --animate-shine: shine 3s linear infinite;
+  --animate-blink: blink 0.7s steps(1) infinite;
+
+  @keyframes shine {
+    to {
+      background-position: 200% center;
+    }
   }
+  @keyframes blink {
+    50% {
+      border-color: transparent;
+    }
+  }
+}
+
+/*
+  The default border color has changed to `currentcolor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
+
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentcolor);
+  }
+}
+
+/* Custom styles to preserve original design */
+html {
+  scroll-behavior: smooth;
+}
+
+.text-gradient {
+  background: linear-gradient(
+    89.81deg,
+    #9845E8 -1.72%,
+    #33D2FF 54.05%,
+    #DD5789 99.78%,
+    #9845E8 150%
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: shine 3s linear infinite;
+}
+
+.typing-text {
+  display: inline-block;
+  border-right: 2px solid currentColor;
+  padding-right: 3px;
+  animation: blink 0.7s steps(1) infinite;
+}
+
+.nav-link-active {
+  color: #F54747;
+}
+
+.gradient-border {
+  position: relative;
+  background: linear-gradient(to right, #EC4899, #A855F7);
+  padding: 3px;
+  border-radius: 9999px;
+  width: fit-content;
+  height: fit-content;
+}
+
+.gradient-border::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 9999px;
+  padding: 3px;
+  background: linear-gradient(to right, #EC4899, #A855F7);
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+@keyframes shine {
+  to {
+    background-position: 200% center;
+  }
+}
+
+@keyframes blink {
+  50% {
+    border-color: transparent;
+  }
+}
+
+/* Slide transition styles */
+.slide-enter-active,
+.slide-leave-active {
+  transition: transform 0.3s ease;
+}
+
+.slide-enter-from,
+.slide-leave-to {
+  transform: translateX(100%);
+}
+
+/* Ensure Nuxt UI doesn't override our custom colors */
+.dark .bg-darkBg {
+  background-color: #0d0d0d !important;
+}
+
+.bg-lightBg {
+  background-color: #ffffff !important;
 }

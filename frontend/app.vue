@@ -3,6 +3,7 @@
     <NuxtLayout>
       <NuxtPage />
     </NuxtLayout>
+    <UToaster position="top-right" />
   </div>
 </template>
 

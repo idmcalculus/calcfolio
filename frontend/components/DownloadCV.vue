@@ -14,8 +14,7 @@
 
 <script setup lang="ts">
 import type { Ref } from 'vue';
-import { onMounted, inject } from 'vue'
-import AOS from 'aos'
+import { inject } from 'vue'
 
 interface Props {
   width?: string
@@ -35,8 +34,4 @@ const showCVModal = inject<Ref<boolean>>('showCVModal')
 const openModal = () => {
   if (showCVModal) showCVModal.value = true
 }
-
-onMounted(() => {
-  AOS.init({ duration: 800 })
-})
 </script>

@@ -1,5 +1,5 @@
 <template>
-	<section class="my-12 px-6 max-w-screen-xl mx-auto" data-aos="fade-up">
+	<section class="my-12 px-6 max-w-(--breakpoint-xl) mx-auto" data-aos="fade-up">
 		<div class=" mb-8 text-center md:text-left">
 			<h2 class="text-2xl md:text-3xl font-bold">Some of my work</h2>
 			<SectionDivider />
@@ -22,7 +22,6 @@
   
 <script setup lang="ts">
   import { ref, onMounted, computed } from 'vue'
-  import AOS from 'aos'
   import ProjectCard from './ProjectCard.vue'
   
   interface Props {
@@ -38,7 +37,6 @@
   })
 
   onMounted(async () => {
-	AOS.init({ duration: 800 })
 	for (const project of limitedProjects.value) {
 		project.image = await getProjectImage(project)
 	}

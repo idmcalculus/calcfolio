@@ -1,5 +1,5 @@
 <template>
-  <section class="testimonials-section my-12 px-4 md:px-6 max-w-screen-xl mx-auto" data-aos="fade-up">
+  <section class="testimonials-section my-12 px-4 md:px-6 max-w-(--breakpoint-xl) mx-auto" data-aos="fade-up">
     <div class="mb-6 w-full text-center md:text-left">
       <h2 class="text-2xl md:text-3xl font-extrabold">Testimonials</h2>
       <SectionDivider/>
@@ -50,17 +50,12 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
-import AOS from 'aos'
+import { ref } from 'vue'
 import { Splide, SplideSlide } from '@splidejs/vue-splide'
 import '@splidejs/splide/css'
 
 import TestimonialCard from './TestimonialCard.vue'
 import SectionDivider from './SectionDivider.vue'
-
-onMounted(() => {
-  AOS.init({ duration: 800 })
-})
 
 interface Testimonial {
   name: string

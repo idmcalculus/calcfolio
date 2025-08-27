@@ -1,5 +1,5 @@
 <template>
-  <div class="container mx-auto p-6 max-w-screen-xl">
+  <div class="container mx-auto p-6 max-w-(--breakpoint-xl)">
     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
       <h2 class="text-2xl font-semibold mb-4 sm:mb-0">Messages Dashboard</h2>
       
@@ -34,7 +34,7 @@
     </div>
 
     <!-- Message Chart -->
-    <div class="mb-8 bg-white dark:bg-gray-800 rounded shadow">
+    <div class="mb-8 bg-white dark:bg-gray-800 rounded shadow-sm">
       <ClientOnly> <!-- Ensure chart renders only on client -->
          <MessageChart />
          <template #fallback>
@@ -44,7 +44,7 @@
     </div>
 
     <!-- Message Table -->
-    <div class="bg-white dark:bg-gray-800 rounded shadow">
+    <div class="bg-white dark:bg-gray-800 rounded shadow-sm">
        <ClientOnly> <!-- Ensure table (with client-side fetch) renders only on client -->
          <MessageTable />
           <template #fallback>

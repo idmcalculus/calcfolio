@@ -5,9 +5,9 @@
     <form class="space-y-4" @submit.prevent="handleSubmit">
       <div class="relative">
         <input
+          id="name"
           v-model="form.name"
           type="text"
-          id="name"
           required
           class="form-input peer"
           placeholder=" "
@@ -17,9 +17,9 @@
 
       <div class="relative">
         <input
+          id="email"
           v-model="form.email"
           type="email"
-          id="email"
           required
           class="form-input peer"
           placeholder=" "
@@ -29,9 +29,9 @@
 
       <div class="relative">
         <input
+          id="subject"
           v-model="form.subject"
           type="text"
-          id="subject"
           required
           class="form-input peer"
           placeholder=" "
@@ -41,8 +41,8 @@
 
       <div class="relative">
         <textarea
-          v-model="form.message"
           id="message"
+          v-model="form.message"
           rows="4"
           required
           class="form-input peer"
@@ -68,10 +68,9 @@
 
 <script setup lang="ts">
   import { ref } from 'vue'
-  import { useReCaptcha } from 'vue-recaptcha-v3'
-  import { useToast } from 'vue-toastification' // Import useToast
 
   const { contact } = useApi()
+  const toast = useToast()
 
   const form = ref({
     name: '',
@@ -83,19 +82,39 @@
   const loading = ref(false)
   const responseMsg = ref('') // Keep for potential inline messages if needed, or remove
   const success = ref(false)
-  const toast = useToast() // Get toast interface
 
   // --- reCAPTCHA Setup ---
-  const recaptchaInstance = useReCaptcha()
+  const config = useRuntimeConfig()
 
   const getRecaptchaToken = async () => {
-    if (!recaptchaInstance) {
-      console.error('reCAPTCHA instance not available. Check plugin initialization.');
-      throw new Error('reCAPTCHA not loaded');
+    // Skip reCAPTCHA entirely if not configured or not in client
+    if (!config.public.recaptchaSiteKey || !import.meta.client) {
+      return null;
     }
-    await recaptchaInstance.recaptchaLoaded() // Wait for the script to load
-    const token = await recaptchaInstance.executeRecaptcha('contact_form') // 'contact_form' is the action name
-    return token
+    
+    try {
+      // Check if the reCAPTCHA plugin is actually available
+      const nuxtApp = useNuxtApp()
+      if (!nuxtApp.vueApp.config.globalProperties.$recaptcha && !nuxtApp.$recaptcha) {
+        console.warn('reCAPTCHA plugin not registered');
+        return null;
+      }
+      
+      // Only try to use reCAPTCHA if everything is properly set up
+      const { useReCaptcha } = await import('vue-recaptcha-v3')
+      const recaptchaInstance = useReCaptcha()
+      
+      if (!recaptchaInstance) {
+        return null;
+      }
+      
+      await recaptchaInstance.recaptchaLoaded()
+      const token = await recaptchaInstance.executeRecaptcha('contact_form')
+      return token
+    } catch {
+      // Silently handle the injection error
+      return null;
+    }
   }
   // --- End reCAPTCHA Setup ---
 
@@ -107,30 +126,40 @@
     try {
       // --- Get reCAPTCHA token ---
       const recaptchaToken = await getRecaptchaToken()
-      if (!recaptchaToken) {
-        throw new Error('Failed to get reCAPTCHA token.')
-      }
       // --- End Get reCAPTCHA token ---
 
       const responseData = await contact.submit({
         ...form.value,
-        recaptcha_token: recaptchaToken
+        recaptcha_token: recaptchaToken || ''
       })
       // Use toast for feedback
       if (responseData.success) {
-        toast.success(responseData.message || 'Message sent successfully!');
+        toast.add({
+          title: 'Success',
+          description: responseData.message || 'Message sent successfully!',
+          color: 'success'
+          
+        });
         form.value = { name: '', email: '', subject: '', message: '' }; // Reset form
         success.value = true;
         responseMsg.value = ''; // Clear any inline message
       } else {
-        toast.error(responseData.message || 'Submission failed. Please check your input.');
+        toast.add({
+          title: 'Error',
+          description: responseData.message || 'Submission failed. Please check your input.',
+          color: 'error'
+        });
         success.value = false;
         responseMsg.value = responseData.message || 'Submission failed'; // Optionally keep inline message
       }
     } catch (error: unknown) { // Type error as unknown
       console.error('Contact form submission error:', error);
       const errorMsg = error instanceof Error ? error.message : 'An unexpected error occurred. Please try again.';
-      toast.error(errorMsg); // Show error toast
+      toast.add({
+        title: 'Error',
+        description: errorMsg,
+        color: 'error'
+      });
       responseMsg.value = errorMsg; // Optionally show inline message
       success.value = false
     } finally {
@@ -141,8 +170,23 @@
 
 <style lang="postcss">
 .form-input {
-  @apply w-full px-4 py-3 rounded bg-white dark:bg-gray-800 text-black dark:text-white outline-none transition-all duration-300 border-2 border-transparent;
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border-radius: 0.375rem;
+  background-color: rgb(255 255 255);
+  color: rgb(0 0 0);
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  transition-property: all;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 300ms;
+  border: 2px solid transparent;
   background-clip: padding-box;
+}
+
+.dark .form-input {
+  background-color: rgb(31 41 55);
+  color: rgb(255 255 255);
 }
 
 .form-input:focus {
@@ -151,7 +195,14 @@
 }
 
 .form-label {
-  @apply absolute text-gray-500 transition-all duration-300 pointer-events-none px-1;
+  position: absolute;
+  color: rgb(107 114 128);
+  transition-property: all;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 300ms;
+  pointer-events: none;
+  padding-left: 0.25rem;
+  padding-right: 0.25rem;
   left: 1rem;
   top: 50%;
   transform: translateY(-50%);
@@ -159,9 +210,17 @@
 
 .form-input:focus ~ .form-label,
 .form-input:not(:placeholder-shown) ~ .form-label {
-  @apply text-sm text-blue-500 bg-white dark:bg-gray-800;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  color: rgb(59 130 246);
+  background-color: rgb(255 255 255);
   top: 0;
   transform: translateY(-50%) scale(0.85);
+}
+
+.dark .form-input:focus ~ .form-label,
+.dark .form-input:not(:placeholder-shown) ~ .form-label {
+  background-color: rgb(31 41 55);
 }
 
 textarea ~ .form-label {

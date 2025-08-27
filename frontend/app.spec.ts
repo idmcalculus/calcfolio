@@ -47,7 +47,7 @@ describe('App.vue', () => {
     expect(header.exists()).toBe(true)
     const headerContainer = header.find('.container') // Find the container div
     expect(headerContainer.exists()).toBe(true)
-    expect(headerContainer.classes()).toContain('max-w-screen-xl')
+    expect(headerContainer.classes()).toContain('max-w-(--breakpoint-xl)')
 
     // Check logo link within container
     const logoLink = headerContainer.findComponent(MockNuxtLink) // Find the first NuxtLink (logo)

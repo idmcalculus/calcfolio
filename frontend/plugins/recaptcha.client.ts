@@ -7,7 +7,7 @@ export default defineNuxtPlugin((nuxtApp) => {
 
   if (!siteKey) {
     console.warn('reCAPTCHA site key is not configured. Please set NUXT_PUBLIC_RECAPTCHA_SITE_KEY environment variable.')
-    // Optionally, you could disable the plugin or handle this case differently
+    // Skip plugin registration entirely
     return;
   }
 

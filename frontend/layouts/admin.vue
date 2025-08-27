@@ -56,12 +56,17 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import { navigateTo } from '#app';
 import { useDarkMode } from '~/composables/useDarkMode';
 
 // Dark mode state and toggle function
-const { isDark, toggleDark } = useDarkMode();
+const { isDark, toggleDark, initializeTheme } = useDarkMode();
+
+// Initialize theme after component is mounted (client-side)
+onMounted(() => {
+  initializeTheme()
+})
 
 const { auth } = useApi();
 const loading = ref(false);
