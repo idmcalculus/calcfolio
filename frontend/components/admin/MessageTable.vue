@@ -60,17 +60,17 @@
     </div>
 
     <!-- Loading State -->
-    <div v-if="status === 'pending'" class="text-center py-10">
+    <div v-if="props.loading" class="text-center py-10">
       Loading messages...
     </div>
 
     <!-- Error State -->
-    <div v-else-if="error" class="text-center py-10 text-red-500">
-      Error loading messages: {{ error.message }}
+    <div v-else-if="props.error" class="text-center py-10 text-red-500">
+      Error loading messages: {{ props.error.message }}
     </div>
 
     <!-- Message Table -->
-    <div v-else-if="messages && messages.length > 0" class="overflow-x-auto">
+    <div v-else-if="paginatedMessages && paginatedMessages.length > 0" class="overflow-x-auto">
       <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-600">
         <thead class="bg-gray-50 dark:bg-gray-700">
           <tr>
@@ -100,7 +100,7 @@
           </tr>
         </thead>
         <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-          <tr v-for="message in messages" :key="message.id" :class="[{ 'font-semibold': !message.is_read }, selectedIds.includes(message.id) ? 'bg-blue-50 dark:bg-gray-700' : '']">
+          <tr v-for="message in paginatedMessages" :key="message.id" :class="[{ 'font-semibold': !message.is_read }, selectedIds.includes(message.id) ? 'bg-blue-50 dark:bg-gray-700' : '']">
             <td class="px-6 py-4 whitespace-nowrap">
                <input
                  v-model="selectedIds"
@@ -226,6 +226,14 @@ import type { Message } from '~/composables/useApi';
 const { admin } = useApi();
 const toast = useToast();
 
+// Props from parent component
+const props = defineProps<{
+  messages: Message[]
+  loading: boolean
+  error: Error | null
+  refresh: () => Promise<void>
+}>();
+
 // --- State for fetching and controls ---
 const currentPage = ref(1);
 const itemsPerPage = ref(15); // Match backend default
@@ -245,22 +253,21 @@ const confirmModalMessage = ref('');
 
 // --- Select All Logic ---
 const selectAll = computed({
-  get: () => messages.value.length > 0 && selectedIds.value.length === messages.value.length,
+  get: () => paginatedMessages.value.length > 0 && selectedIds.value.length === paginatedMessages.value.length,
   set: (value: boolean) => {
-    selectedIds.value = value ? messages.value.map(msg => msg.id) : [];
+    selectedIds.value = value ? paginatedMessages.value.map((msg: Message) => msg.id) : [];
   }
 });
 
-// --- Data Fetching ---
-// Fetch all messages once (without filters for client-side filtering)
-const { data: apiResponse, status, error, refresh } = await admin.messages.list({
-  limit: 1000, // Fetch a large number to get all messages for client-side filtering
-  lazy: false,
-  server: false,
-});
+// Use messages from props instead of API call
+const allMessages = computed(() => props.messages);
 
-// Computed properties for easier access
-const allMessages = computed(() => apiResponse.value?.data ?? []);
+// Paginated messages for display (client-side pagination)
+const paginatedMessages = computed(() => {
+  const start = (currentPage.value - 1) * itemsPerPage.value;
+  const end = start + itemsPerPage.value;
+  return filteredMessages.value.slice(start, end);
+});
 
 // Client-side filtering and sorting
 const filteredMessages = computed(() => {
@@ -303,12 +310,6 @@ const filteredMessages = computed(() => {
   return messages;
 });
 
-// Paginated messages for display
-const messages = computed(() => {
-  const start = (currentPage.value - 1) * itemsPerPage.value;
-  const end = start + itemsPerPage.value;
-  return filteredMessages.value.slice(start, end);
-});
 
 // Computed pagination info
 const pagination = computed(() => {
@@ -389,7 +390,7 @@ const executeBulkAction = async (action: BulkAction) => {
       color: 'success'
     });
     selectedIds.value = [];
-    await refresh();
+    await props.refresh();
 
   } catch (err: unknown) {
      const errorMsg = err instanceof Error ? err.message : 'An unexpected error occurred during bulk action.';
@@ -414,8 +415,10 @@ const viewMessage = async (message: Message) => {
       server: false,
     });
 
-    // Use the fresh data from the API (which will have is_read = true)
-    messageToView.value = freshMessage.value || message;
+    // Extract the message data from the API response
+    // The backend returns { success: true, data: Message }
+    const messageData = freshMessage.value?.data || message;
+    messageToView.value = messageData;
     isModalOpen.value = true;
 
     // Update the message in our local lists to reflect the read status
@@ -425,7 +428,7 @@ const viewMessage = async (message: Message) => {
     }
 
     // Also update in the current page's messages
-    const messageInCurrentPage = messages.value.find(m => m.id === message.id);
+    const messageInCurrentPage = paginatedMessages.value.find((m: Message) => m.id === message.id);
     if (messageInCurrentPage) {
       messageInCurrentPage.is_read = true;
     }
@@ -438,7 +441,7 @@ const viewMessage = async (message: Message) => {
     isModalOpen.value = true;
 
     // Still optimistically mark as read in the UI
-    const messageInList = messages.value.find(m => m.id === message.id);
+    const messageInList = paginatedMessages.value.find((m: Message) => m.id === message.id);
     if (messageInList && !messageInList.is_read) {
       messageInList.is_read = true;
     }

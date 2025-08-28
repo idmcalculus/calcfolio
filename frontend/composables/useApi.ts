@@ -95,6 +95,7 @@ export interface MessageListParams extends Record<string, unknown> {
   sort?: string
   order?: string // Allow string to be more flexible with existing code
   search?: string
+  status?: string // Add status parameter for filtering by message status
 }
 
 // Type for fetch options to avoid 'any'
@@ -144,17 +145,38 @@ export const useApi = () => {
   })
 
   /**
-   * Clean query parameters by removing null/undefined/empty values
-   * @param params - Raw parameters object
-   * @returns Cleaned parameters
-   */
-  const cleanQueryParams = (params: Record<string, unknown>): Record<string, unknown> => {
-    return Object.fromEntries(
-      Object.entries(params).filter(([_, value]) =>
-        value !== null && value !== undefined && value !== ''
-      )
-    )
-  }
+    * Clean query parameters by removing null/undefined/empty values
+    * but keeping valid defaults for pagination
+    * @param params - Raw parameters object
+    * @returns Cleaned parameters
+    */
+   const cleanQueryParams = (params: Record<string, unknown>): Record<string, unknown> => {
+     const cleaned = Object.fromEntries(
+       Object.entries(params).filter(([key, value]) => {
+         // Always include pagination parameters with defaults
+         if (['page', 'limit', 'sort', 'order'].includes(key)) {
+           return true
+         }
+         // Include other parameters if they have valid values
+         return value !== null && value !== undefined && value !== ''
+       })
+     )
+
+     // Ensure pagination defaults are set and properly typed
+     const result = {
+       page: 1,
+       limit: Math.min(cleaned.limit as number || 15, 10000), // Allow up to 10000 as requested
+       sort: 'created_at',
+       order: 'desc',
+       ...cleaned,
+     }
+
+     // Ensure numeric parameters are properly typed
+     if (result.page) result.page = Number(result.page)
+     if (result.limit) result.limit = Number(result.limit)
+
+     return result
+   }
 
   /**
    * Enhanced error handling utility
@@ -313,27 +335,56 @@ export const useApi = () => {
      * @param options - Additional useFetch options
      * @returns Reactive auth status
      */
-    checkAuth: async (options: Record<string, unknown> = {}): Promise<{ authenticated: boolean }> => {
-      const url = '/admin/check'
-      const requestOptions = {
-        ...getBaseOptions(),
-        baseURL,
-        // Add cache buster by default to ensure fresh requests
-        query: { t: Date.now(), ...(options.query || {}) },
-        ...options,
-      }
+     checkAuth: async (options: Record<string, unknown> = {}): Promise<{ authenticated: boolean }> => {
+       const url = '/admin/check'
+       const requestOptions = {
+         ...getBaseOptions(),
+         baseURL,
+         // Add cache buster by default to ensure fresh requests
+         query: { t: Date.now(), ...(options.query || {}) },
+         ...options,
+       }
 
-      logApiRequest(url, requestOptions)
+       logApiRequest(url, requestOptions)
 
-      try {
-        const response = await $fetch<{ authenticated: boolean }>(url, requestOptions)
-        logApiResponse(url, response)
-        return response
-      } catch (error) {
-        logApiResponse(url, undefined, error)
-        return handleApiError(error)
-      }
-    },
+       try {
+         const response = await $fetch<{ authenticated: boolean }>(url, requestOptions)
+         logApiResponse(url, response)
+         return response
+       } catch (error) {
+         logApiResponse(url, undefined, error)
+         return handleApiError(error)
+       }
+     },
+
+     /**
+      * Recover session after resource exhaustion or connection issues
+      * @returns Promise with recovery status
+      */
+     recoverSession: async (): Promise<{ recovered: boolean; authenticated: boolean; message: string }> => {
+       const url = '/admin/recover-session'
+       const options = {
+         ...getBaseOptions(),
+         baseURL,
+         method: 'POST' as const,
+       }
+
+       logApiRequest(url, options)
+
+       try {
+         const response = await $fetch<{ recovered: boolean; authenticated: boolean; message: string }>(url, options)
+         logApiResponse(url, response)
+         return response
+       } catch (error) {
+         logApiResponse(url, undefined, error)
+         // Don't throw error for session recovery - return failed state
+         return {
+           recovered: false,
+           authenticated: false,
+           message: 'Session recovery failed'
+         }
+       }
+     },
   }
 
   /**
@@ -375,38 +426,37 @@ export const useApi = () => {
   const admin = {
     messages: {
       /**
-       * List messages with pagination/filtering - Uses useFetch for reactive data
-       * @param params - Query parameters for filtering and pagination
-       * @param options - Additional useFetch options
-       * @returns Reactive paginated message list
-       */
-      list: (params: MessageListParams = {}, options: Record<string, unknown> = {}) => {
-        const cleanedParams = cleanQueryParams(params as Record<string, unknown>)
+        * List messages with pagination/filtering - Uses useFetch for reactive data
+        * @param params - Query parameters for filtering and pagination
+        * @param options - Additional useFetch options
+        * @returns Reactive paginated message list
+        */
+       list: (params: MessageListParams = {}, options: Record<string, unknown> = {}) => {
+         const cleanedParams = cleanQueryParams(params as Record<string, unknown>)
 
-        return useFetch<PaginatedResponse<Message>>('/admin/messages', {
-          ...getBaseOptions(),
-          baseURL,
-          query: cleanedParams,
-          server: false, // Client-side for authenticated routes
-          lazy: false,   // Immediate fetch
-          ...options,
-        })
-      },
+         return useFetch<PaginatedResponse<Message>>('/admin/messages', {
+           ...getBaseOptions(),
+           baseURL,
+           query: cleanedParams,
+           // Remove server and lazy options that were causing validation issues
+           ...options,
+         })
+       },
 
       /**
-       * Get individual message - Uses useFetch for reactive record fetching
-       * @param id - Message ID
-       * @param options - Additional useFetch options
-       * @returns Reactive message data
-       */
-      get: (id: number, options: Record<string, unknown> = {}) => {
-        return useFetch<Message>(`/admin/messages/${id}`, {
-          ...getBaseOptions(),
-          baseURL,
-          server: false, // Client-side for authenticated routes
-          ...options,
-        })
-      },
+        * Get individual message - Uses useFetch for reactive record fetching
+        * @param id - Message ID
+        * @param options - Additional useFetch options
+        * @returns Reactive message data wrapped in API response
+        */
+       get: (id: number, options: Record<string, unknown> = {}) => {
+         return useFetch<ApiResponse<Message>>(`/admin/messages/${id}`, {
+           ...getBaseOptions(),
+           baseURL,
+           // Remove server option that was causing issues
+           ...options,
+         })
+       },
 
       /**
        * Bulk action on messages - Uses $fetch for imperative action

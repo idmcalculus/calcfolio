@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Handlers;
+namespace App\Presentation\Handlers;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -24,7 +24,7 @@ class CustomErrorHandler extends ErrorHandler
     {
         $exception = $this->exception;
         $statusCode = $this->getStatusCode();
-        
+
         // Create structured error response
         $errorData = [
             'success' => false,
@@ -74,7 +74,7 @@ class CustomErrorHandler extends ErrorHandler
             400 => 'bad_request',
             401 => 'unauthorized',
             403 => 'forbidden',
-            404 => 'not_found', 
+            404 => 'not_found',
             405 => 'method_not_allowed',
             422 => 'validation_error',
             429 => 'rate_limited',
@@ -91,7 +91,7 @@ class CustomErrorHandler extends ErrorHandler
             $exceptionClass = basename(str_replace('\\', '/', get_class($exception)));
             return strtoupper($exceptionClass) . '_' . $statusCode;
         }
-        
+
         return 'HTTP_ERROR_' . $statusCode;
     }
 

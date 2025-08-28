@@ -2,34 +2,18 @@
 
 require __DIR__ . '/../vendor/autoload.php';
 
-// use Dotenv\Dotenv; // Removed to fix linter error
-use Psr\Http\Message\ResponseInterface as Response;
-use Psr\Http\Message\ServerRequestInterface as Request;
-use Slim\Factory\AppFactory;
-// Resend library imported via composer autoload
-use App\Services\EmailService;
-use App\Services\WebhookVerifier;
-use App\Middleware\ErrorHandlingMiddleware;
-use App\Handlers\CustomErrorHandler;
-use App\Models\Admin; // Add Admin model
-use App\Models\Message;
-use App\Models\EventLog;
-use Illuminate\Database\Capsule\Manager as Capsule;
-use Illuminate\Pagination\Paginator; // Add Paginator
-use Illuminate\Support\Facades\DB; // For raw queries if needed
-use ReCaptcha\ReCaptcha; // Add ReCaptcha
-use ReCaptcha\RequestMethod\CurlPost; // Add ReCaptcha method
-use Slim\Exception\HttpNotFoundException;
-use Slim\Exception\HttpMethodNotAllowedException;
-
-// Load environment variables (optional for production)
+// Load environment variables
 $dotenvPath = __DIR__ . '/..';
 if (file_exists($dotenvPath . '/.env')) {
     $dotenv = Dotenv\Dotenv::createImmutable($dotenvPath);
     $dotenv->load();
 }
 
-// --- CORS handling is now done entirely through Slim middleware ---
+// --- PHP Configuration for Large Datasets ---
+// Increase memory limit and execution time for large data operations
+ini_set('memory_limit', '512M'); // Increase from default 128M
+ini_set('max_execution_time', '300'); // 5 minutes for large queries
+ini_set('max_input_time', '300'); // 5 minutes for large inputs
 
 // --- Session Configuration ---
 // Only configure session if it hasn't been started yet and no output has been sent
@@ -41,7 +25,7 @@ if (!session_id() && !headers_sent()) {
 
     $forwardedProto = $_SERVER['HTTP_X_FORWARDED_PROTO'] ?? '';
     $isHttps = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') || strtolower($forwardedProto) === 'https';
-    $inProd = ($_ENV['APP_ENV'] ?? 'development') === 'production';
+    $inProd = (($_ENV['APP_ENV'] ?? getenv('APP_ENV')) ?: 'development') === 'production';
 
     // Cross-site cookies (frontend on a different origin) require SameSite=None; Secure
     $useSecure = ($inProd || $isHttps) ? '1' : '0';
@@ -54,515 +38,109 @@ if (!session_id() && !headers_sent()) {
     session_start(); // Start the session
 }
 
-$app = AppFactory::create();
+// Initialize dependency injection container
+$containerBuilder = new \DI\ContainerBuilder();
+$containerConfig = require __DIR__ . '/config/container.php';
+$container = $containerConfig($containerBuilder);
 
-// Setup error handling
-$allowedOrigins = array_map('trim', explode(',', $_ENV['CORS_ALLOWED_ORIGINS'] ?? 'http://localhost:3000'));
-$isDevelopment = ($_ENV['APP_ENV'] ?? 'development') !== 'production';
+// Get settings
+$settings = $container->get('settings');
+$allowedOrigins = $settings['cors']['allowed_origins'];
+$isDevelopment = (($_ENV['APP_ENV'] ?? getenv('APP_ENV')) ?: 'development') !== 'production';
 
-// Add error middleware and set custom error handler
-$errorMiddleware = $app->addErrorMiddleware(true, true, true);
-$customErrorHandler = new CustomErrorHandler($allowedOrigins, $isDevelopment);
-$errorMiddleware->setDefaultErrorHandler($customErrorHandler);
+// Create Slim app
+$app = \Slim\Factory\AppFactory::create();
 
-// Add enhanced error handling middleware that ensures CORS headers on all responses
-$app->add(new ErrorHandlingMiddleware($allowedOrigins, $isDevelopment));
+// Add error handling middleware
+$errorMiddleware = $app->addErrorMiddleware($isDevelopment, $isDevelopment, $isDevelopment);
 
-// Comprehensive CORS middleware that handles all requests including OPTIONS
-$app->add(function (Request $request, $handler) use ($allowedOrigins) {
-    $origin = $request->getHeaderLine('Origin');
-    $originAllowed = $origin && in_array($origin, $allowedOrigins, true);
-    
-    // Handle preflight OPTIONS requests
-    if (strtoupper($request->getMethod()) === 'OPTIONS') {
-        $response = new \Slim\Psr7\Response(204);
-        
-        if ($originAllowed) {
-            $allowHeaders = $request->getHeaderLine('Access-Control-Request-Headers') ?: 'Content-Type, Authorization, X-Requested-With';
-            $response = $response
-                ->withHeader('Access-Control-Allow-Origin', $origin)
-                ->withHeader('Vary', 'Origin')
-                ->withHeader('Access-Control-Allow-Credentials', 'true')
-                ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PATCH, DELETE, OPTIONS')
-                ->withHeader('Access-Control-Allow-Headers', $allowHeaders)
-                ->withHeader('Access-Control-Max-Age', '86400')
-                ->withHeader('Content-Length', '0');
-        } else {
-            // Even for non-allowed origins, return a proper response to avoid browser errors
-            $response = $response
-                ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PATCH, DELETE, OPTIONS')
-                ->withHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With')
-                ->withHeader('Content-Length', '0');
-        }
-        return $response;
-    }
+// Add CORS middleware
+$app->add($container->get(\App\Presentation\Middleware\CorsMiddleware::class));
 
-    // For non-OPTIONS requests, process normally and add CORS headers to response
-    $response = $handler->handle($request);
-    
-    if ($originAllowed) {
-        $response = $response
-            ->withHeader('Access-Control-Allow-Origin', $origin)
-            ->withHeader('Vary', 'Origin')
-            ->withHeader('Access-Control-Allow-Credentials', 'true');
-    }
-    
-    return $response;
-});
+// Setup database and create tables
+$databaseSetupService = $container->get(\App\Infrastructure\Database\DatabaseSetupService::class);
+$databaseSetupService->createTablesIfNotExist();
 
-// Remove the separate OPTIONS route as it's handled in middleware now
-
-// Initialize Eloquent
-$capsule = new Capsule;
-$capsule->addConnection(require __DIR__ . '/config/database.php');
-$capsule->setAsGlobal();
-$capsule->bootEloquent();
-
-// --- Setup Eloquent Pagination ---
-// Tell Paginator how to resolve the current page from the request query parameters
-Paginator::currentPageResolver(function ($pageName = 'page') {
-    // Get query parameters from the current request (assuming $app is accessible or pass request)
-    // This part might need adjustment depending on how Slim handles request context here.
-    // A simpler approach might be to just read $_GET directly if not in a route handler context.
+// Setup Eloquent pagination
+\Illuminate\Pagination\Paginator::currentPageResolver(function ($pageName = 'page') {
     return (int) ($_GET[$pageName] ?? 1);
 });
-// Optional: Configure base path if needed (usually not required for API)
-// Paginator::currentPathResolver(function () { return '/admin/messages'; });
 
+// Get controllers
+$contactController = $container->get(\App\Application\Controllers\ContactController::class);
+$adminAuthController = $container->get(\App\Application\Controllers\AdminAuthController::class);
+$adminController = $container->get(\App\Application\Controllers\AdminController::class);
+$webhookController = $container->get(\App\Application\Controllers\WebhookController::class);
 
-// Create tables if they don't exist
-if (!Capsule::schema()->hasTable('messages')) {
-    Capsule::schema()->create('messages', function ($table) {
-        $table->id();
-        $table->string('name');
-        $table->string('email');
-        $table->string('subject');
-        $table->text('message');
-        $table->string('status')->default(Message::STATUS_PENDING);
-        $table->string('message_id')->unique()->nullable(); // Make nullable if needed, or ensure always set
-        $table->boolean('is_read')->default(0); // Add is_read column
-        $table->timestamps();
-    });
-}
+// Get middleware
+$adminAuthMiddleware = $container->get(\App\Presentation\Middleware\AdminAuthMiddleware::class);
 
-// Create admins table (redundant if migrate_schema.php was run, but safe)
-if (!Capsule::schema()->hasTable('admins')) {
-    Capsule::schema()->create('admins', function ($table) {
-        $table->id();
-        $table->string('username')->unique();
-        $table->string('password_hash');
-        $table->timestamps();
-    });
-}
+// Routes
 
-if (!Capsule::schema()->hasTable('event_logs')) {
-    Capsule::schema()->create('event_logs', function ($table) {
-        $table->id();
-        $table->string('event_type');
-        $table->json('payload')->nullable();
-        $table->timestamp('created_at')->useCurrent();
-    });
-}
+// Public routes
+$app->post('/contact', [$contactController, 'submit']);
+$app->get('/message/{messageId}', [$contactController, 'getMessageStatus']);
+
+// Admin authentication routes
+$app->map(['GET', 'POST'], '/admin/login', [$adminAuthController, 'login']);
+$app->post('/admin/logout', [$adminAuthController, 'logout']);
+$app->get('/admin/check', [$adminAuthController, 'checkAuth']);
+$app->post('/admin/recover-session', [$adminAuthController, 'recoverSession']);
+
+// Protected admin routes
+$app->group('/admin', function ($group) use ($adminController) {
+    // More specific routes first
+    $group->get('/messages/stats', [$adminController, 'getStatistics']);
+    $group->patch('/bulk/messages', [$adminController, 'bulkAction']);
+    // More general routes last
+    $group->get('/messages/{id}', [$adminController, 'getMessage']);
+    $group->get('/messages', [$adminController, 'getMessages']);
+})->add($adminAuthMiddleware);
+
+// Resend webhook (public but secured via signature)
+$app->post('/resend-webhook', [$webhookController, 'handleResendWebhook']);
+
+// OpenAPI documentation routes
+$app->get('/docs.html', function ($request, $response) {
+    $docsPath = __DIR__ . '/../public/docs.html';
+    if (file_exists($docsPath)) {
+        $response->getBody()->write(file_get_contents($docsPath));
+        return $response->withHeader('Content-Type', 'text/html');
+    }
+    throw new \Slim\Exception\HttpNotFoundException($request);
+});
+
+$app->get('/openapi.json', function ($request, $response) {
+    $openapiPath = __DIR__ . '/../public/openapi.json';
+    if (file_exists($openapiPath)) {
+        $response->getBody()->write(file_get_contents($openapiPath));
+        return $response->withHeader('Content-Type', 'application/json');
+    }
+    throw new \Slim\Exception\HttpNotFoundException($request);
+});
+
+$app->get('/openapi.yaml', function ($request, $response) {
+    $openapiPath = __DIR__ . '/../public/openapi.yaml';
+    if (file_exists($openapiPath)) {
+        $response->getBody()->write(file_get_contents($openapiPath));
+        return $response->withHeader('Content-Type', 'application/yaml');
+    }
+    throw new \Slim\Exception\HttpNotFoundException($request);
+});
+
+// Catch-all route for 404
+$app->any('[/{path:.*}]', function ($request, $response) {
+    throw new \Slim\Exception\HttpNotFoundException($request);
+});
 
 // Log server start
-EventLog::create([
-    'event_type' => 'script_initialized',
+\App\Models\EventLog::create([
+    'event_type' => 'server_started',
     'payload' => [
         'php_version' => PHP_VERSION,
         'server_time' => date('c'),
-        'environment' => $_ENV['APP_ENV'] ?? 'development'
+        'environment' => ($_ENV['APP_ENV'] ?? getenv('APP_ENV')) ?: 'development'
     ]
 ]);
-
-// --- Helper Function for Authentication Check ---
-$isAdminAuthenticated = function () {
-    return isset($_SESSION['admin_logged_in']) && $_SESSION['admin_logged_in'] === true;
-};
-
-// Contact form endpoint
-$app->post('/contact', function (Request $request, Response $response) {
-    try {
-        $data = json_decode($request->getBody()->getContents(), true);
-        $recaptchaSecret = $_ENV['RECAPTCHA_V3_SECRET_KEY'] ?? null;
-
-        // --- reCAPTCHA v3 Verification ---
-        if (!$recaptchaSecret) {
-             error_log('reCAPTCHA secret key not configured.');
-             throw new Exception('Server configuration error.');
-        }
-        if (!isset($data['recaptcha_token'])) {
-            throw new Exception('reCAPTCHA token missing.');
-        }
-
-        $recaptcha = new ReCaptcha($recaptchaSecret, new CurlPost());
-        $recaptchaResponse = $recaptcha->verify($data['recaptcha_token'], $request->getServerParams()['REMOTE_ADDR'] ?? null);
-
-        if (!$recaptchaResponse->isSuccess() || $recaptchaResponse->getScore() < 0.5) { // Adjust score threshold as needed
-            error_log('reCAPTCHA verification failed. Score: ' . $recaptchaResponse->getScore() . ' Errors: ' . implode(', ', $recaptchaResponse->getErrorCodes()));
-            throw new Exception('reCAPTCHA verification failed. Are you a bot?');
-        }
-        // --- End reCAPTCHA Verification ---
-
-
-        if (!isset($data['name'], $data['email'], $data['subject'], $data['message'])) {
-            throw new Exception('Invalid submission data');
-        }
-
-        // Sanitize and lowercase email
-        $email = strtolower(trim($data['email']));
-        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-             throw new Exception('Invalid email format provided.');
-        }
-
-        // Generate unique message ID (sanitize for Resend tags - only ASCII letters, numbers, underscores, dashes)
-        $messageId = 'msg_' . uniqid() . '_' . bin2hex(random_bytes(4));
-
-        // Initialize Resend EmailService
-        $emailService = new EmailService();
-
-        try {
-            // Send both emails using Resend
-            $adminEmailResult = $emailService->sendContactNotification($data, $messageId);
-            $autoReplyResult = $emailService->sendAutoReply([
-                'name' => $data['name'],
-                'email' => $email // Use sanitized email
-            ], $messageId);
-
-            // Save to database using Eloquent (use lowercased email)
-            Message::create([
-                'name' => $data['name'],
-                'email' => $email, // Use sanitized email
-                'subject' => $data['subject'],
-                'message' => $data['message'],
-                'message_id' => $messageId
-            ]);
-
-            $payload = ['success' => true, 'message' => 'Message received. Thank you!'];
-            $response->getBody()->write(json_encode($payload));
-            return $response->withHeader('Content-Type', 'application/json');
-        } catch (Exception $e) {
-            throw new Exception('Email delivery failed: ' . $e->getMessage());
-        }
-    } catch (Exception $e) {
-        error_log('General error: ' . $e->getMessage());
-        $payload = [
-            'success' => false,
-            'message' => 'An error occurred',
-            'debug' => $e->getMessage()
-        ];
-        $response->getBody()->write(json_encode($payload));
-        return $response
-            ->withHeader('Content-Type', 'application/json')
-            ->withStatus(500);
-    }
-});
-
-// Add status check endpoint
-$app->get('/message/{messageId}', function (Request $request, Response $response, array $args) {
-    $message = Message::where('message_id', $args['messageId'])->first();
-    
-    $response->getBody()->write(json_encode($message ?? ['error' => 'Message not found']));
-    return $response->withHeader('Content-Type', 'application/json');
-});
-
-// Resend webhook endpoint
-$app->post('/resend-webhook', function (Request $request, Response $response) {
-    $payload = $request->getBody()->getContents();
-    $signature = $request->getHeaderLine('resend-signature');
-    
-    // Verify webhook signature
-    $verifier = new WebhookVerifier();
-    if (!$verifier->verify($payload, $signature)) {
-        error_log('Resend webhook signature verification failed');
-        return $response->withStatus(401);
-    }
-    
-    $event = json_decode($payload, true);
-    
-    // Log webhook event
-    EventLog::create([
-        'event_type' => 'resend_webhook',
-        'payload' => $event
-    ]);
-    
-    error_log('Resend webhook received: ' . $payload);
-    
-    // Extract message ID from tags
-    $messageId = null;
-    if (isset($event['data']['tags'])) {
-        foreach ($event['data']['tags'] as $tag) {
-            if ($tag['name'] === 'message_id') {
-                $messageId = $tag['value'];
-                break;
-            }
-        }
-    }
-    
-    // Process event
-    $eventType = $event['type'] ?? '';
-    
-    error_log("Processing Resend event: $eventType for message: $messageId");
-    
-    if ($messageId) {
-        $status = match($eventType) {
-            'email.delivered' => Message::STATUS_DELIVERED,
-            'email.bounced' => Message::STATUS_BOUNCED,
-            'email.opened' => Message::STATUS_OPENED,
-            'email.clicked' => Message::STATUS_CLICKED,
-            'email.complained' => Message::STATUS_COMPLAINED,
-            default => null
-        };
-
-        if ($status) {
-            Message::where('message_id', $messageId)
-                ->update(['status' => $status]);
-        }
-    }
-
-    return $response->withStatus(200);
-});
-
-// --- Admin Authentication Endpoints ---
-
-// Admin login with method validation - this will properly throw 405 for wrong methods
-$app->map(['GET', 'POST', 'PATCH', 'DELETE'], '/admin/login', function (Request $request, Response $response) {
-    // Only allow POST method
-    if ($request->getMethod() !== 'POST') {
-        throw new HttpMethodNotAllowedException($request);
-    }
-    
-    $data = json_decode($request->getBody()->getContents(), true);
-    // Trim and potentially lowercase username if it's treated like an email
-    $usernameInput = trim($data['username'] ?? '');
-    // Decide whether to lowercase based on if usernames ARE emails or just strings
-    // If they can be mixed case and are not emails, don't lowercase here.
-    // Assuming username might be an email for login consistency:
-    $username = strtolower($usernameInput);
-    $password = $data['password'] ?? null;
-
-    if (!$username || !$password) {
-        $response->getBody()->write(json_encode(['success' => false, 'message' => 'Username and password required.']));
-        return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
-    }
-
-    try {
-        $admin = Admin::where('username', $username)->first();
-
-        if ($admin && password_verify($password, $admin->password_hash)) {
-            // Password matches - Log the admin in
-            session_regenerate_id(true); // Regenerate ID on login
-            $_SESSION['admin_logged_in'] = true;
-            $_SESSION['admin_username'] = $admin->username;
-            $_SESSION['last_regen'] = time(); // Set initial regeneration time
-
-            $response->getBody()->write(json_encode(['success' => true, 'message' => 'Login successful.']));
-            return $response->withHeader('Content-Type', 'application/json')->withStatus(200);
-        } else {
-            // Invalid credentials
-            error_log("Admin login failed for username: {$username}"); // Log failed attempt
-            $response->getBody()->write(json_encode(['success' => false, 'message' => 'Invalid username or password.']));
-            return $response->withHeader('Content-Type', 'application/json')->withStatus(401); // Unauthorized
-        }
-    } catch (\Exception $e) {
-        error_log('Admin login error: ' . $e->getMessage());
-        $response->getBody()->write(json_encode(['success' => false, 'message' => 'An internal error occurred during login.']));
-        return $response->withHeader('Content-Type', 'application/json')->withStatus(500);
-    }
-});
-
-// POST /admin/logout
-$app->post('/admin/logout', function (Request $request, Response $response) use ($isAdminAuthenticated) {
-    if (!$isAdminAuthenticated()) {
-        // Optional: Return error if trying to logout when not logged in
-         $response->getBody()->write(json_encode(['success' => false, 'message' => 'Not logged in.']));
-         return $response->withHeader('Content-Type', 'application/json')->withStatus(401);
-    }
-
-    // Unset all session variables
-    $_SESSION = [];
-
-    // Destroy the session cookie
-    if (ini_get("session.use_cookies")) {
-        $params = session_get_cookie_params();
-        setcookie(session_name(), '', time() - 42000,
-            $params["path"], $params["domain"],
-            $params["secure"], $params["httponly"]
-        );
-    }
-
-    // Destroy the session
-    session_destroy();
-
-    $response->getBody()->write(json_encode(['success' => true, 'message' => 'Logout successful.']));
-    return $response->withHeader('Content-Type', 'application/json')->withStatus(200);
-});
-
-// GET /admin/check (Check authentication status)
-$app->get('/admin/check', function (Request $request, Response $response) use ($isAdminAuthenticated) {
-    $isAuthenticated = $isAdminAuthenticated();
-    $response->getBody()->write(json_encode(['authenticated' => $isAuthenticated]));
-    return $response->withHeader('Content-Type', 'application/json')->withStatus(200);
-});
-
-
-// --- Admin Message Management Endpoints (Protected) ---
-
-// GET /admin/messages - List messages with filtering, sorting, pagination, search
-$app->get('/admin/messages', function (Request $request, Response $response) use ($isAdminAuthenticated) {
-    if (!$isAdminAuthenticated()) {
-        $response->getBody()->write(json_encode(['error' => 'Unauthorized']));
-        return $response->withHeader('Content-Type', 'application/json')->withStatus(401);
-    }
-
-    $params = $request->getQueryParams();
-
-    // Parameters with defaults
-    $page = isset($params['page']) ? max(1, (int)$params['page']) : 1;
-    $limit = isset($params['limit']) ? max(1, (int)$params['limit']) : 15; // Default 15 per page
-    $filterRead = $params['is_read'] ?? null; // '0' for unread, '1' for read, null for all
-    $sortBy = $params['sort'] ?? 'created_at'; // Default sort by creation date
-    $sortOrder = isset($params['order']) && strtolower($params['order']) === 'asc' ? 'asc' : 'desc'; // Default descending
-    $search = $params['search'] ?? null;
-
-    // Validate sort column
-    $allowedSortColumns = ['created_at', 'name', 'email', 'subject', 'is_read'];
-    if (!in_array($sortBy, $allowedSortColumns)) {
-        $sortBy = 'created_at'; // Default to safe column if invalid sort provided
-    }
-
-    try {
-        $query = Message::query();
-
-        // Apply filters
-        if ($filterRead !== null && in_array($filterRead, ['0', '1'])) {
-            $query->where('is_read', '=', (int)$filterRead);
-        }
-
-        // Apply search
-        if ($search) {
-            $searchTerm = '%' . $search . '%';
-            $query->where(function ($q) use ($searchTerm) {
-                $q->where('name', 'LIKE', $searchTerm)
-                  ->orWhere('email', 'LIKE', $searchTerm)
-                  ->orWhere('subject', 'LIKE', $searchTerm)
-                  ->orWhere('message', 'LIKE', $searchTerm);
-            });
-        }
-
-        // Apply sorting
-        $query->orderBy($sortBy, $sortOrder);
-
-        // Apply pagination
-        $paginator = $query->paginate($limit, ['*'], 'page', $page);
-
-        $response->getBody()->write(json_encode([
-            'data' => $paginator->items(),
-            'pagination' => [
-                'total' => $paginator->total(),
-                'per_page' => $paginator->perPage(),
-                'current_page' => $paginator->currentPage(),
-                'last_page' => $paginator->lastPage(),
-                'from' => $paginator->firstItem(),
-                'to' => $paginator->lastItem(),
-            ]
-        ]));
-        return $response->withHeader('Content-Type', 'application/json')->withStatus(200);
-
-    } catch (\Exception $e) {
-        error_log('Error fetching admin messages: ' . $e->getMessage());
-        $response->getBody()->write(json_encode(['error' => 'Failed to retrieve messages.']));
-        return $response->withHeader('Content-Type', 'application/json')->withStatus(500);
-    }
-});
-
-// GET /admin/messages/{id} - Fetch a single message and mark as read
-$app->get('/admin/messages/{id}', function (Request $request, Response $response, array $args) use ($isAdminAuthenticated) {
-    if (!$isAdminAuthenticated()) {
-        $response->getBody()->write(json_encode(['error' => 'Unauthorized']));
-        return $response->withHeader('Content-Type', 'application/json')->withStatus(401);
-    }
-
-    $messageId = $args['id'];
-
-    try {
-        $message = Message::find($messageId);
-
-        if (!$message) {
-            $response->getBody()->write(json_encode(['error' => 'Message not found.']));
-            return $response->withHeader('Content-Type', 'application/json')->withStatus(404);
-        }
-
-        // Mark as read if it's not already
-        if (!$message->is_read) {
-            $message->is_read = true;
-            $message->save();
-        }
-
-        $response->getBody()->write(json_encode($message));
-        return $response->withHeader('Content-Type', 'application/json')->withStatus(200);
-
-    } catch (\Exception $e) {
-        error_log('Error fetching single admin message: ' . $e->getMessage());
-        $response->getBody()->write(json_encode(['error' => 'Failed to retrieve message.']));
-        return $response->withHeader('Content-Type', 'application/json')->withStatus(500);
-    }
-});
-
-// PATCH /admin/messages/bulk - Perform bulk actions (read, unread, delete)
-$app->patch('/admin/bulk/messages', function (Request $request, Response $response) use ($isAdminAuthenticated) {
-    if (!$isAdminAuthenticated()) {
-        $response->getBody()->write(json_encode(['error' => 'Unauthorized']));
-        return $response->withHeader('Content-Type', 'application/json')->withStatus(401);
-    }
-
-    $data = json_decode($request->getBody()->getContents(), true);
-    $action = $data['action'] ?? null;
-    $ids = $data['ids'] ?? null;
-
-    if (!in_array($action, ['mark_read', 'mark_unread', 'delete']) || !is_array($ids) || empty($ids)) {
-        $response->getBody()->write(json_encode(['error' => 'Invalid action or message IDs provided.']));
-        return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
-    }
-
-    // Sanitize IDs to ensure they are integers
-    $sanitizedIds = array_filter($ids, 'is_int');
-    if (count($sanitizedIds) !== count($ids)) {
-         $response->getBody()->write(json_encode(['error' => 'Invalid message IDs provided.']));
-         return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
-    }
-
-    try {
-        $affectedRows = 0;
-        switch ($action) {
-            case 'mark_read':
-                $affectedRows = Message::whereIn('id', $sanitizedIds)->update(['is_read' => true]);
-                break;
-            case 'mark_unread':
-                $affectedRows = Message::whereIn('id', $sanitizedIds)->update(['is_read' => false]);
-                break;
-            case 'delete':
-                $affectedRows = Message::destroy($sanitizedIds); // Eloquent's destroy method
-                break;
-        }
-
-        $response->getBody()->write(json_encode([
-            'success' => true,
-            'message' => "Action '{$action}' completed.",
-            'affected_rows' => $affectedRows
-        ]));
-        return $response->withHeader('Content-Type', 'application/json')->withStatus(200);
-
-    } catch (\Exception $e) {
-        error_log('Error performing bulk action on messages: ' . $e->getMessage());
-        $response->getBody()->write(json_encode(['error' => 'Failed to perform bulk action.']));
-        return $response->withHeader('Content-Type', 'application/json')->withStatus(500);
-    }
-});
-
-
-// Add a catch-all route for better 404 handling
-$app->any('[/{path:.*}]', function (Request $request, Response $response) {
-    throw new HttpNotFoundException($request);
-});
 
 $app->run();

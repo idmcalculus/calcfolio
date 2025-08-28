@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Services;
+namespace App\Infrastructure\External;
 
 class WebhookVerifier
 {
-    private $secret;
+    private string $secret;
 
     public function __construct()
     {
-        $this->secret = $_ENV['RESEND_WEBHOOK_SECRET'] ?? '';
+        $this->secret = ($_ENV['RESEND_WEBHOOK_SECRET'] ?? getenv('RESEND_WEBHOOK_SECRET')) ?: '';
     }
 
     /**
@@ -22,13 +22,13 @@ class WebhookVerifier
         }
 
         // Remove 'whsec_' prefix if present
-        $cleanSignature = str_starts_with($signature, 'whsec_') 
-            ? substr($signature, 6) 
+        $cleanSignature = str_starts_with($signature, 'whsec_')
+            ? substr($signature, 6)
             : $signature;
 
         // Generate expected signature
         $expectedSignature = hash_hmac('sha256', $payload, $this->secret);
-        
+
         // Use hash_equals for timing-safe comparison
         return hash_equals($expectedSignature, $cleanSignature);
     }
@@ -50,7 +50,7 @@ class WebhookVerifier
             if (count($parts) === 2) {
                 $algorithm = $parts[0];
                 $signature = $parts[1];
-                
+
                 if ($algorithm === 'sha256') {
                     $expectedSignature = hash_hmac('sha256', $payload, $this->secret);
                     return hash_equals($expectedSignature, $signature);

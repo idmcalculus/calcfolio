@@ -58,8 +58,8 @@
     </div>
 
     <!-- Chart Status Messages -->
-    <div v-if="status === 'pending'" class="text-center py-6">Loading chart data...</div>
-    <div v-else-if="error" class="text-center py-6 text-red-500">Error loading chart data: {{ error.message }}</div>
+    <div v-if="props.loading" class="text-center py-6">Loading chart data...</div>
+    <div v-else-if="props.error" class="text-center py-6 text-red-500">Error loading chart data: {{ props.error.message }}</div>
     <div v-else-if="chartData.labels.length > 0">
       <Bar :data="chartData" :options="chartOptions" />
     </div>
@@ -81,11 +81,17 @@
 import { ref, computed } from 'vue';
 import { Bar } from 'vue-chartjs';
 import { Chart as ChartJS, Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale } from 'chart.js';
+import type { Message } from '~/composables/useApi';
 
 // Register Chart.js components
 ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale);
 
-const { admin } = useApi();
+// Props from parent component
+const props = defineProps<{
+  messages: Message[]
+  loading: boolean
+  error: Error | null
+}>();
 
 // Filter state
 const selectedEmail = ref<string | null>(null);
@@ -112,23 +118,16 @@ const months = ref([
 const currentYear = new Date().getFullYear();
 const availableYears = ref(Array.from({ length: 6 }, (_, i) => currentYear - i));
 
-// Fetch all messages once for client-side filtering
-const { data: messagesResponse, status, error } = await admin.messages.list({
-  limit: 10000, // Fetch a large number to get all messages
-  lazy: false,
-  server: false,
-});
-
-// Computed available emails - fallback to extracting from messages if API fails
+// Computed available emails from shared messages data
 const availableEmails = computed(() => {
-  return allMessages.value
+  return props.messages
     .map(msg => msg.email)
     .filter((email, index, arr) => arr.indexOf(email) === index) // Remove duplicates
     .sort();
 });
 
-// Computed all messages
-const allMessages = computed(() => messagesResponse.value?.data ?? []);
+// Use messages from props instead of API call
+const allMessages = computed(() => props.messages);
 
 // Client-side filtering and chart data generation
 const chartData = computed(() => {
