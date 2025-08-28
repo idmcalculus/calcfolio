@@ -406,20 +406,49 @@ const executeBulkAction = async (action: BulkAction) => {
 };
 
 // --- View Message Logic ---
-const viewMessage = (message: Message) => {
-  // Note: Fetching the message again via /admin/messages/{id} would mark it as read on the backend.
-  // For simplicity here, we'll just use the data already fetched for the list.
-  // If marking as read *only* upon explicit view is critical, we'd need to fetch here.
-  messageToView.value = message;
-  isModalOpen.value = true;
+const viewMessage = async (message: Message) => {
+  try {
+    // Fetch the message from API to mark it as read on the backend
+    const { data: freshMessage } = await admin.messages.get(message.id, {
+      lazy: false,
+      server: false,
+    });
 
-  // Optimistically mark as read in the current list if not already
-  // This provides immediate UI feedback without waiting for a potential refresh
-  const messageInList = messages.value.find(m => m.id === message.id);
-  if (messageInList && !messageInList.is_read) {
-     messageInList.is_read = true;
-     // We could also call refresh() here if we want the backend state to be updated immediately
-     // and reflect potential changes made by other admins, but it adds overhead.
+    // Use the fresh data from the API (which will have is_read = true)
+    messageToView.value = freshMessage.value || message;
+    isModalOpen.value = true;
+
+    // Update the message in our local lists to reflect the read status
+    const messageInAllMessages = allMessages.value.find(m => m.id === message.id);
+    if (messageInAllMessages) {
+      messageInAllMessages.is_read = true;
+    }
+
+    // Also update in the current page's messages
+    const messageInCurrentPage = messages.value.find(m => m.id === message.id);
+    if (messageInCurrentPage) {
+      messageInCurrentPage.is_read = true;
+    }
+
+  } catch (error) {
+    console.error('Error fetching message for viewing:', error);
+
+    // Fallback: Use the existing message data and show modal anyway
+    messageToView.value = message;
+    isModalOpen.value = true;
+
+    // Still optimistically mark as read in the UI
+    const messageInList = messages.value.find(m => m.id === message.id);
+    if (messageInList && !messageInList.is_read) {
+      messageInList.is_read = true;
+    }
+
+    // Show error toast but don't prevent the modal from opening
+    toast.add({
+      title: 'Warning',
+      description: 'Could not update read status on server, but message will still be displayed.',
+      color: 'warning'
+    });
   }
 };
 

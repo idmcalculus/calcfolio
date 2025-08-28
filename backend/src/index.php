@@ -36,6 +36,9 @@ if (file_exists($dotenvPath . '/.env')) {
 if (!session_id() && !headers_sent()) {
     // Ensure sessions use secure settings
     ini_set('session.cookie_httponly', '1');
+    ini_set('session.cookie_path', '/');
+    ini_set('session.cookie_domain', ''); // Let browser determine domain
+
     $forwardedProto = $_SERVER['HTTP_X_FORWARDED_PROTO'] ?? '';
     $isHttps = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') || strtolower($forwardedProto) === 'https';
     $inProd = ($_ENV['APP_ENV'] ?? 'development') === 'production';
@@ -45,6 +48,9 @@ if (!session_id() && !headers_sent()) {
     ini_set('session.cookie_secure', $useSecure);
     ini_set('session.cookie_samesite', $useSecure === '1' ? 'None' : 'Lax');
     ini_set('session.use_strict_mode', '1'); // Prevent session fixation
+    ini_set('session.gc_maxlifetime', '3600'); // 1 hour
+    ini_set('session.cookie_lifetime', '3600'); // 1 hour
+
     session_start(); // Start the session
 }
 
@@ -170,11 +176,6 @@ EventLog::create([
 
 // --- Helper Function for Authentication Check ---
 $isAdminAuthenticated = function () {
-    // Regenerate session ID periodically to prevent session fixation
-    if (isset($_SESSION['last_regen']) && (time() - $_SESSION['last_regen'] > 1800)) { // e.g., every 30 minutes
-        session_regenerate_id(true);
-        $_SESSION['last_regen'] = time();
-    }
     return isset($_SESSION['admin_logged_in']) && $_SESSION['admin_logged_in'] === true;
 };
 

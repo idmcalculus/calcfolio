@@ -1,6 +1,6 @@
 import { defineNuxtRouteMiddleware, navigateTo } from '#app'
 
-export default defineNuxtRouteMiddleware(async (to) => {
+export default defineNuxtRouteMiddleware(async (to, from) => {
   // Skip middleware on server side or if not an admin route
   if (import.meta.server || !to.path.startsWith('/admin')) {
     return
@@ -11,23 +11,29 @@ export default defineNuxtRouteMiddleware(async (to) => {
     return
   }
 
+  // If coming from login page, skip auth check (user just authenticated)
+  if (from.path === '/admin/login') {
+    return
+  }
+
   const { auth } = useApi()
 
   try {
-    const { data } = await auth.checkAuth({
-      server: false, // Client-side only
+    const authResult = await auth.checkAuth({
+      // Add cache buster to ensure fresh request
+      query: { t: Date.now() }
     })
 
-    if (!data.value?.authenticated) {
-      console.log('User not authenticated, redirecting to login.');
-      return navigateTo('/admin/login');
+    if (!authResult.authenticated) {
+      return navigateTo('/admin/login')
     }
+
     // If authenticated, allow navigation to proceed
-    console.log('User authenticated, allowing access to:', to.path);
+    return
 
   } catch (error) {
-    console.error('Error during admin authentication check:', error);
-    // Redirect to login on any unexpected error during the check
-    return navigateTo('/admin/login');
+    console.error('Auth check failed:', error)
+    // On any error, redirect to login
+    return navigateTo('/admin/login')
   }
 })

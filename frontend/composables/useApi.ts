@@ -162,62 +162,42 @@ export const useApi = () => {
    * @throws Enhanced error with server details
    */
   const handleApiError = (error: unknown): never => {
-    // Log for debugging in development
-    if (import.meta.dev) {
-      console.group('🚨 API Error Details')
-      console.error('Original error:', error)
-      console.error('Error type:', typeof error)
-      console.error('Error properties:', error && typeof error === 'object' ? Object.keys(error) : 'N/A')
-      if (error && typeof error === 'object' && 'data' in error) {
-        console.error('Error data:', (error as { data: unknown }).data)
-      }
-      console.groupEnd()
-    }
-
     // Check if it's a server error response with structured error data
     if (error && typeof error === 'object' && 'data' in error) {
       const errorData = (error as { data: unknown }).data
       if (errorData && typeof errorData === 'object' && 'success' in errorData && !errorData.success && 'error' in errorData) {
         const serverError = (errorData as ApiErrorResponse).error
-        
+
         // Create a descriptive error message
         const errorMessage = serverError.message || 'An error occurred'
-        const errorDetails = import.meta.dev && serverError.debug
-          ? `\n\nDebug Info: ${serverError.debug.exception} in ${serverError.debug.file}:${serverError.debug.line}`
-          : ''
-        
-        const enhancedError = new Error(`${errorMessage}${errorDetails}`) as EnhancedError
+
+        const enhancedError = new Error(errorMessage) as EnhancedError
         enhancedError.serverError = serverError
         enhancedError.statusCode = (error as { statusCode?: number }).statusCode || 500
         enhancedError.errorType = serverError.type
         enhancedError.errorCode = serverError.code
-        
+
         throw enhancedError
       }
     }
-    
+
     // Check for network/CORS errors
     const errorMessage = error instanceof Error ? error.message : String(error)
     const errorName = error instanceof Error ? error.name : 'Unknown'
-    
+
     if (errorName === 'FetchError' || errorMessage.includes('fetch')) {
-      // Try to provide more helpful error messages
-      if (errorMessage.includes('CORS')) {
-        throw new Error('Network error: Unable to connect to server. Please check your connection and try again.')
-      }
-      
       const statusCode = error && typeof error === 'object' && 'statusCode' in error
         ? (error as { statusCode: number }).statusCode
         : undefined
-      
+
       if (statusCode) {
         const statusMessage = getStatusMessage(statusCode)
         throw new Error(`Server error (${statusCode}): ${statusMessage}`)
       }
-      
+
       throw new Error('Network error: Unable to connect to server. Please check your connection and try again.')
     }
-    
+
     // Fallback for other types of errors
     throw error instanceof Error ? error : new Error('An unexpected error occurred')
   }
@@ -251,10 +231,7 @@ export const useApi = () => {
    */
   const logApiRequest = (url: string, options: RequestOptions) => {
     if (import.meta.dev) {
-      console.group(`🔄 API Request: ${options.method || 'GET'} ${url}`)
-      console.log('Options:', options)
-      console.log('Timestamp:', new Date().toISOString())
-      console.groupEnd()
+      console.log(`🔄 API Request: ${options.method || 'GET'} ${url}`)
     }
   }
 
@@ -266,17 +243,11 @@ export const useApi = () => {
    */
   const logApiResponse = (url: string, response?: unknown, error?: unknown) => {
     if (import.meta.dev) {
-      console.group(`${error ? '❌' : '✅'} API Response: ${url}`)
       if (error) {
-        console.error('Error:', error)
-        if (error && typeof error === 'object' && 'serverError' in error) {
-          console.error('Server Error Details:', (error as EnhancedError).serverError)
-        }
+        console.error(`❌ API Error: ${url}`, error)
       } else {
-        console.log('Response:', response)
+        console.log(`✅ API Success: ${url}`)
       }
-      console.log('Timestamp:', new Date().toISOString())
-      console.groupEnd()
     }
   }
 
@@ -342,13 +313,26 @@ export const useApi = () => {
      * @param options - Additional useFetch options
      * @returns Reactive auth status
      */
-    checkAuth: (options: Record<string, unknown> = {}) => {
-      return useFetch<{ authenticated: boolean }>('/admin/check', {
+    checkAuth: async (options: Record<string, unknown> = {}): Promise<{ authenticated: boolean }> => {
+      const url = '/admin/check'
+      const requestOptions = {
         ...getBaseOptions(),
         baseURL,
-        server: false, // Client-side only for auth checks
+        // Add cache buster by default to ensure fresh requests
+        query: { t: Date.now(), ...(options.query || {}) },
         ...options,
-      })
+      }
+
+      logApiRequest(url, requestOptions)
+
+      try {
+        const response = await $fetch<{ authenticated: boolean }>(url, requestOptions)
+        logApiResponse(url, response)
+        return response
+      } catch (error) {
+        logApiResponse(url, undefined, error)
+        return handleApiError(error)
+      }
     },
   }
 

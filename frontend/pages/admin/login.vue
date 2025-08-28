@@ -97,26 +97,28 @@ const handleLogin = async () => {
       throw new Error(data.message || 'Login failed. Please check your credentials.')
     }
 
-    // Login successful, show success toast and navigate to the admin dashboard
+    // Login successful, show success toast
     toast.add({
       title: 'Login Successful',
       description: 'Welcome back! Redirecting to dashboard...',
       color: 'success'
     })
-    
+
+    // Navigate immediately to dashboard - middleware will handle authentication
+    console.log('Login successful, navigating to dashboard')
     await navigateTo('/admin/dashboard')
 
   } catch (error: unknown) {
     console.error('Admin login error:', error)
     const message = error instanceof Error ? error.message : 'An unexpected error occurred.'
-    
+
     // Determine if this is a validation error or server error
     const isValidationError = message.includes('credentials') ||
-                             message.includes('username') ||
-                             message.includes('password') ||
-                             message.includes('invalid') ||
-                             message.includes('incorrect')
-    
+                              message.includes('username') ||
+                              message.includes('password') ||
+                              message.includes('invalid') ||
+                              message.includes('incorrect')
+
     if (isValidationError) {
       // Show validation errors inline
       errorMsg.value = message
