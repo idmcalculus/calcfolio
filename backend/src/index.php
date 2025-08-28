@@ -1,5 +1,12 @@
 <?php
 
+// Disable error output to prevent HTML responses
+ini_set('display_errors', '0');
+error_reporting(E_ALL);
+
+// Buffer output to prevent premature headers
+ob_start();
+
 require __DIR__ . '/../vendor/autoload.php';
 
 // Load environment variables
@@ -18,24 +25,43 @@ ini_set('max_input_time', '300'); // 5 minutes for large inputs
 // --- Session Configuration ---
 // Only configure session if it hasn't been started yet and no output has been sent
 if (!session_id() && !headers_sent()) {
-    // Ensure sessions use secure settings
-    ini_set('session.cookie_httponly', '1');
-    ini_set('session.cookie_path', '/');
-    ini_set('session.cookie_domain', ''); // Let browser determine domain
+    try {
+        // Ensure sessions use secure settings
+        ini_set('session.cookie_httponly', '1');
+        ini_set('session.cookie_path', '/');
+        ini_set('session.cookie_domain', ''); // Let browser determine domain
 
-    $forwardedProto = $_SERVER['HTTP_X_FORWARDED_PROTO'] ?? '';
-    $isHttps = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') || strtolower($forwardedProto) === 'https';
-    $inProd = (($_ENV['APP_ENV'] ?? getenv('APP_ENV')) ?: 'development') === 'production';
+        // Railway and other proxies set this header
+        $forwardedProto = $_SERVER['HTTP_X_FORWARDED_PROTO'] ?? '';
+        $forwardedHost = $_SERVER['HTTP_X_FORWARDED_HOST'] ?? '';
+        
+        // Better HTTPS detection for proxied environments
+        $isHttps = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')
+                   || strtolower($forwardedProto) === 'https'
+                   || strpos($forwardedHost, 'railway.app') !== false;
+        
+        $inProd = (($_ENV['APP_ENV'] ?? getenv('APP_ENV')) ?: 'development') === 'production';
 
-    // Cross-site cookies (frontend on a different origin) require SameSite=None; Secure
-    $useSecure = ($inProd || $isHttps) ? '1' : '0';
-    ini_set('session.cookie_secure', $useSecure);
-    ini_set('session.cookie_samesite', $useSecure === '1' ? 'None' : 'Lax');
-    ini_set('session.use_strict_mode', '1'); // Prevent session fixation
-    ini_set('session.gc_maxlifetime', '3600'); // 1 hour
-    ini_set('session.cookie_lifetime', '3600'); // 1 hour
+        // For cross-origin requests, we need SameSite=None with Secure
+        // But SameSite=None requires Secure flag, so force it for production/HTTPS
+        if ($inProd || $isHttps) {
+            ini_set('session.cookie_secure', '1');
+            ini_set('session.cookie_samesite', 'None');
+        } else {
+            // Development without HTTPS
+            ini_set('session.cookie_secure', '0');
+            ini_set('session.cookie_samesite', 'Lax');
+        }
+        
+        ini_set('session.use_strict_mode', '1'); // Prevent session fixation
+        ini_set('session.gc_maxlifetime', '3600'); // 1 hour
+        ini_set('session.cookie_lifetime', '3600'); // 1 hour
 
-    session_start(); // Start the session
+        session_start(); // Start the session
+    } catch (\Exception $e) {
+        // Log session errors but don't output them
+        error_log('Session initialization error: ' . $e->getMessage());
+    }
 }
 
 // Initialize dependency injection container
@@ -77,12 +103,25 @@ $adminAuthMiddleware = $container->get(\App\Presentation\Middleware\AdminAuthMid
 
 // Routes
 
+// Diagnostic route (temporary for debugging)
+$app->get('/diagnostic', function ($request, $response) {
+    $diagnosticPath = __DIR__ . '/diagnostic.php';
+    if (file_exists($diagnosticPath)) {
+        ob_start();
+        include $diagnosticPath;
+        $output = ob_get_clean();
+        $response->getBody()->write($output);
+        return $response->withHeader('Content-Type', 'application/json');
+    }
+    throw new \Slim\Exception\HttpNotFoundException($request);
+});
+
 // Public routes
 $app->post('/contact', [$contactController, 'submit']);
 $app->get('/message/{messageId}', [$contactController, 'getMessageStatus']);
 
-// Admin authentication routes
-$app->map(['GET', 'POST'], '/admin/login', [$adminAuthController, 'login']);
+// Admin authentication routes (POST only for login to avoid confusion)
+$app->post('/admin/login', [$adminAuthController, 'login']);
 $app->post('/admin/logout', [$adminAuthController, 'logout']);
 $app->get('/admin/check', [$adminAuthController, 'checkAuth']);
 $app->post('/admin/recover-session', [$adminAuthController, 'recoverSession']);
@@ -142,5 +181,8 @@ $app->any('[/{path:.*}]', function ($request, $response) {
         'environment' => ($_ENV['APP_ENV'] ?? getenv('APP_ENV')) ?: 'development'
     ]
 ]);
+
+// Clean any output buffer before running the app
+ob_end_clean();
 
 $app->run();

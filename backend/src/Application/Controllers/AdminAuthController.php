@@ -16,33 +16,6 @@ class AdminAuthController
         $this->authService = $authService;
     }
 
-    /**
-     * Admin login
-     *
-     * @OA\Post(
-     *     path="/admin/login",
-     *     summary="Admin login",
-     *     tags={"Admin Authentication"},
-     *     @OA\RequestBody(
-     *         required=true,
-     *         @OA\JsonContent(
-     *             required={"username","password"},
-     *             @OA\Property(property="username", type="string"),
-     *             @OA\Property(property="password", type="string", format="password")
-     *         )
-     *     ),
-     *     @OA\Response(
-     *         response=200,
-     *         description="Login successful",
-     *         @OA\JsonContent(
-     *             @OA\Property(property="success", type="boolean", example=true),
-     *             @OA\Property(property="message", type="string")
-     *         )
-     *     ),
-     *     @OA\Response(response=401, description="Invalid credentials"),
-     *     @OA\Response(response=400, description="Validation error")
-     * )
-     */
     #[OA\Post(
         path: "/admin/login",
         summary: "Admin login",
@@ -75,9 +48,27 @@ class AdminAuthController
     public function login(Request $request, Response $response): Response
     {
         try {
-            $data = json_decode($request->getBody()->getContents(), true);
+            // Log request details for debugging
+            error_log('Admin login request received');
+            error_log('Request method: ' . $request->getMethod());
+            error_log('Request headers: ' . json_encode($request->getHeaders()));
+            
+            $body = $request->getBody()->getContents();
+            error_log('Request body: ' . $body);
+            
+            $data = json_decode($body, true);
+            
+            if (json_last_error() !== JSON_ERROR_NONE) {
+                error_log('JSON decode error: ' . json_last_error_msg());
+                $response->getBody()->write(json_encode([
+                    'success' => false,
+                    'message' => 'Invalid JSON in request body.'
+                ]));
+                return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
+            }
 
             if (!isset($data['username'], $data['password'])) {
+                error_log('Missing username or password in request');
                 $response->getBody()->write(json_encode([
                     'success' => false,
                     'message' => 'Username and password required.'
@@ -85,9 +76,11 @@ class AdminAuthController
                 return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
             }
 
+            error_log('Attempting to authenticate user: ' . $data['username']);
             $admin = $this->authService->authenticate($data['username'], $data['password']);
 
             if (!$admin) {
+                error_log('Authentication failed for user: ' . $data['username']);
                 $response->getBody()->write(json_encode([
                     'success' => false,
                     'message' => 'Invalid username or password.'
@@ -95,9 +88,11 @@ class AdminAuthController
                 return $response->withHeader('Content-Type', 'application/json')->withStatus(401);
             }
 
+            error_log('Authentication successful, attempting login');
             $loginSuccess = $this->authService->login($admin);
 
             if (!$loginSuccess) {
+                error_log('Session login failed');
                 $response->getBody()->write(json_encode([
                     'success' => false,
                     'message' => 'Login failed due to session error.'
@@ -105,40 +100,25 @@ class AdminAuthController
                 return $response->withHeader('Content-Type', 'application/json')->withStatus(500);
             }
 
+            error_log('Login successful for user: ' . $data['username']);
             $response->getBody()->write(json_encode([
                 'success' => true,
                 'message' => 'Login successful.'
             ]));
-            return $response->withHeader('Content-Type', 'application/json');
+            return $response->withHeader('Content-Type', 'application/json')->withStatus(200);
 
         } catch (\Exception $e) {
-            error_log('Admin login error: ' . $e->getMessage());
+            error_log('Admin login exception: ' . $e->getMessage());
+            error_log('Stack trace: ' . $e->getTraceAsString());
             $response->getBody()->write(json_encode([
                 'success' => false,
-                'message' => 'An internal error occurred during login.'
+                'message' => 'An internal error occurred during login.',
+                'error' => $e->getMessage() // Include error in development
             ]));
             return $response->withHeader('Content-Type', 'application/json')->withStatus(500);
         }
     }
 
-    /**
-     * Admin logout
-     *
-     * @OA\Post(
-     *     path="/admin/logout",
-     *     summary="Admin logout",
-     *     tags={"Admin Authentication"},
-     *     @OA\Response(
-     *         response=200,
-     *         description="Logout successful",
-     *         @OA\JsonContent(
-     *             @OA\Property(property="success", type="boolean", example=true),
-     *             @OA\Property(property="message", type="string")
-     *         )
-     *     ),
-     *     @OA\Response(response=401, description="Not authenticated")
-     * )
-     */
     #[OA\Post(
         path: "/admin/logout",
         summary: "Admin logout",
@@ -177,24 +157,6 @@ class AdminAuthController
         return $response->withHeader('Content-Type', 'application/json');
     }
 
-    /**
-     * Check authentication status
-     *
-     * @OA\Get(
-     *     path="/admin/check",
-     *     summary="Check authentication status",
-     *     tags={"Admin Authentication"},
-     *     @OA\Response(
-     *         response=200,
-     *         description="Authentication status",
-     *         @OA\JsonContent(
-     *             @OA\Property(property="authenticated", type="boolean"),
-     *             @OA\Property(property="session_id", type="string"),
-     *             @OA\Property(property="last_activity", type="string")
-     *         )
-     *     )
-     * )
-     */
     #[OA\Get(
         path: "/admin/check",
         summary: "Check authentication status",
@@ -233,23 +195,6 @@ class AdminAuthController
         return $response->withHeader('Content-Type', 'application/json');
     }
 
-    /**
-     * Recover session after resource exhaustion
-     *
-     * @OA\Post(
-     *     path="/admin/recover-session",
-     *     summary="Recover session after resource issues",
-     *     tags={"Admin Authentication"},
-     *     @OA\Response(
-     *         response=200,
-     *         description="Session recovery status",
-     *         @OA\JsonContent(
-     *             @OA\Property(property="recovered", type="boolean"),
-     *             @OA\Property(property="message", type="string")
-     *         )
-     *     )
-     * )
-     */
     #[OA\Post(
         path: "/admin/recover-session",
         summary: "Recover session after resource issues",

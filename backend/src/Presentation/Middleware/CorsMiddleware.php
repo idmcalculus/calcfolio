@@ -20,7 +20,14 @@ class CorsMiddleware implements MiddlewareInterface
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $origin = $request->getHeaderLine('Origin');
+        
+        // Log CORS debug info
+        error_log('CORS Middleware - Origin: ' . $origin);
+        error_log('CORS Middleware - Allowed Origins: ' . json_encode($this->allowedOrigins));
+        
         $originAllowed = $origin && in_array($origin, $this->allowedOrigins, true);
+        
+        error_log('CORS Middleware - Origin Allowed: ' . ($originAllowed ? 'YES' : 'NO'));
 
         // Handle preflight OPTIONS requests
         if (strtoupper($request->getMethod()) === 'OPTIONS') {
@@ -49,8 +56,14 @@ class CorsMiddleware implements MiddlewareInterface
             return $response;
         }
 
-        // For non-OPTIONS requests, process normally and add CORS headers to response
-        $response = $handler->handle($request);
+        try {
+            // For non-OPTIONS requests, process normally and add CORS headers to response
+            $response = $handler->handle($request);
+        } catch (\Exception $e) {
+            // If an error occurs, ensure we still return a proper response
+            error_log('Request handling error: ' . $e->getMessage());
+            throw $e;
+        }
 
         if ($originAllowed) {
             $response = $response
