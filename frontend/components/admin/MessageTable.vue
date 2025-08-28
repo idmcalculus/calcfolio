@@ -252,32 +252,83 @@ const selectAll = computed({
 });
 
 // --- Data Fetching ---
-// Computed property for query parameters
-const queryParams = computed(() => ({
-  page: currentPage.value,
-  limit: itemsPerPage.value,
-  ...(filterRead.value !== null && { is_read: filterRead.value }),
-  sort: sortBy.value,
-  order: sortOrder.value,
-  ...(searchTerm.value && { search: searchTerm.value }),
-}));
-
-// Use the API composable to get messages
-const { data: apiResponse, status, error, refresh } = await admin.messages.list(queryParams.value, {
-  lazy: false, // Fetch data immediately on component setup
-  server: false, // Ensure fetching happens client-side after auth middleware runs
+// Fetch all messages once (without filters for client-side filtering)
+const { data: apiResponse, status, error, refresh } = await admin.messages.list({
+  limit: 1000, // Fetch a large number to get all messages for client-side filtering
+  lazy: false,
+  server: false,
 });
 
 // Computed properties for easier access
-const messages = computed(() => apiResponse.value?.data ?? []);
-const pagination = computed(() => apiResponse.value?.pagination); // Keep pagination for now, will be used soon
+const allMessages = computed(() => apiResponse.value?.data ?? []);
+
+// Client-side filtering and sorting
+const filteredMessages = computed(() => {
+  let messages = [...allMessages.value];
+
+  // Apply read status filter
+  if (filterRead.value !== null) {
+    messages = messages.filter(msg => msg.is_read === (filterRead.value === '1'));
+  }
+
+  // Apply search filter
+  if (searchTerm.value) {
+    const search = searchTerm.value.toLowerCase();
+    messages = messages.filter(msg =>
+      msg.name.toLowerCase().includes(search) ||
+      msg.email.toLowerCase().includes(search) ||
+      msg.subject.toLowerCase().includes(search) ||
+      msg.message.toLowerCase().includes(search)
+    );
+  }
+
+  // Apply sorting
+  messages.sort((a, b) => {
+    let aValue: string | number | boolean = a[sortBy.value as keyof typeof a];
+    let bValue: string | number | boolean = b[sortBy.value as keyof typeof b];
+
+    // Handle string comparison
+    if (typeof aValue === 'string') {
+      aValue = aValue.toLowerCase();
+      bValue = (bValue as string).toLowerCase();
+    }
+
+    if (sortOrder.value === 'asc') {
+      return aValue > bValue ? 1 : aValue < bValue ? -1 : 0;
+    } else {
+      return aValue < bValue ? 1 : aValue > bValue ? -1 : 0;
+    }
+  });
+
+  return messages;
+});
+
+// Paginated messages for display
+const messages = computed(() => {
+  const start = (currentPage.value - 1) * itemsPerPage.value;
+  const end = start + itemsPerPage.value;
+  return filteredMessages.value.slice(start, end);
+});
+
+// Computed pagination info
+const pagination = computed(() => {
+  const total = filteredMessages.value.length;
+  return {
+    total,
+    per_page: itemsPerPage.value,
+    current_page: currentPage.value,
+    last_page: Math.ceil(total / itemsPerPage.value),
+    from: total > 0 ? ((currentPage.value - 1) * itemsPerPage.value) + 1 : null,
+    to: total > 0 ? Math.min(currentPage.value * itemsPerPage.value, total) : null,
+  };
+});
 
 // --- Control Functions ---
 const updateSort = (event: Event) => {
   const target = event.target as HTMLSelectElement;
   const [newSortBy, newSortOrder] = target.value.split(':');
-  sortBy.value = newSortBy;
-  sortOrder.value = newSortOrder;
+  sortBy.value = newSortBy || 'created_at';
+  sortOrder.value = newSortOrder || 'desc';
   currentPage.value = 1; // Reset to first page when sorting changes
 };
 

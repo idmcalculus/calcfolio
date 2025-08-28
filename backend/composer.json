@@ -1,6 +1,6 @@
 {
     "name": "idmcalculus/backend",
-    "description": "Slim + Resend + Eloquent ORM/SQLite backend for portfolio contact form",
+    "description": "Slim + Resend + Eloquent ORM/SQLite backend for portfolio contact form and admin dashboard",
     "type": "project",
     "require": {
         "php": "^8.3",

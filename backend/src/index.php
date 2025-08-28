@@ -321,13 +321,6 @@ $app->post('/resend-webhook', function (Request $request, Response $response) {
     return $response->withStatus(200);
 });
 
-// Keep legacy SES webhook for transition (can be removed later)
-$app->post('/ses-webhook', function (Request $request, Response $response) {
-    error_log('Warning: Legacy SES webhook called - please update to use /resend-webhook');
-    return $response->withStatus(410); // Gone - endpoint deprecated
-});
-
-
 // --- Admin Authentication Endpoints ---
 
 // Admin login with method validation - this will properly throw 405 for wrong methods
@@ -481,52 +474,6 @@ $app->get('/admin/messages', function (Request $request, Response $response) use
     }
 });
 
-// GET /admin/messages/stats - Get message counts per month
-// NOTE: Define static routes like '/stats' before variable routes like '/{id}'
-$app->get('/admin/messages/stats', function (Request $request, Response $response) use ($isAdminAuthenticated) {
-    if (!$isAdminAuthenticated()) {
-        $response->getBody()->write(json_encode(['error' => 'Unauthorized']));
-        return $response->withHeader('Content-Type', 'application/json')->withStatus(401);
-    }
-
-    try {
-        // Query to get count per year/month - use different syntax for different DB drivers
-        $driver = Capsule::connection()->getDriverName();
-        
-        if ($driver === 'sqlite') {
-            $stats = Message::selectRaw("strftime('%Y-%m', created_at) as month, COUNT(*) as count")
-                            ->groupBy('month')
-                            ->orderBy('month', 'asc')
-                            ->get();
-        } else {
-            // PostgreSQL syntax
-            $stats = Message::selectRaw("to_char(created_at, 'YYYY-MM') as month, COUNT(*) as count")
-                            ->groupBy('month')
-                            ->orderBy('month', 'asc')
-                            ->get();
-        }
-
-        // Format for Chart.js
-        $labels = $stats->pluck('month')->map(function ($monthYear) {
-            // Format 'YYYY-MM' to 'Mon YYYY' (e.g., 'Apr 2025')
-            $date = \DateTime::createFromFormat('Y-m', $monthYear);
-            return $date ? $date->format('M Y') : $monthYear;
-        })->toArray();
-        $data = $stats->pluck('count')->toArray();
-
-        $response->getBody()->write(json_encode([
-            'labels' => $labels,
-            'data' => $data,
-        ]));
-        return $response->withHeader('Content-Type', 'application/json')->withStatus(200);
-
-    } catch (\Exception $e) {
-        error_log('Error fetching message stats: ' . $e->getMessage());
-        $response->getBody()->write(json_encode(['error' => 'Failed to retrieve message statistics.']));
-        return $response->withHeader('Content-Type', 'application/json')->withStatus(500);
-    }
-});
-
 // GET /admin/messages/{id} - Fetch a single message and mark as read
 $app->get('/admin/messages/{id}', function (Request $request, Response $response, array $args) use ($isAdminAuthenticated) {
     if (!$isAdminAuthenticated()) {
@@ -561,7 +508,7 @@ $app->get('/admin/messages/{id}', function (Request $request, Response $response
 });
 
 // PATCH /admin/messages/bulk - Perform bulk actions (read, unread, delete)
-$app->patch('/admin/messages/bulk', function (Request $request, Response $response) use ($isAdminAuthenticated) {
+$app->patch('/admin/bulk/messages', function (Request $request, Response $response) use ($isAdminAuthenticated) {
     if (!$isAdminAuthenticated()) {
         $response->getBody()->write(json_encode(['error' => 'Unauthorized']));
         return $response->withHeader('Content-Type', 'application/json')->withStatus(401);

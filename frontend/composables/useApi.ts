@@ -410,20 +410,6 @@ export const useApi = () => {
       },
 
       /**
-       * Get message statistics - Uses useFetch for reactive dashboard data
-       * @param options - Additional useFetch options
-       * @returns Reactive message statistics
-       */
-      stats: (options: Record<string, unknown> = {}) => {
-        return useFetch<MessageStatsResponse>('/admin/messages/stats', {
-          ...getBaseOptions(),
-          baseURL,
-          server: false, // Client-side for authenticated routes
-          ...options,
-        })
-      },
-
-      /**
        * Get individual message - Uses useFetch for reactive record fetching
        * @param id - Message ID
        * @param options - Additional useFetch options
@@ -444,7 +430,7 @@ export const useApi = () => {
        * @returns Promise with action response
        */
       bulkAction: async (request: BulkActionRequest): Promise<ApiResponse> => {
-        const url = '/admin/messages/bulk'
+        const url = '/admin/bulk/messages'
         const options = {
           ...getBaseOptions(),
           baseURL,
