@@ -58,7 +58,7 @@ class ContactFormService
                 'subject' => $data['subject'],
                 'message' => $data['message'],
                 'message_id' => $messageId,
-                'status' => MessageStatus::STATUS_PENDING,
+                'status' => MessageStatus::pending()->getValue(),
                 'is_read' => false,
             ]);
 

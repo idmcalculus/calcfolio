@@ -12,7 +12,63 @@ class WebhookVerifier
     }
 
     /**
-     * Verify webhook signature from Resend
+     * Verify webhook signature from Svix (used by Resend)
+     */
+    public function verifySvix(string $payload, string $signature, string $timestamp, string $msgId = ''): bool
+    {
+        if (empty($this->secret)) {
+            error_log('Warning: RESEND_WEBHOOK_SECRET not configured, skipping signature verification');
+            return true; // Skip verification if no secret configured
+        }
+
+        // Parse Svix signature format: "v1,signature" (can have multiple signatures separated by space)
+        $signatures = [];
+        foreach (explode(' ', $signature) as $part) {
+            if (str_contains($part, ',')) {
+                [$version, $sig] = explode(',', $part, 2);
+                if ($version === 'v1') {
+                    $signatures[] = $sig;
+                }
+            }
+        }
+
+        if (empty($signatures)) {
+            error_log('No v1 signature found in Svix header');
+            return false;
+        }
+
+        // Remove 'whsec_' prefix from secret if present
+        $cleanSecret = str_starts_with($this->secret, 'whsec_')
+            ? substr($this->secret, 6)
+            : $this->secret;
+
+        // Try both signature formats (with and without msgId)
+        $signedPayloads = [];
+        if (!empty($msgId)) {
+            // Svix format with msgId: msgId.timestamp.payload
+            $signedPayloads[] = $msgId . '.' . $timestamp . '.' . $payload;
+        }
+        // Simplified format: timestamp.payload
+        $signedPayloads[] = $timestamp . '.' . $payload;
+
+        // Generate expected signatures for both formats
+        foreach ($signedPayloads as $signedPayload) {
+            $expectedSignature = base64_encode(hash_hmac('sha256', $signedPayload, base64_decode($cleanSecret), true));
+            
+            // Check if any of the provided signatures match
+            foreach ($signatures as $receivedSignature) {
+                if (hash_equals($expectedSignature, $receivedSignature)) {
+                    return true;
+                }
+            }
+        }
+
+        error_log('Svix webhook signature verification failed');
+        return false;
+    }
+
+    /**
+     * Verify webhook signature from Resend (legacy format)
      */
     public function verify(string $payload, string $signature): bool
     {

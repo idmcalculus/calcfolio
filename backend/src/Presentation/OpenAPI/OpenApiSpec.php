@@ -13,8 +13,9 @@ use OpenApi\Attributes as OA;
         email: "idm.calculus@gmail.com"
     )
 )]
-#[OA\Server(url: "http://localhost:8080", description: "Development server")]
-#[OA\Server(url: "https://api.calcfolio.com", description: "Production server")]
+#[OA\Server(url: "http://localhost:8080", description: "Local Development server")]
+#[OA\Server(url: "https://calcfolio-api-dev.up.railway.app", description: "Remote Development server")]
+#[OA\Server(url: "https://calcfolio-api.up.railway.app", description: "Remote Development server")]
 #[OA\SecurityScheme(
     securityScheme: "sessionAuth",
     type: "apiKey",

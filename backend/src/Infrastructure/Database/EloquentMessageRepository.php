@@ -95,7 +95,7 @@ class EloquentMessageRepository implements MessageRepositoryInterface
             'subject' => $data['subject'],
             'message' => $data['message'],
             'message_id' => $data['message_id'] ?? null,
-            'status' => $data['status'] ?? MessageStatus::STATUS_PENDING,
+            'status' => $data['status'] ?? MessageStatus::pending()->getValue(),
             'is_read' => $data['is_read'] ?? false,
         ]);
 

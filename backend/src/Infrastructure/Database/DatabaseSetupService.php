@@ -36,7 +36,7 @@ class DatabaseSetupService
                 $table->string('email');
                 $table->string('subject');
                 $table->text('message');
-                $table->string('status')->default(MessageStatus::STATUS_PENDING);
+                $table->string('status')->default(MessageStatus::pending()->getValue());
                 $table->string('message_id')->unique()->nullable();
                 $table->boolean('is_read')->default(0);
                 $table->timestamps();

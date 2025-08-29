@@ -43,10 +43,19 @@ class WebhookController
     public function handleResendWebhook(Request $request, Response $response): Response
     {
         $payload = $request->getBody()->getContents();
-        $signature = $request->getHeaderLine('resend-signature');
+        
+        // Svix headers (used by Resend)
+        $signature = $request->getHeaderLine('svix-signature');
+        $timestamp = $request->getHeaderLine('svix-timestamp');
+        $msgId = $request->getHeaderLine('svix-id');
+        
+        // Fallback to resend-signature if svix headers not present
+        if (empty($signature)) {
+            $signature = $request->getHeaderLine('resend-signature');
+        }
 
         // Verify webhook signature
-        if (!$this->webhookVerifier->verify($payload, $signature)) {
+        if (!$this->webhookVerifier->verifySvix($payload, $signature, $timestamp, $msgId)) {
             error_log('Resend webhook signature verification failed');
             return $response->withStatus(401);
         }
@@ -74,18 +83,17 @@ class WebhookController
             return;
         }
 
-        $statusString = $this->mapEventTypeToStatus($event['type'] ?? '');
+        $status = $this->mapEventTypeToStatus($event['type'] ?? '');
 
-        if ($statusString) {
+        if ($status) {
             // Find message by message_id
             $message = $this->messageRepository->findByMessageId($messageId);
 
             if ($message) {
-                // Update message status using repository
-                $status = MessageStatus::fromString($statusString);
-                $this->messageRepository->update($message->getId(), ['status' => $statusString]);
+                // Update message status using repository with the MessageStatus value object
+                $this->messageRepository->update($message->getId(), ['status' => $status->getValue()]);
 
-                error_log("Updated message {$messageId} status to: {$statusString}");
+                error_log("Updated message {$messageId} status to: {$status->getValue()}");
             } else {
                 error_log("Message with ID {$messageId} not found");
             }
@@ -101,9 +109,20 @@ class WebhookController
             return null;
         }
 
-        foreach ($event['data']['tags'] as $tag) {
-            if (($tag['name'] ?? '') === 'message_id') {
-                return $tag['value'] ?? null;
+        // Tags can be either an object or an array
+        $tags = $event['data']['tags'];
+        
+        // If tags is an associative array/object with message_id key
+        if (isset($tags['message_id'])) {
+            return $tags['message_id'];
+        }
+        
+        // If tags is an array of tag objects (legacy format)
+        if (is_array($tags)) {
+            foreach ($tags as $tag) {
+                if (is_array($tag) && ($tag['name'] ?? '') === 'message_id') {
+                    return $tag['value'] ?? null;
+                }
             }
         }
 
@@ -111,16 +130,17 @@ class WebhookController
     }
 
     /**
-     * Map webhook event type to message status
+     * Map webhook event type to message status value object
      */
-    private function mapEventTypeToStatus(string $eventType): ?string
+    private function mapEventTypeToStatus(string $eventType): ?MessageStatus
     {
         return match($eventType) {
-            'email.delivered' => MessageStatus::STATUS_DELIVERED,
-            'email.bounced' => MessageStatus::STATUS_BOUNCED,
-            'email.opened' => MessageStatus::STATUS_OPENED,
-            'email.clicked' => MessageStatus::STATUS_CLICKED,
-            'email.complained' => MessageStatus::STATUS_COMPLAINED,
+            'email.delivered' => MessageStatus::delivered(),
+            'email.delivery_delayed' => MessageStatus::pending(), // Email is still pending delivery
+            'email.bounced' => MessageStatus::bounced(),
+            'email.opened' => MessageStatus::opened(),
+            'email.clicked' => MessageStatus::clicked(),
+            'email.complained' => MessageStatus::complained(),
             default => null
         };
     }
