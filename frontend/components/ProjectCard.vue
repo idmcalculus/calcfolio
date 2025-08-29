@@ -1,10 +1,10 @@
 <template>
 	<article class="p-4 bg-transparent overflow-hidden transition-all hover:shadow-lg hover:scale-105 focus-within:ring-2 focus-within:ring-primary focus-within:ring-offset-2 rounded-lg">
 	  <NuxtImg
-		:src="image"
-		:alt="`Screenshot or preview of ${title} project`"
-		class="w-full h-64 object-cover rounded-md"
-		loading="lazy"
+	 :src="imageUrl"
+	 :alt="`Screenshot or preview of ${title} project`"
+	 class="w-full h-64 object-cover rounded-md"
+	 loading="lazy"
 	  />
 
 	  <div class="pt-4">
@@ -56,7 +56,7 @@
 	title: string
 	description: string
 	tags: string[]
-	image?: string
+	imageUrl: string
 	link?: string
 	github?: string
   }>()
