@@ -82,7 +82,7 @@
 			title: 'Senior Software & Data Engineer',
 			company: 'Trusted Transfers',
 			date: 'January 2023 – June 2025',
-			description: 'I designed and implemented Power BI/Tableau dashboards that improved decision-making speed by 40%. I re-architected APIs and PostgreSQL (partitioning + indexing) and sped up Spark/Python pipelines—cutting query latency by 95% and processing time by 70%. I shifted heavy cron jobs to AWS Lambda and deployed microservices on ECS Fargate via Pulumi, halving both provisioning and deploy times while making the platform more secure and scalable.',
+			description: 'I built Power BI/Tableau dashboards that improved decision-making by 40%. I optimised APIs, PostgreSQL, and Spark pipelines—cutting latency by up to 95%. I deployed secure AWS microservices with Pulumi and halved provisioning and deploy times.',
 			type: 'part-time'
 		},
 		{
@@ -170,13 +170,13 @@
     }
 
     // Check if the job above has the same company
-    const hasSameCompanyAbove = (index: number): boolean => {
-        if (index === 0) return false
-        const currentJob = sortedExperience.value[index]
-        const previousJob = sortedExperience.value[index - 1]
-        if (!currentJob || !previousJob) return false
-        return currentJob.company === previousJob.company
-    }
+    // const hasSameCompanyAbove = (index: number): boolean => {
+    //     if (index === 0) return false
+    //     const currentJob = sortedExperience.value[index]
+    //     const previousJob = sortedExperience.value[index - 1]
+    //     if (!currentJob || !previousJob) return false
+    //     return currentJob.company === previousJob.company
+    // }
 
     // Check if this is the first role in a company group
     const isFirstInCompanyGroup = (index: number): boolean => {
