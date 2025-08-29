@@ -10,8 +10,9 @@ class EmailAddress
 
     public function __construct(string $email)
     {
-        $this->ensureIsValidEmail($email);
-        $this->value = strtolower(trim($email));
+        $trimmedEmail = trim($email);
+        $this->ensureIsValidEmail($trimmedEmail);
+        $this->value = strtolower($trimmedEmail);
     }
 
     private function ensureIsValidEmail(string $email): void

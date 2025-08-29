@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <title>Dashboard for /Users/idmcalculus/Documents/calcfolio/backend/src</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="_css/bootstrap.min.css?v=12.3.3" rel="stylesheet" type="text/css">
+  <link href="_css/billboard.min.css?v=12.3.3" rel="stylesheet" type="text/css">
+  <link href="_css/style.css?v=12.3.3" rel="stylesheet" type="text/css">
+  <link href="_css/custom.css" rel="stylesheet" type="text/css">
+ </head>
+ <body>
+  <header>
+   <div class="container-fluid">
+    <div class="row">
+     <div class="col-md-12">
+      <nav aria-label="breadcrumb">
+       <ol class="breadcrumb">
+         <li class="breadcrumb-item"><a href="index.html">/Users/idmcalculus/Documents/calcfolio/backend/src</a></li>
+         <li class="breadcrumb-item active">(Dashboard)</li>
+
+       </ol>
+      </nav>
+     </div>
+    </div>
+   </div>
+  </header>
+  <div class="container-fluid">
+   <div class="row">
+    <div class="col-md-12">
+     <h2>Classes</h2>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-6">
+     <h3>Coverage Distribution</h3>
+     <div id="classesCoverageDistribution" style="height: 300px;">
+       <svg></svg>
+     </div>
+    </div>
+    <div class="col-md-6">
+     <h3>Complexity</h3>
+     <div id="classComplexity" style="height: 300px;">
+       <svg></svg>
+     </div>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-6">
+     <h3 style="margin-top: 2rem;">Insufficient Coverage</h3>
+     <div class="scrollbox">
+      <table class="table">
+       <thead>
+        <tr>
+         <th>Class</th>
+         <th class="text-right">Coverage</th>
+        </tr>
+       </thead>
+       <tbody>
+       <tr><td><a href="Application/Controllers/AdminAuthController.php.html#10">App\Application\Controllers\AdminAuthController</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Application/Controllers/AdminController.php.html#11">App\Application\Controllers\AdminController</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Application/Controllers/WebhookController.php.html#12">App\Application\Controllers\WebhookController</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Application/Validators/RequestValidator.php.html#9">App\Application\Validators\RequestValidator</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Domain/Entities/Message.php.html#9">App\Domain\Entities\Message</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Infrastructure/Database/DatabaseSetupService.php.html#8">App\Infrastructure\Database\DatabaseSetupService</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Infrastructure/Database/EloquentAdminRepository.php.html#9">App\Infrastructure\Database\EloquentAdminRepository</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Infrastructure/Database/EloquentMessageRepository.php.html#13">App\Infrastructure\Database\EloquentMessageRepository</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Infrastructure/External/ResendEmailService.php.html#9">App\Infrastructure\External\ResendEmailService</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Infrastructure/External/WebhookVerifier.php.html#5">App\Infrastructure\External\WebhookVerifier</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Presentation/Handlers/CustomErrorHandler.php.html#12">App\Presentation\Handlers\CustomErrorHandler</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Presentation/Middleware/CorsMiddleware.php.html#11">App\Presentation\Middleware\CorsMiddleware</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Application/Services/AdminMessageService.php.html#10">App\Application\Services\AdminMessageService</a></td><td class="text-right">8%</td></tr>
+       <tr><td><a href="Domain/Entities/Admin.php.html#8">App\Domain\Entities\Admin</a></td><td class="text-right">31%</td></tr>
+       <tr><td><a href="Domain/ValueObjects/MessageStatus.php.html#7">App\Domain\ValueObjects\MessageStatus</a></td><td class="text-right">46%</td></tr>
+       <tr><td><a href="Application/Services/ContactFormService.php.html#13">App\Application\Services\ContactFormService</a></td><td class="text-right">51%</td></tr>
+       <tr><td><a href="Application/Services/AdminAuthenticationService.php.html#9">App\Application\Services\AdminAuthenticationService</a></td><td class="text-right">54%</td></tr>
+       <tr><td><a href="Application/Controllers/ContactController.php.html#13">App\Application\Controllers\ContactController</a></td><td class="text-right">55%</td></tr>
+       <tr><td><a href="Domain/ValueObjects/EmailAddress.php.html#7">App\Domain\ValueObjects\EmailAddress</a></td><td class="text-right">70%</td></tr>
+       <tr><td><a href="Presentation/Middleware/AdminAuthMiddleware.php.html#12">App\Presentation\Middleware\AdminAuthMiddleware</a></td><td class="text-right">88%</td></tr>
+
+       </tbody>
+      </table>
+     </div>
+    </div>
+    <div class="col-md-6">
+     <h3 style="margin-top: 2rem;">Project Risks</h3>
+     <div class="scrollbox">
+      <table class="table">
+       <thead>
+        <tr>
+         <th>Class</th>
+         <th class="text-right">Coverage</th>
+         <th class="text-right">Complexity</th>
+         <th class="text-right"><abbr title="Change Risk Anti-Patterns (CRAP) Index">CRAP</abbr></th>
+        </tr>
+       </thead>
+       <tbody>
+       <tr><td><a href="Presentation/Handlers/CustomErrorHandler.php.html#12">App\Presentation\Handlers\CustomErrorHandler</a></td><td class="text-right">0.0%</td><td class="text-right">41</td><td class="text-right">1722</td></tr>
+       <tr><td><a href="Application/Validators/RequestValidator.php.html#9">App\Application\Validators\RequestValidator</a></td><td class="text-right">0.0%</td><td class="text-right">35</td><td class="text-right">1260</td></tr>
+       <tr><td><a href="Application/Services/AdminMessageService.php.html#10">App\Application\Services\AdminMessageService</a></td><td class="text-right">8.5%</td><td class="text-right">33</td><td class="text-right">867</td></tr>
+       <tr><td><a href="Infrastructure/External/WebhookVerifier.php.html#5">App\Infrastructure\External\WebhookVerifier</a></td><td class="text-right">0.0%</td><td class="text-right">26</td><td class="text-right">702</td></tr>
+       <tr><td><a href="Application/Controllers/WebhookController.php.html#12">App\Application\Controllers\WebhookController</a></td><td class="text-right">0.0%</td><td class="text-right">23</td><td class="text-right">552</td></tr>
+       <tr><td><a href="Infrastructure/Database/EloquentMessageRepository.php.html#13">App\Infrastructure\Database\EloquentMessageRepository</a></td><td class="text-right">0.0%</td><td class="text-right">22</td><td class="text-right">506</td></tr>
+       <tr><td><a href="Application/Controllers/AdminAuthController.php.html#10">App\Application\Controllers\AdminAuthController</a></td><td class="text-right">0.0%</td><td class="text-right">19</td><td class="text-right">380</td></tr>
+       <tr><td><a href="Application/Controllers/AdminController.php.html#11">App\Application\Controllers\AdminController</a></td><td class="text-right">0.0%</td><td class="text-right">18</td><td class="text-right">342</td></tr>
+       <tr><td><a href="Infrastructure/External/ResendEmailService.php.html#9">App\Infrastructure\External\ResendEmailService</a></td><td class="text-right">0.0%</td><td class="text-right">17</td><td class="text-right">306</td></tr>
+       <tr><td><a href="Infrastructure/Database/EloquentAdminRepository.php.html#9">App\Infrastructure\Database\EloquentAdminRepository</a></td><td class="text-right">0.0%</td><td class="text-right">13</td><td class="text-right">182</td></tr>
+       <tr><td><a href="Infrastructure/Database/DatabaseSetupService.php.html#8">App\Infrastructure\Database\DatabaseSetupService</a></td><td class="text-right">0.0%</td><td class="text-right">12</td><td class="text-right">156</td></tr>
+       <tr><td><a href="Presentation/Middleware/CorsMiddleware.php.html#11">App\Presentation\Middleware\CorsMiddleware</a></td><td class="text-right">0.0%</td><td class="text-right">9</td><td class="text-right">90</td></tr>
+       <tr><td><a href="Domain/ValueObjects/MessageStatus.php.html#7">App\Domain\ValueObjects\MessageStatus</a></td><td class="text-right">46.4%</td><td class="text-right">19</td><td class="text-right">74</td></tr>
+       <tr><td><a href="Application/Services/AdminAuthenticationService.php.html#9">App\Application\Services\AdminAuthenticationService</a></td><td class="text-right">54.9%</td><td class="text-right">21</td><td class="text-right">61</td></tr>
+       <tr><td><a href="Application/Controllers/ContactController.php.html#13">App\Application\Controllers\ContactController</a></td><td class="text-right">55.1%</td><td class="text-right">11</td><td class="text-right">21</td></tr>
+       <tr><td><a href="Application/Services/ContactFormService.php.html#13">App\Application\Services\ContactFormService</a></td><td class="text-right">51.0%</td><td class="text-right">7</td><td class="text-right">12</td></tr>
+       <tr><td><a href="Domain/ValueObjects/EmailAddress.php.html#7">App\Domain\ValueObjects\EmailAddress</a></td><td class="text-right">70.0%</td><td class="text-right">8</td><td class="text-right">9</td></tr>
+       <tr><td><a href="Presentation/Middleware/AdminAuthMiddleware.php.html#12">App\Presentation\Middleware\AdminAuthMiddleware</a></td><td class="text-right">88.2%</td><td class="text-right">4</td><td class="text-right">4</td></tr>
+
+       </tbody>
+      </table>
+     </div>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-12">
+     <h2 style="margin-top: 3rem;">Methods</h2>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-6">
+     <h3>Coverage Distribution</h3>
+     <div id="methodsCoverageDistribution" style="height: 300px;">
+       <svg></svg>
+     </div>
+    </div>
+    <div class="col-md-6">
+     <h3>Complexity</h3>
+     <div id="methodComplexity" style="height: 300px;">
+       <svg></svg>
+     </div>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-6">
+     <h3 style="margin-top: 2rem;">Insufficient Coverage</h3>
+     <div class="scrollbox">
+      <table class="table">
+       <thead>
+        <tr>
+         <th>Method</th>
+         <th class="text-right">Coverage</th>
+        </tr>
+       </thead>
+       <tbody>
+       <tr><td><a href="Application/Controllers/AdminAuthController.php.html#14"><abbr title="App\Application\Controllers\AdminAuthController::__construct">__construct</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Application/Controllers/AdminAuthController.php.html#19"><abbr title="App\Application\Controllers\AdminAuthController::login">login</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Application/Controllers/AdminAuthController.php.html#122"><abbr title="App\Application\Controllers\AdminAuthController::logout">logout</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Application/Controllers/AdminAuthController.php.html#160"><abbr title="App\Application\Controllers\AdminAuthController::checkAuth">checkAuth</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Application/Controllers/AdminAuthController.php.html#198"><abbr title="App\Application\Controllers\AdminAuthController::recoverSession">recoverSession</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Application/Controllers/AdminController.php.html#16"><abbr title="App\Application\Controllers\AdminController::__construct">__construct</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Application/Controllers/AdminController.php.html#24"><abbr title="App\Application\Controllers\AdminController::getMessages">getMessages</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Application/Controllers/AdminController.php.html#60"><abbr title="App\Application\Controllers\AdminController::getMessage">getMessage</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Application/Controllers/AdminController.php.html#97"><abbr title="App\Application\Controllers\AdminController::bulkAction">bulkAction</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Application/Controllers/AdminController.php.html#149"><abbr title="App\Application\Controllers\AdminController::getStatistics">getStatistics</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Application/Controllers/ContactController.php.html#113"><abbr title="App\Application\Controllers\ContactController::getMessageStatus">getMessageStatus</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Application/Controllers/WebhookController.php.html#17"><abbr title="App\Application\Controllers\WebhookController::__construct">__construct</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Application/Controllers/WebhookController.php.html#25"><abbr title="App\Application\Controllers\WebhookController::handleResendWebhook">handleResendWebhook</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Application/Controllers/WebhookController.php.html#77"><abbr title="App\Application\Controllers\WebhookController::processWebhookEvent">processWebhookEvent</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Application/Controllers/WebhookController.php.html#106"><abbr title="App\Application\Controllers\WebhookController::extractMessageIdFromEvent">extractMessageIdFromEvent</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Application/Controllers/WebhookController.php.html#135"><abbr title="App\Application\Controllers\WebhookController::mapEventTypeToStatus">mapEventTypeToStatus</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Application/Services/AdminAuthenticationService.php.html#36"><abbr title="App\Application\Services\AdminAuthenticationService::getCurrentAdmin">getCurrentAdmin</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Application/Services/AdminAuthenticationService.php.html#45"><abbr title="App\Application\Services\AdminAuthenticationService::login">login</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Application/Services/AdminAuthenticationService.php.html#90"><abbr title="App\Application\Services\AdminAuthenticationService::regenerateSession">regenerateSession</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Application/Services/AdminMessageService.php.html#29"><abbr title="App\Application\Services\AdminMessageService::getMessages">getMessages</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Application/Services/AdminMessageService.php.html#164"><abbr title="App\Application\Services\AdminMessageService::bulkAction">bulkAction</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Application/Services/AdminMessageService.php.html#233"><abbr title="App\Application\Services\AdminMessageService::getStatistics">getStatistics</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Application/Services/ContactFormService.php.html#85"><abbr title="App\Application\Services\ContactFormService::getMessageStatus">getMessageStatus</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Application/Validators/RequestValidator.php.html#14"><abbr title="App\Application\Validators\RequestValidator::validateContactForm">validateContactForm</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Application/Validators/RequestValidator.php.html#45"><abbr title="App\Application\Validators\RequestValidator::validateAdminLogin">validateAdminLogin</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Application/Validators/RequestValidator.php.html#68"><abbr title="App\Application\Validators\RequestValidator::validateBulkAction">validateBulkAction</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Application/Validators/RequestValidator.php.html#88"><abbr title="App\Application\Validators\RequestValidator::validatePagination">validatePagination</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Application/Validators/RequestValidator.php.html#159"><abbr title="App\Application\Validators\RequestValidator::processPaginationParams">processPaginationParams</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Application/Validators/RequestValidator.php.html#190"><abbr title="App\Application\Validators\RequestValidator::validateSearch">validateSearch</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Application/Validators/RequestValidator.php.html#211"><abbr title="App\Application\Validators\RequestValidator::getErrors">getErrors</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Application/Validators/RequestValidator.php.html#216"><abbr title="App\Application\Validators\RequestValidator::isValid">isValid</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Application/Validators/RequestValidator.php.html#221"><abbr title="App\Application\Validators\RequestValidator::getValidatedData">getValidatedData</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Application/Validators/RequestValidator.php.html#226"><abbr title="App\Application\Validators\RequestValidator::formatValidationErrors">formatValidationErrors</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Domain/Entities/Admin.php.html#30"><abbr title="App\Domain\Entities\Admin::getId">getId</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Domain/Entities/Admin.php.html#35"><abbr title="App\Domain\Entities\Admin::getUsername">getUsername</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Domain/Entities/Admin.php.html#40"><abbr title="App\Domain\Entities\Admin::getPasswordHash">getPasswordHash</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Domain/Entities/Admin.php.html#45"><abbr title="App\Domain\Entities\Admin::getCreatedAt">getCreatedAt</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Domain/Entities/Admin.php.html#50"><abbr title="App\Domain\Entities\Admin::getUpdatedAt">getUpdatedAt</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Domain/Entities/Admin.php.html#60"><abbr title="App\Domain\Entities\Admin::updatePassword">updatePassword</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Domain/Entities/Admin.php.html#66"><abbr title="App\Domain\Entities\Admin::toArray">toArray</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Domain/Entities/Message.php.html#22"><abbr title="App\Domain\Entities\Message::__construct">__construct</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Domain/Entities/Message.php.html#46"><abbr title="App\Domain\Entities\Message::getId">getId</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Domain/Entities/Message.php.html#51"><abbr title="App\Domain\Entities\Message::getName">getName</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Domain/Entities/Message.php.html#56"><abbr title="App\Domain\Entities\Message::getEmail">getEmail</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Domain/Entities/Message.php.html#61"><abbr title="App\Domain\Entities\Message::getSubject">getSubject</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Domain/Entities/Message.php.html#66"><abbr title="App\Domain\Entities\Message::getMessage">getMessage</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Domain/Entities/Message.php.html#71"><abbr title="App\Domain\Entities\Message::getMessageId">getMessageId</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Domain/Entities/Message.php.html#76"><abbr title="App\Domain\Entities\Message::getStatus">getStatus</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Domain/Entities/Message.php.html#81"><abbr title="App\Domain\Entities\Message::isRead">isRead</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Domain/Entities/Message.php.html#86"><abbr title="App\Domain\Entities\Message::getCreatedAt">getCreatedAt</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Domain/Entities/Message.php.html#91"><abbr title="App\Domain\Entities\Message::getUpdatedAt">getUpdatedAt</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Domain/Entities/Message.php.html#96"><abbr title="App\Domain\Entities\Message::markAsRead">markAsRead</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Domain/Entities/Message.php.html#102"><abbr title="App\Domain\Entities\Message::updateStatus">updateStatus</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Domain/Entities/Message.php.html#108"><abbr title="App\Domain\Entities\Message::toArray">toArray</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Domain/ValueObjects/EmailAddress.php.html#35"><abbr title="App\Domain\ValueObjects\EmailAddress::getLocalPart">getLocalPart</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Domain/ValueObjects/EmailAddress.php.html#40"><abbr title="App\Domain\ValueObjects\EmailAddress::equals">equals</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Domain/ValueObjects/EmailAddress.php.html#45"><abbr title="App\Domain\ValueObjects\EmailAddress::__toString">__toString</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Domain/ValueObjects/MessageStatus.php.html#45"><abbr title="App\Domain\ValueObjects\MessageStatus::delivered">delivered</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Domain/ValueObjects/MessageStatus.php.html#50"><abbr title="App\Domain\ValueObjects\MessageStatus::bounced">bounced</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Domain/ValueObjects/MessageStatus.php.html#55"><abbr title="App\Domain\ValueObjects\MessageStatus::opened">opened</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Domain/ValueObjects/MessageStatus.php.html#60"><abbr title="App\Domain\ValueObjects\MessageStatus::clicked">clicked</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Domain/ValueObjects/MessageStatus.php.html#65"><abbr title="App\Domain\ValueObjects\MessageStatus::complained">complained</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Domain/ValueObjects/MessageStatus.php.html#70"><abbr title="App\Domain\ValueObjects\MessageStatus::fromString">fromString</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Domain/ValueObjects/MessageStatus.php.html#80"><abbr title="App\Domain\ValueObjects\MessageStatus::isPending">isPending</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Domain/ValueObjects/MessageStatus.php.html#85"><abbr title="App\Domain\ValueObjects\MessageStatus::isDelivered">isDelivered</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Domain/ValueObjects/MessageStatus.php.html#90"><abbr title="App\Domain\ValueObjects\MessageStatus::isBounced">isBounced</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Domain/ValueObjects/MessageStatus.php.html#95"><abbr title="App\Domain\ValueObjects\MessageStatus::isOpened">isOpened</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Domain/ValueObjects/MessageStatus.php.html#100"><abbr title="App\Domain\ValueObjects\MessageStatus::isClicked">isClicked</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Domain/ValueObjects/MessageStatus.php.html#105"><abbr title="App\Domain\ValueObjects\MessageStatus::isComplained">isComplained</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Domain/ValueObjects/MessageStatus.php.html#110"><abbr title="App\Domain\ValueObjects\MessageStatus::equals">equals</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Domain/ValueObjects/MessageStatus.php.html#115"><abbr title="App\Domain\ValueObjects\MessageStatus::__toString">__toString</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Infrastructure/Database/DatabaseSetupService.php.html#12"><abbr title="App\Infrastructure\Database\DatabaseSetupService::__construct">__construct</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Infrastructure/Database/DatabaseSetupService.php.html#20"><abbr title="App\Infrastructure\Database\DatabaseSetupService::createTablesIfNotExist">createTablesIfNotExist</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Infrastructure/Database/DatabaseSetupService.php.html#30"><abbr title="App\Infrastructure\Database\DatabaseSetupService::createMessagesTable">createMessagesTable</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Infrastructure/Database/DatabaseSetupService.php.html#50"><abbr title="App\Infrastructure\Database\DatabaseSetupService::createAdminsTable">createAdminsTable</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Infrastructure/Database/DatabaseSetupService.php.html#65"><abbr title="App\Infrastructure\Database\DatabaseSetupService::createEventLogsTable">createEventLogsTable</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Infrastructure/Database/DatabaseSetupService.php.html#80"><abbr title="App\Infrastructure\Database\DatabaseSetupService::checkTablesExist">checkTablesExist</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Infrastructure/Database/DatabaseSetupService.php.html#92"><abbr title="App\Infrastructure\Database\DatabaseSetupService::dropAllTables">dropAllTables</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Infrastructure/Database/EloquentAdminRepository.php.html#11"><abbr title="App\Infrastructure\Database\EloquentAdminRepository::findById">findById</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Infrastructure/Database/EloquentAdminRepository.php.html#22"><abbr title="App\Infrastructure\Database\EloquentAdminRepository::findByUsername">findByUsername</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Infrastructure/Database/EloquentAdminRepository.php.html#33"><abbr title="App\Infrastructure\Database\EloquentAdminRepository::create">create</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Infrastructure/Database/EloquentAdminRepository.php.html#43"><abbr title="App\Infrastructure\Database\EloquentAdminRepository::update">update</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Infrastructure/Database/EloquentAdminRepository.php.html#54"><abbr title="App\Infrastructure\Database\EloquentAdminRepository::delete">delete</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Infrastructure/Database/EloquentAdminRepository.php.html#65"><abbr title="App\Infrastructure\Database\EloquentAdminRepository::usernameExists">usernameExists</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Infrastructure/Database/EloquentAdminRepository.php.html#76"><abbr title="App\Infrastructure\Database\EloquentAdminRepository::getAll">getAll</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Infrastructure/Database/EloquentAdminRepository.php.html#85"><abbr title="App\Infrastructure\Database\EloquentAdminRepository::modelToEntity">modelToEntity</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Infrastructure/Database/EloquentMessageRepository.php.html#15"><abbr title="App\Infrastructure\Database\EloquentMessageRepository::findById">findById</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Infrastructure/Database/EloquentMessageRepository.php.html#26"><abbr title="App\Infrastructure\Database\EloquentMessageRepository::findByMessageId">findByMessageId</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Infrastructure/Database/EloquentMessageRepository.php.html#37"><abbr title="App\Infrastructure\Database\EloquentMessageRepository::getPaginated">getPaginated</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Infrastructure/Database/EloquentMessageRepository.php.html#90"><abbr title="App\Infrastructure\Database\EloquentMessageRepository::create">create</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Infrastructure/Database/EloquentMessageRepository.php.html#105"><abbr title="App\Infrastructure\Database\EloquentMessageRepository::update">update</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Infrastructure/Database/EloquentMessageRepository.php.html#116"><abbr title="App\Infrastructure\Database\EloquentMessageRepository::delete">delete</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Infrastructure/Database/EloquentMessageRepository.php.html#127"><abbr title="App\Infrastructure\Database\EloquentMessageRepository::markAsRead">markAsRead</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Infrastructure/Database/EloquentMessageRepository.php.html#132"><abbr title="App\Infrastructure\Database\EloquentMessageRepository::count">count</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Infrastructure/Database/EloquentMessageRepository.php.html#147"><abbr title="App\Infrastructure\Database\EloquentMessageRepository::search">search</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Infrastructure/Database/EloquentMessageRepository.php.html#173"><abbr title="App\Infrastructure\Database\EloquentMessageRepository::modelToEntity">modelToEntity</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Infrastructure/External/ResendEmailService.php.html#15"><abbr title="App\Infrastructure\External\ResendEmailService::__construct">__construct</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Infrastructure/External/ResendEmailService.php.html#22"><abbr title="App\Infrastructure\External\ResendEmailService::sendContactNotification">sendContactNotification</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Infrastructure/External/ResendEmailService.php.html#44"><abbr title="App\Infrastructure\External\ResendEmailService::sendAutoReply">sendAutoReply</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Infrastructure/External/ResendEmailService.php.html#66"><abbr title="App\Infrastructure\External\ResendEmailService::sendEmail">sendEmail</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Infrastructure/External/ResendEmailService.php.html#98"><abbr title="App\Infrastructure\External\ResendEmailService::getServiceStatus">getServiceStatus</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Infrastructure/External/ResendEmailService.php.html#116"><abbr title="App\Infrastructure\External\ResendEmailService::validateEmail">validateEmail</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Infrastructure/External/ResendEmailService.php.html#121"><abbr title="App\Infrastructure\External\ResendEmailService::buildAdminEmailBody">buildAdminEmailBody</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Infrastructure/External/ResendEmailService.php.html#126"><abbr title="App\Infrastructure\External\ResendEmailService::buildAutoReplyBody">buildAutoReplyBody</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Infrastructure/External/ResendEmailService.php.html#131"><abbr title="App\Infrastructure\External\ResendEmailService::sanitizeTagValue">sanitizeTagValue</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Infrastructure/External/WebhookVerifier.php.html#9"><abbr title="App\Infrastructure\External\WebhookVerifier::__construct">__construct</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Infrastructure/External/WebhookVerifier.php.html#17"><abbr title="App\Infrastructure\External\WebhookVerifier::verifySvix">verifySvix</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Infrastructure/External/WebhookVerifier.php.html#73"><abbr title="App\Infrastructure\External\WebhookVerifier::verify">verify</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Infrastructure/External/WebhookVerifier.php.html#116"><abbr title="App\Infrastructure\External\WebhookVerifier::verifyAdvanced">verifyAdvanced</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Infrastructure/External/WebhookVerifier.php.html#145"><abbr title="App\Infrastructure\External\WebhookVerifier::hasSecret">hasSecret</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Presentation/Handlers/CustomErrorHandler.php.html#17"><abbr title="App\Presentation\Handlers\CustomErrorHandler::__construct">__construct</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Presentation/Handlers/CustomErrorHandler.php.html#23"><abbr title="App\Presentation\Handlers\CustomErrorHandler::respond">respond</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Presentation/Handlers/CustomErrorHandler.php.html#58"><abbr title="App\Presentation\Handlers\CustomErrorHandler::getStatusCode">getStatusCode</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Presentation/Handlers/CustomErrorHandler.php.html#71"><abbr title="App\Presentation\Handlers\CustomErrorHandler::getErrorType">getErrorType</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Presentation/Handlers/CustomErrorHandler.php.html#88"><abbr title="App\Presentation\Handlers\CustomErrorHandler::getErrorCode">getErrorCode</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Presentation/Handlers/CustomErrorHandler.php.html#98"><abbr title="App\Presentation\Handlers\CustomErrorHandler::getPublicErrorMessage">getPublicErrorMessage</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Presentation/Handlers/CustomErrorHandler.php.html#121"><abbr title="App\Presentation\Handlers\CustomErrorHandler::addCorsHeaders">addCorsHeaders</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Presentation/Middleware/CorsMiddleware.php.html#15"><abbr title="App\Presentation\Middleware\CorsMiddleware::__construct">__construct</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Presentation/Middleware/CorsMiddleware.php.html#20"><abbr title="App\Presentation\Middleware\CorsMiddleware::process">process</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Application/Services/AdminMessageService.php.html#123"><abbr title="App\Application\Services\AdminMessageService::getMessage">getMessage</abbr></a></td><td class="text-right">41%</td></tr>
+       <tr><td><a href="Application/Services/ContactFormService.php.html#32"><abbr title="App\Application\Services\ContactFormService::processContactForm">processContactForm</abbr></a></td><td class="text-right">65%</td></tr>
+       <tr><td><a href="Application/Controllers/ContactController.php.html#26"><abbr title="App\Application\Controllers\ContactController::submit">submit</abbr></a></td><td class="text-right">69%</td></tr>
+       <tr><td><a href="Application/Services/AdminAuthenticationService.php.html#18"><abbr title="App\Application\Services\AdminAuthenticationService::authenticate">authenticate</abbr></a></td><td class="text-right">75%</td></tr>
+       <tr><td><a href="Application/Services/AdminAuthenticationService.php.html#109"><abbr title="App\Application\Services\AdminAuthenticationService::validateSessionTimeout">validateSessionTimeout</abbr></a></td><td class="text-right">75%</td></tr>
+       <tr><td><a href="Presentation/Middleware/AdminAuthMiddleware.php.html#21"><abbr title="App\Presentation\Middleware\AdminAuthMiddleware::process">process</abbr></a></td><td class="text-right">87%</td></tr>
+
+       </tbody>
+      </table>
+     </div>
+    </div>
+    <div class="col-md-6">
+     <h3 style="margin-top: 2rem;">Project Risks</h3>
+     <div class="scrollbox">
+      <table class="table">
+       <thead>
+        <tr>
+         <th>Method</th>
+         <th class="text-right">Coverage</th>
+         <th class="text-right">Complexity</th>
+         <th class="text-right"><abbr title="Change Risk Anti-Patterns (CRAP) Index">CRAP</abbr></th>
+        </tr>
+       </thead>
+       <tbody>
+       <tr><td><a href="Presentation/Handlers/CustomErrorHandler.php.html#98"><abbr title="App\Presentation\Handlers\CustomErrorHandler::getPublicErrorMessage">getPublicErrorMessage</abbr></a></td><td class="text-right">0.0%</td><td class="text-right">16</td><td class="text-right">272</td></tr>
+       <tr><td><a href="Application/Services/AdminMessageService.php.html#164"><abbr title="App\Application\Services\AdminMessageService::bulkAction">bulkAction</abbr></a></td><td class="text-right">0.0%</td><td class="text-right">13</td><td class="text-right">182</td></tr>
+       <tr><td><a href="Presentation/Handlers/CustomErrorHandler.php.html#71"><abbr title="App\Presentation\Handlers\CustomErrorHandler::getErrorType">getErrorType</abbr></a></td><td class="text-right">0.0%</td><td class="text-right">12</td><td class="text-right">156</td></tr>
+       <tr><td><a href="Application/Services/AdminMessageService.php.html#29"><abbr title="App\Application\Services\AdminMessageService::getMessages">getMessages</abbr></a></td><td class="text-right">0.0%</td><td class="text-right">11</td><td class="text-right">132</td></tr>
+       <tr><td><a href="Application/Validators/RequestValidator.php.html#159"><abbr title="App\Application\Validators\RequestValidator::processPaginationParams">processPaginationParams</abbr></a></td><td class="text-right">0.0%</td><td class="text-right">11</td><td class="text-right">132</td></tr>
+       <tr><td><a href="Infrastructure/External/WebhookVerifier.php.html#17"><abbr title="App\Infrastructure\External\WebhookVerifier::verifySvix">verifySvix</abbr></a></td><td class="text-right">0.0%</td><td class="text-right">11</td><td class="text-right">132</td></tr>
+       <tr><td><a href="Application/Validators/RequestValidator.php.html#88"><abbr title="App\Application\Validators\RequestValidator::validatePagination">validatePagination</abbr></a></td><td class="text-right">0.0%</td><td class="text-right">9</td><td class="text-right">90</td></tr>
+       <tr><td><a href="Application/Controllers/WebhookController.php.html#135"><abbr title="App\Application\Controllers\WebhookController::mapEventTypeToStatus">mapEventTypeToStatus</abbr></a></td><td class="text-right">0.0%</td><td class="text-right">8</td><td class="text-right">72</td></tr>
+       <tr><td><a href="Presentation/Middleware/CorsMiddleware.php.html#20"><abbr title="App\Presentation\Middleware\CorsMiddleware::process">process</abbr></a></td><td class="text-right">0.0%</td><td class="text-right">8</td><td class="text-right">72</td></tr>
+       <tr><td><a href="Application/Controllers/AdminController.php.html#60"><abbr title="App\Application\Controllers\AdminController::getMessage">getMessage</abbr></a></td><td class="text-right">0.0%</td><td class="text-right">7</td><td class="text-right">56</td></tr>
+       <tr><td><a href="Application/Controllers/WebhookController.php.html#106"><abbr title="App\Application\Controllers\WebhookController::extractMessageIdFromEvent">extractMessageIdFromEvent</abbr></a></td><td class="text-right">0.0%</td><td class="text-right">7</td><td class="text-right">56</td></tr>
+       <tr><td><a href="Infrastructure/External/WebhookVerifier.php.html#73"><abbr title="App\Infrastructure\External\WebhookVerifier::verify">verify</abbr></a></td><td class="text-right">0.0%</td><td class="text-right">7</td><td class="text-right">56</td></tr>
+       <tr><td><a href="Application/Controllers/AdminAuthController.php.html#19"><abbr title="App\Application\Controllers\AdminAuthController::login">login</abbr></a></td><td class="text-right">0.0%</td><td class="text-right">6</td><td class="text-right">42</td></tr>
+       <tr><td><a href="Application/Controllers/AdminAuthController.php.html#198"><abbr title="App\Application\Controllers\AdminAuthController::recoverSession">recoverSession</abbr></a></td><td class="text-right">0.0%</td><td class="text-right">6</td><td class="text-right">42</td></tr>
+       <tr><td><a href="Infrastructure/Database/EloquentMessageRepository.php.html#37"><abbr title="App\Infrastructure\Database\EloquentMessageRepository::getPaginated">getPaginated</abbr></a></td><td class="text-right">0.0%</td><td class="text-right">5</td><td class="text-right">30</td></tr>
+       <tr><td><a href="Infrastructure/External/WebhookVerifier.php.html#116"><abbr title="App\Infrastructure\External\WebhookVerifier::verifyAdvanced">verifyAdvanced</abbr></a></td><td class="text-right">0.0%</td><td class="text-right">5</td><td class="text-right">30</td></tr>
+       <tr><td><a href="Application/Controllers/AdminAuthController.php.html#160"><abbr title="App\Application\Controllers\AdminAuthController::checkAuth">checkAuth</abbr></a></td><td class="text-right">0.0%</td><td class="text-right">4</td><td class="text-right">20</td></tr>
+       <tr><td><a href="Application/Controllers/AdminController.php.html#97"><abbr title="App\Application\Controllers\AdminController::bulkAction">bulkAction</abbr></a></td><td class="text-right">0.0%</td><td class="text-right">4</td><td class="text-right">20</td></tr>
+       <tr><td><a href="Application/Controllers/WebhookController.php.html#77"><abbr title="App\Application\Controllers\WebhookController::processWebhookEvent">processWebhookEvent</abbr></a></td><td class="text-right">0.0%</td><td class="text-right">4</td><td class="text-right">20</td></tr>
+       <tr><td><a href="Infrastructure/External/ResendEmailService.php.html#15"><abbr title="App\Infrastructure\External\ResendEmailService::__construct">__construct</abbr></a></td><td class="text-right">0.0%</td><td class="text-right">4</td><td class="text-right">20</td></tr>
+       <tr><td><a href="Presentation/Handlers/CustomErrorHandler.php.html#121"><abbr title="App\Presentation\Handlers\CustomErrorHandler::addCorsHeaders">addCorsHeaders</abbr></a></td><td class="text-right">0.0%</td><td class="text-right">4</td><td class="text-right">20</td></tr>
+       <tr><td><a href="Application/Controllers/AdminController.php.html#24"><abbr title="App\Application\Controllers\AdminController::getMessages">getMessages</abbr></a></td><td class="text-right">0.0%</td><td class="text-right">3</td><td class="text-right">12</td></tr>
+       <tr><td><a href="Application/Controllers/AdminController.php.html#149"><abbr title="App\Application\Controllers\AdminController::getStatistics">getStatistics</abbr></a></td><td class="text-right">0.0%</td><td class="text-right">3</td><td class="text-right">12</td></tr>
+       <tr><td><a href="Application/Controllers/ContactController.php.html#113"><abbr title="App\Application\Controllers\ContactController::getMessageStatus">getMessageStatus</abbr></a></td><td class="text-right">0.0%</td><td class="text-right">3</td><td class="text-right">12</td></tr>
+       <tr><td><a href="Application/Controllers/WebhookController.php.html#25"><abbr title="App\Application\Controllers\WebhookController::handleResendWebhook">handleResendWebhook</abbr></a></td><td class="text-right">0.0%</td><td class="text-right">3</td><td class="text-right">12</td></tr>
+       <tr><td><a href="Application/Services/AdminAuthenticationService.php.html#36"><abbr title="App\Application\Services\AdminAuthenticationService::getCurrentAdmin">getCurrentAdmin</abbr></a></td><td class="text-right">0.0%</td><td class="text-right">3</td><td class="text-right">12</td></tr>
+       <tr><td><a href="Application/Services/AdminAuthenticationService.php.html#90"><abbr title="App\Application\Services\AdminAuthenticationService::regenerateSession">regenerateSession</abbr></a></td><td class="text-right">0.0%</td><td class="text-right">3</td><td class="text-right">12</td></tr>
+       <tr><td><a href="Application/Services/AdminMessageService.php.html#233"><abbr title="App\Application\Services\AdminMessageService::getStatistics">getStatistics</abbr></a></td><td class="text-right">0.0%</td><td class="text-right">3</td><td class="text-right">12</td></tr>
+       <tr><td><a href="Application/Validators/RequestValidator.php.html#14"><abbr title="App\Application\Validators\RequestValidator::validateContactForm">validateContactForm</abbr></a></td><td class="text-right">0.0%</td><td class="text-right">3</td><td class="text-right">12</td></tr>
+       <tr><td><a href="Application/Validators/RequestValidator.php.html#226"><abbr title="App\Application\Validators\RequestValidator::formatValidationErrors">formatValidationErrors</abbr></a></td><td class="text-right">0.0%</td><td class="text-right">3</td><td class="text-right">12</td></tr>
+       <tr><td><a href="Infrastructure/Database/DatabaseSetupService.php.html#92"><abbr title="App\Infrastructure\Database\DatabaseSetupService::dropAllTables">dropAllTables</abbr></a></td><td class="text-right">0.0%</td><td class="text-right">3</td><td class="text-right">12</td></tr>
+       <tr><td><a href="Infrastructure/Database/EloquentMessageRepository.php.html#132"><abbr title="App\Infrastructure\Database\EloquentMessageRepository::count">count</abbr></a></td><td class="text-right">0.0%</td><td class="text-right">3</td><td class="text-right">12</td></tr>
+       <tr><td><a href="Infrastructure/Database/EloquentMessageRepository.php.html#147"><abbr title="App\Infrastructure\Database\EloquentMessageRepository::search">search</abbr></a></td><td class="text-right">0.0%</td><td class="text-right">3</td><td class="text-right">12</td></tr>
+       <tr><td><a href="Infrastructure/External/ResendEmailService.php.html#66"><abbr title="App\Infrastructure\External\ResendEmailService::sendEmail">sendEmail</abbr></a></td><td class="text-right">0.0%</td><td class="text-right">3</td><td class="text-right">12</td></tr>
+       <tr><td><a href="Presentation/Handlers/CustomErrorHandler.php.html#23"><abbr title="App\Presentation\Handlers\CustomErrorHandler::respond">respond</abbr></a></td><td class="text-right">0.0%</td><td class="text-right">3</td><td class="text-right">12</td></tr>
+       <tr><td><a href="Presentation/Handlers/CustomErrorHandler.php.html#58"><abbr title="App\Presentation\Handlers\CustomErrorHandler::getStatusCode">getStatusCode</abbr></a></td><td class="text-right">0.0%</td><td class="text-right">3</td><td class="text-right">12</td></tr>
+       <tr><td><a href="Application/Services/AdminMessageService.php.html#123"><abbr title="App\Application\Services\AdminMessageService::getMessage">getMessage</abbr></a></td><td class="text-right">41.7%</td><td class="text-right">5</td><td class="text-right">9</td></tr>
+       <tr><td><a href="Application/Controllers/ContactController.php.html#26"><abbr title="App\Application\Controllers\ContactController::submit">submit</abbr></a></td><td class="text-right">69.4%</td><td class="text-right">7</td><td class="text-right">8</td></tr>
+       <tr><td><a href="Application/Controllers/AdminAuthController.php.html#122"><abbr title="App\Application\Controllers\AdminAuthController::logout">logout</abbr></a></td><td class="text-right">0.0%</td><td class="text-right">2</td><td class="text-right">6</td></tr>
+       <tr><td><a href="Application/Services/AdminAuthenticationService.php.html#45"><abbr title="App\Application\Services\AdminAuthenticationService::login">login</abbr></a></td><td class="text-right">0.0%</td><td class="text-right">2</td><td class="text-right">6</td></tr>
+       <tr><td><a href="Application/Services/ContactFormService.php.html#85"><abbr title="App\Application\Services\ContactFormService::getMessageStatus">getMessageStatus</abbr></a></td><td class="text-right">0.0%</td><td class="text-right">2</td><td class="text-right">6</td></tr>
+       <tr><td><a href="Application/Validators/RequestValidator.php.html#45"><abbr title="App\Application\Validators\RequestValidator::validateAdminLogin">validateAdminLogin</abbr></a></td><td class="text-right">0.0%</td><td class="text-right">2</td><td class="text-right">6</td></tr>
+       <tr><td><a href="Application/Validators/RequestValidator.php.html#68"><abbr title="App\Application\Validators\RequestValidator::validateBulkAction">validateBulkAction</abbr></a></td><td class="text-right">0.0%</td><td class="text-right">2</td><td class="text-right">6</td></tr>
+       <tr><td><a href="Application/Validators/RequestValidator.php.html#190"><abbr title="App\Application\Validators\RequestValidator::validateSearch">validateSearch</abbr></a></td><td class="text-right">0.0%</td><td class="text-right">2</td><td class="text-right">6</td></tr>
+       <tr><td><a href="Infrastructure/Database/DatabaseSetupService.php.html#30"><abbr title="App\Infrastructure\Database\DatabaseSetupService::createMessagesTable">createMessagesTable</abbr></a></td><td class="text-right">0.0%</td><td class="text-right">2</td><td class="text-right">6</td></tr>
+       <tr><td><a href="Infrastructure/Database/DatabaseSetupService.php.html#50"><abbr title="App\Infrastructure\Database\DatabaseSetupService::createAdminsTable">createAdminsTable</abbr></a></td><td class="text-right">0.0%</td><td class="text-right">2</td><td class="text-right">6</td></tr>
+       <tr><td><a href="Infrastructure/Database/DatabaseSetupService.php.html#65"><abbr title="App\Infrastructure\Database\DatabaseSetupService::createEventLogsTable">createEventLogsTable</abbr></a></td><td class="text-right">0.0%</td><td class="text-right">2</td><td class="text-right">6</td></tr>
+       <tr><td><a href="Infrastructure/Database/EloquentAdminRepository.php.html#11"><abbr title="App\Infrastructure\Database\EloquentAdminRepository::findById">findById</abbr></a></td><td class="text-right">0.0%</td><td class="text-right">2</td><td class="text-right">6</td></tr>
+       <tr><td><a href="Infrastructure/Database/EloquentAdminRepository.php.html#22"><abbr title="App\Infrastructure\Database\EloquentAdminRepository::findByUsername">findByUsername</abbr></a></td><td class="text-right">0.0%</td><td class="text-right">2</td><td class="text-right">6</td></tr>
+       <tr><td><a href="Infrastructure/Database/EloquentAdminRepository.php.html#43"><abbr title="App\Infrastructure\Database\EloquentAdminRepository::update">update</abbr></a></td><td class="text-right">0.0%</td><td class="text-right">2</td><td class="text-right">6</td></tr>
+       <tr><td><a href="Infrastructure/Database/EloquentAdminRepository.php.html#54"><abbr title="App\Infrastructure\Database\EloquentAdminRepository::delete">delete</abbr></a></td><td class="text-right">0.0%</td><td class="text-right">2</td><td class="text-right">6</td></tr>
+       <tr><td><a href="Infrastructure/Database/EloquentAdminRepository.php.html#65"><abbr title="App\Infrastructure\Database\EloquentAdminRepository::usernameExists">usernameExists</abbr></a></td><td class="text-right">0.0%</td><td class="text-right">2</td><td class="text-right">6</td></tr>
+       <tr><td><a href="Infrastructure/Database/EloquentMessageRepository.php.html#15"><abbr title="App\Infrastructure\Database\EloquentMessageRepository::findById">findById</abbr></a></td><td class="text-right">0.0%</td><td class="text-right">2</td><td class="text-right">6</td></tr>
+       <tr><td><a href="Infrastructure/Database/EloquentMessageRepository.php.html#26"><abbr title="App\Infrastructure\Database\EloquentMessageRepository::findByMessageId">findByMessageId</abbr></a></td><td class="text-right">0.0%</td><td class="text-right">2</td><td class="text-right">6</td></tr>
+       <tr><td><a href="Infrastructure/Database/EloquentMessageRepository.php.html#105"><abbr title="App\Infrastructure\Database\EloquentMessageRepository::update">update</abbr></a></td><td class="text-right">0.0%</td><td class="text-right">2</td><td class="text-right">6</td></tr>
+       <tr><td><a href="Infrastructure/Database/EloquentMessageRepository.php.html#116"><abbr title="App\Infrastructure\Database\EloquentMessageRepository::delete">delete</abbr></a></td><td class="text-right">0.0%</td><td class="text-right">2</td><td class="text-right">6</td></tr>
+       <tr><td><a href="Infrastructure/External/ResendEmailService.php.html#22"><abbr title="App\Infrastructure\External\ResendEmailService::sendContactNotification">sendContactNotification</abbr></a></td><td class="text-right">0.0%</td><td class="text-right">2</td><td class="text-right">6</td></tr>
+       <tr><td><a href="Infrastructure/External/ResendEmailService.php.html#44"><abbr title="App\Infrastructure\External\ResendEmailService::sendAutoReply">sendAutoReply</abbr></a></td><td class="text-right">0.0%</td><td class="text-right">2</td><td class="text-right">6</td></tr>
+       <tr><td><a href="Infrastructure/External/ResendEmailService.php.html#98"><abbr title="App\Infrastructure\External\ResendEmailService::getServiceStatus">getServiceStatus</abbr></a></td><td class="text-right">0.0%</td><td class="text-right">2</td><td class="text-right">6</td></tr>
+       <tr><td><a href="Infrastructure/External/WebhookVerifier.php.html#9"><abbr title="App\Infrastructure\External\WebhookVerifier::__construct">__construct</abbr></a></td><td class="text-right">0.0%</td><td class="text-right">2</td><td class="text-right">6</td></tr>
+       <tr><td><a href="Presentation/Handlers/CustomErrorHandler.php.html#88"><abbr title="App\Presentation\Handlers\CustomErrorHandler::getErrorCode">getErrorCode</abbr></a></td><td class="text-right">0.0%</td><td class="text-right">2</td><td class="text-right">6</td></tr>
+       <tr><td><a href="Application/Services/AdminAuthenticationService.php.html#18"><abbr title="App\Application\Services\AdminAuthenticationService::authenticate">authenticate</abbr></a></td><td class="text-right">75.0%</td><td class="text-right">3</td><td class="text-right">3</td></tr>
+       <tr><td><a href="Application/Services/AdminAuthenticationService.php.html#109"><abbr title="App\Application\Services\AdminAuthenticationService::validateSessionTimeout">validateSessionTimeout</abbr></a></td><td class="text-right">75.0%</td><td class="text-right">3</td><td class="text-right">3</td></tr>
+       <tr><td><a href="Application/Services/ContactFormService.php.html#32"><abbr title="App\Application\Services\ContactFormService::processContactForm">processContactForm</abbr></a></td><td class="text-right">65.6%</td><td class="text-right">3</td><td class="text-right">3</td></tr>
+       <tr><td><a href="Presentation/Middleware/AdminAuthMiddleware.php.html#21"><abbr title="App\Presentation\Middleware\AdminAuthMiddleware::process">process</abbr></a></td><td class="text-right">87.5%</td><td class="text-right">3</td><td class="text-right">3</td></tr>
+
+       </tbody>
+      </table>
+     </div>
+    </div>
+   </div>
+   <footer>
+    <hr/>
+    <p>
+     <small>Generated by <a href="https://github.com/sebastianbergmann/php-code-coverage" target="_top">php-code-coverage 12.3.3</a> using <a href="https://www.php.net/" target="_top">PHP 8.4.4</a> and <a href="https://phpunit.de/">PHPUnit 12.3.7</a> at Fri Aug 29 9:20:53 UTC 2025.</small>
+    </p>
+   </footer>
+  </div>
+  <script src="_js/billboard.pkgd.min.js?v=12.3.3" type="text/javascript"></script>
+  <script type="application/json" id="complexity_class">[[0,19,"Application\/Controllers\/AdminAuthController.php.html#10","App\\Application\\Controllers\\AdminAuthController","380"],[0,18,"Application\/Controllers\/AdminController.php.html#11","App\\Application\\Controllers\\AdminController","342"],[0,23,"Application\/Controllers\/WebhookController.php.html#12","App\\Application\\Controllers\\WebhookController","552"],[0,35,"Application\/Validators\/RequestValidator.php.html#9","App\\Application\\Validators\\RequestValidator","1260"],[0,14,"Domain\/Entities\/Message.php.html#9","App\\Domain\\Entities\\Message","210"],[0,12,"Infrastructure\/Database\/DatabaseSetupService.php.html#8","App\\Infrastructure\\Database\\DatabaseSetupService","156"],[0,13,"Infrastructure\/Database\/EloquentAdminRepository.php.html#9","App\\Infrastructure\\Database\\EloquentAdminRepository","182"],[0,22,"Infrastructure\/Database\/EloquentMessageRepository.php.html#13","App\\Infrastructure\\Database\\EloquentMessageRepository","506"],[0,17,"Infrastructure\/External\/ResendEmailService.php.html#9","App\\Infrastructure\\External\\ResendEmailService","306"],[0,26,"Infrastructure\/External\/WebhookVerifier.php.html#5","App\\Infrastructure\\External\\WebhookVerifier","702"],[0,41,"Presentation\/Handlers\/CustomErrorHandler.php.html#12","App\\Presentation\\Handlers\\CustomErrorHandler","1722"],[0,9,"Presentation\/Middleware\/CorsMiddleware.php.html#11","App\\Presentation\\Middleware\\CorsMiddleware","90"],[8.49673202614379,33,"Application\/Services\/AdminMessageService.php.html#10","App\\Application\\Services\\AdminMessageService","867.33"],[31.57894736842105,9,"Domain\/Entities\/Admin.php.html#8","App\\Domain\\Entities\\Admin","34.95"],[46.42857142857143,19,"Domain\/ValueObjects\/MessageStatus.php.html#7","App\\Domain\\ValueObjects\\MessageStatus","74.50"],[51.02040816326531,7,"Application\/Services\/ContactFormService.php.html#13","App\\Application\\Services\\ContactFormService","12.76"],[54.90196078431373,21,"Application\/Services\/AdminAuthenticationService.php.html#9","App\\Application\\Services\\AdminAuthenticationService","61.45"],[55.10204081632652,11,"Application\/Controllers\/ContactController.php.html#13","App\\Application\\Controllers\\ContactController","21.95"],[70,8,"Domain\/ValueObjects\/EmailAddress.php.html#7","App\\Domain\\ValueObjects\\EmailAddress","9.73"],[88.23529411764706,4,"Presentation\/Middleware\/AdminAuthMiddleware.php.html#12","App\\Presentation\\Middleware\\AdminAuthMiddleware","4.03"],[100,0,"Models\/Admin.php.html#7","App\\Models\\Admin","0"],[100,0,"Models\/EventLog.php.html#7","App\\Models\\EventLog","0"],[100,0,"Models\/Message.php.html#7","App\\Models\\Message","0"],[100,0,"Presentation\/OpenAPI\/OpenApiSpec.php.html#7","App\\Presentation\\OpenAPI\\OpenApiSpec","0"]]</script>
+  <script type="application/json" id="complexity_method">[[0,1,"Application\/Controllers\/AdminAuthController.php.html#14","App\\Application\\Controllers\\AdminAuthController::__construct","2"],[0,6,"Application\/Controllers\/AdminAuthController.php.html#19","App\\Application\\Controllers\\AdminAuthController::login","42"],[0,2,"Application\/Controllers\/AdminAuthController.php.html#122","App\\Application\\Controllers\\AdminAuthController::logout","6"],[0,4,"Application\/Controllers\/AdminAuthController.php.html#160","App\\Application\\Controllers\\AdminAuthController::checkAuth","20"],[0,6,"Application\/Controllers\/AdminAuthController.php.html#198","App\\Application\\Controllers\\AdminAuthController::recoverSession","42"],[0,1,"Application\/Controllers\/AdminController.php.html#16","App\\Application\\Controllers\\AdminController::__construct","2"],[0,3,"Application\/Controllers\/AdminController.php.html#24","App\\Application\\Controllers\\AdminController::getMessages","12"],[0,7,"Application\/Controllers\/AdminController.php.html#60","App\\Application\\Controllers\\AdminController::getMessage","56"],[0,4,"Application\/Controllers\/AdminController.php.html#97","App\\Application\\Controllers\\AdminController::bulkAction","20"],[0,3,"Application\/Controllers\/AdminController.php.html#149","App\\Application\\Controllers\\AdminController::getStatistics","12"],[0,3,"Application\/Controllers\/ContactController.php.html#113","App\\Application\\Controllers\\ContactController::getMessageStatus","12"],[0,1,"Application\/Controllers\/WebhookController.php.html#17","App\\Application\\Controllers\\WebhookController::__construct","2"],[0,3,"Application\/Controllers\/WebhookController.php.html#25","App\\Application\\Controllers\\WebhookController::handleResendWebhook","12"],[0,4,"Application\/Controllers\/WebhookController.php.html#77","App\\Application\\Controllers\\WebhookController::processWebhookEvent","20"],[0,7,"Application\/Controllers\/WebhookController.php.html#106","App\\Application\\Controllers\\WebhookController::extractMessageIdFromEvent","56"],[0,8,"Application\/Controllers\/WebhookController.php.html#135","App\\Application\\Controllers\\WebhookController::mapEventTypeToStatus","72"],[0,3,"Application\/Services\/AdminAuthenticationService.php.html#36","App\\Application\\Services\\AdminAuthenticationService::getCurrentAdmin","12"],[0,2,"Application\/Services\/AdminAuthenticationService.php.html#45","App\\Application\\Services\\AdminAuthenticationService::login","6"],[0,3,"Application\/Services\/AdminAuthenticationService.php.html#90","App\\Application\\Services\\AdminAuthenticationService::regenerateSession","12"],[0,11,"Application\/Services\/AdminMessageService.php.html#29","App\\Application\\Services\\AdminMessageService::getMessages","132"],[0,13,"Application\/Services\/AdminMessageService.php.html#164","App\\Application\\Services\\AdminMessageService::bulkAction","182"],[0,3,"Application\/Services\/AdminMessageService.php.html#233","App\\Application\\Services\\AdminMessageService::getStatistics","12"],[0,2,"Application\/Services\/ContactFormService.php.html#85","App\\Application\\Services\\ContactFormService::getMessageStatus","6"],[0,3,"Application\/Validators\/RequestValidator.php.html#14","App\\Application\\Validators\\RequestValidator::validateContactForm","12"],[0,2,"Application\/Validators\/RequestValidator.php.html#45","App\\Application\\Validators\\RequestValidator::validateAdminLogin","6"],[0,2,"Application\/Validators\/RequestValidator.php.html#68","App\\Application\\Validators\\RequestValidator::validateBulkAction","6"],[0,9,"Application\/Validators\/RequestValidator.php.html#88","App\\Application\\Validators\\RequestValidator::validatePagination","90"],[0,11,"Application\/Validators\/RequestValidator.php.html#159","App\\Application\\Validators\\RequestValidator::processPaginationParams","132"],[0,2,"Application\/Validators\/RequestValidator.php.html#190","App\\Application\\Validators\\RequestValidator::validateSearch","6"],[0,1,"Application\/Validators\/RequestValidator.php.html#211","App\\Application\\Validators\\RequestValidator::getErrors","2"],[0,1,"Application\/Validators\/RequestValidator.php.html#216","App\\Application\\Validators\\RequestValidator::isValid","2"],[0,1,"Application\/Validators\/RequestValidator.php.html#221","App\\Application\\Validators\\RequestValidator::getValidatedData","2"],[0,3,"Application\/Validators\/RequestValidator.php.html#226","App\\Application\\Validators\\RequestValidator::formatValidationErrors","12"],[0,1,"Domain\/Entities\/Admin.php.html#30","App\\Domain\\Entities\\Admin::getId","2"],[0,1,"Domain\/Entities\/Admin.php.html#35","App\\Domain\\Entities\\Admin::getUsername","2"],[0,1,"Domain\/Entities\/Admin.php.html#40","App\\Domain\\Entities\\Admin::getPasswordHash","2"],[0,1,"Domain\/Entities\/Admin.php.html#45","App\\Domain\\Entities\\Admin::getCreatedAt","2"],[0,1,"Domain\/Entities\/Admin.php.html#50","App\\Domain\\Entities\\Admin::getUpdatedAt","2"],[0,1,"Domain\/Entities\/Admin.php.html#60","App\\Domain\\Entities\\Admin::updatePassword","2"],[0,1,"Domain\/Entities\/Admin.php.html#66","App\\Domain\\Entities\\Admin::toArray","2"],[0,1,"Domain\/Entities\/Message.php.html#22","App\\Domain\\Entities\\Message::__construct","2"],[0,1,"Domain\/Entities\/Message.php.html#46","App\\Domain\\Entities\\Message::getId","2"],[0,1,"Domain\/Entities\/Message.php.html#51","App\\Domain\\Entities\\Message::getName","2"],[0,1,"Domain\/Entities\/Message.php.html#56","App\\Domain\\Entities\\Message::getEmail","2"],[0,1,"Domain\/Entities\/Message.php.html#61","App\\Domain\\Entities\\Message::getSubject","2"],[0,1,"Domain\/Entities\/Message.php.html#66","App\\Domain\\Entities\\Message::getMessage","2"],[0,1,"Domain\/Entities\/Message.php.html#71","App\\Domain\\Entities\\Message::getMessageId","2"],[0,1,"Domain\/Entities\/Message.php.html#76","App\\Domain\\Entities\\Message::getStatus","2"],[0,1,"Domain\/Entities\/Message.php.html#81","App\\Domain\\Entities\\Message::isRead","2"],[0,1,"Domain\/Entities\/Message.php.html#86","App\\Domain\\Entities\\Message::getCreatedAt","2"],[0,1,"Domain\/Entities\/Message.php.html#91","App\\Domain\\Entities\\Message::getUpdatedAt","2"],[0,1,"Domain\/Entities\/Message.php.html#96","App\\Domain\\Entities\\Message::markAsRead","2"],[0,1,"Domain\/Entities\/Message.php.html#102","App\\Domain\\Entities\\Message::updateStatus","2"],[0,1,"Domain\/Entities\/Message.php.html#108","App\\Domain\\Entities\\Message::toArray","2"],[0,1,"Domain\/ValueObjects\/EmailAddress.php.html#35","App\\Domain\\ValueObjects\\EmailAddress::getLocalPart","2"],[0,1,"Domain\/ValueObjects\/EmailAddress.php.html#40","App\\Domain\\ValueObjects\\EmailAddress::equals","2"],[0,1,"Domain\/ValueObjects\/EmailAddress.php.html#45","App\\Domain\\ValueObjects\\EmailAddress::__toString","2"],[0,1,"Domain\/ValueObjects\/MessageStatus.php.html#45","App\\Domain\\ValueObjects\\MessageStatus::delivered","2"],[0,1,"Domain\/ValueObjects\/MessageStatus.php.html#50","App\\Domain\\ValueObjects\\MessageStatus::bounced","2"],[0,1,"Domain\/ValueObjects\/MessageStatus.php.html#55","App\\Domain\\ValueObjects\\MessageStatus::opened","2"],[0,1,"Domain\/ValueObjects\/MessageStatus.php.html#60","App\\Domain\\ValueObjects\\MessageStatus::clicked","2"],[0,1,"Domain\/ValueObjects\/MessageStatus.php.html#65","App\\Domain\\ValueObjects\\MessageStatus::complained","2"],[0,1,"Domain\/ValueObjects\/MessageStatus.php.html#70","App\\Domain\\ValueObjects\\MessageStatus::fromString","2"],[0,1,"Domain\/ValueObjects\/MessageStatus.php.html#80","App\\Domain\\ValueObjects\\MessageStatus::isPending","2"],[0,1,"Domain\/ValueObjects\/MessageStatus.php.html#85","App\\Domain\\ValueObjects\\MessageStatus::isDelivered","2"],[0,1,"Domain\/ValueObjects\/MessageStatus.php.html#90","App\\Domain\\ValueObjects\\MessageStatus::isBounced","2"],[0,1,"Domain\/ValueObjects\/MessageStatus.php.html#95","App\\Domain\\ValueObjects\\MessageStatus::isOpened","2"],[0,1,"Domain\/ValueObjects\/MessageStatus.php.html#100","App\\Domain\\ValueObjects\\MessageStatus::isClicked","2"],[0,1,"Domain\/ValueObjects\/MessageStatus.php.html#105","App\\Domain\\ValueObjects\\MessageStatus::isComplained","2"],[0,1,"Domain\/ValueObjects\/MessageStatus.php.html#110","App\\Domain\\ValueObjects\\MessageStatus::equals","2"],[0,1,"Domain\/ValueObjects\/MessageStatus.php.html#115","App\\Domain\\ValueObjects\\MessageStatus::__toString","2"],[0,1,"Infrastructure\/Database\/DatabaseSetupService.php.html#12","App\\Infrastructure\\Database\\DatabaseSetupService::__construct","2"],[0,1,"Infrastructure\/Database\/DatabaseSetupService.php.html#20","App\\Infrastructure\\Database\\DatabaseSetupService::createTablesIfNotExist","2"],[0,2,"Infrastructure\/Database\/DatabaseSetupService.php.html#30","App\\Infrastructure\\Database\\DatabaseSetupService::createMessagesTable","6"],[0,2,"Infrastructure\/Database\/DatabaseSetupService.php.html#50","App\\Infrastructure\\Database\\DatabaseSetupService::createAdminsTable","6"],[0,2,"Infrastructure\/Database\/DatabaseSetupService.php.html#65","App\\Infrastructure\\Database\\DatabaseSetupService::createEventLogsTable","6"],[0,1,"Infrastructure\/Database\/DatabaseSetupService.php.html#80","App\\Infrastructure\\Database\\DatabaseSetupService::checkTablesExist","2"],[0,3,"Infrastructure\/Database\/DatabaseSetupService.php.html#92","App\\Infrastructure\\Database\\DatabaseSetupService::dropAllTables","12"],[0,2,"Infrastructure\/Database\/EloquentAdminRepository.php.html#11","App\\Infrastructure\\Database\\EloquentAdminRepository::findById","6"],[0,2,"Infrastructure\/Database\/EloquentAdminRepository.php.html#22","App\\Infrastructure\\Database\\EloquentAdminRepository::findByUsername","6"],[0,1,"Infrastructure\/Database\/EloquentAdminRepository.php.html#33","App\\Infrastructure\\Database\\EloquentAdminRepository::create","2"],[0,2,"Infrastructure\/Database\/EloquentAdminRepository.php.html#43","App\\Infrastructure\\Database\\EloquentAdminRepository::update","6"],[0,2,"Infrastructure\/Database\/EloquentAdminRepository.php.html#54","App\\Infrastructure\\Database\\EloquentAdminRepository::delete","6"],[0,2,"Infrastructure\/Database\/EloquentAdminRepository.php.html#65","App\\Infrastructure\\Database\\EloquentAdminRepository::usernameExists","6"],[0,1,"Infrastructure\/Database\/EloquentAdminRepository.php.html#76","App\\Infrastructure\\Database\\EloquentAdminRepository::getAll","2"],[0,1,"Infrastructure\/Database\/EloquentAdminRepository.php.html#85","App\\Infrastructure\\Database\\EloquentAdminRepository::modelToEntity","2"],[0,2,"Infrastructure\/Database\/EloquentMessageRepository.php.html#15","App\\Infrastructure\\Database\\EloquentMessageRepository::findById","6"],[0,2,"Infrastructure\/Database\/EloquentMessageRepository.php.html#26","App\\Infrastructure\\Database\\EloquentMessageRepository::findByMessageId","6"],[0,5,"Infrastructure\/Database\/EloquentMessageRepository.php.html#37","App\\Infrastructure\\Database\\EloquentMessageRepository::getPaginated","30"],[0,1,"Infrastructure\/Database\/EloquentMessageRepository.php.html#90","App\\Infrastructure\\Database\\EloquentMessageRepository::create","2"],[0,2,"Infrastructure\/Database\/EloquentMessageRepository.php.html#105","App\\Infrastructure\\Database\\EloquentMessageRepository::update","6"],[0,2,"Infrastructure\/Database\/EloquentMessageRepository.php.html#116","App\\Infrastructure\\Database\\EloquentMessageRepository::delete","6"],[0,1,"Infrastructure\/Database\/EloquentMessageRepository.php.html#127","App\\Infrastructure\\Database\\EloquentMessageRepository::markAsRead","2"],[0,3,"Infrastructure\/Database\/EloquentMessageRepository.php.html#132","App\\Infrastructure\\Database\\EloquentMessageRepository::count","12"],[0,3,"Infrastructure\/Database\/EloquentMessageRepository.php.html#147","App\\Infrastructure\\Database\\EloquentMessageRepository::search","12"],[0,1,"Infrastructure\/Database\/EloquentMessageRepository.php.html#173","App\\Infrastructure\\Database\\EloquentMessageRepository::modelToEntity","2"],[0,4,"Infrastructure\/External\/ResendEmailService.php.html#15","App\\Infrastructure\\External\\ResendEmailService::__construct","20"],[0,2,"Infrastructure\/External\/ResendEmailService.php.html#22","App\\Infrastructure\\External\\ResendEmailService::sendContactNotification","6"],[0,2,"Infrastructure\/External\/ResendEmailService.php.html#44","App\\Infrastructure\\External\\ResendEmailService::sendAutoReply","6"],[0,3,"Infrastructure\/External\/ResendEmailService.php.html#66","App\\Infrastructure\\External\\ResendEmailService::sendEmail","12"],[0,2,"Infrastructure\/External\/ResendEmailService.php.html#98","App\\Infrastructure\\External\\ResendEmailService::getServiceStatus","6"],[0,1,"Infrastructure\/External\/ResendEmailService.php.html#116","App\\Infrastructure\\External\\ResendEmailService::validateEmail","2"],[0,1,"Infrastructure\/External\/ResendEmailService.php.html#121","App\\Infrastructure\\External\\ResendEmailService::buildAdminEmailBody","2"],[0,1,"Infrastructure\/External\/ResendEmailService.php.html#126","App\\Infrastructure\\External\\ResendEmailService::buildAutoReplyBody","2"],[0,1,"Infrastructure\/External\/ResendEmailService.php.html#131","App\\Infrastructure\\External\\ResendEmailService::sanitizeTagValue","2"],[0,2,"Infrastructure\/External\/WebhookVerifier.php.html#9","App\\Infrastructure\\External\\WebhookVerifier::__construct","6"],[0,11,"Infrastructure\/External\/WebhookVerifier.php.html#17","App\\Infrastructure\\External\\WebhookVerifier::verifySvix","132"],[0,7,"Infrastructure\/External\/WebhookVerifier.php.html#73","App\\Infrastructure\\External\\WebhookVerifier::verify","56"],[0,5,"Infrastructure\/External\/WebhookVerifier.php.html#116","App\\Infrastructure\\External\\WebhookVerifier::verifyAdvanced","30"],[0,1,"Infrastructure\/External\/WebhookVerifier.php.html#145","App\\Infrastructure\\External\\WebhookVerifier::hasSecret","2"],[0,1,"Presentation\/Handlers\/CustomErrorHandler.php.html#17","App\\Presentation\\Handlers\\CustomErrorHandler::__construct","2"],[0,3,"Presentation\/Handlers\/CustomErrorHandler.php.html#23","App\\Presentation\\Handlers\\CustomErrorHandler::respond","12"],[0,3,"Presentation\/Handlers\/CustomErrorHandler.php.html#58","App\\Presentation\\Handlers\\CustomErrorHandler::getStatusCode","12"],[0,12,"Presentation\/Handlers\/CustomErrorHandler.php.html#71","App\\Presentation\\Handlers\\CustomErrorHandler::getErrorType","156"],[0,2,"Presentation\/Handlers\/CustomErrorHandler.php.html#88","App\\Presentation\\Handlers\\CustomErrorHandler::getErrorCode","6"],[0,16,"Presentation\/Handlers\/CustomErrorHandler.php.html#98","App\\Presentation\\Handlers\\CustomErrorHandler::getPublicErrorMessage","272"],[0,4,"Presentation\/Handlers\/CustomErrorHandler.php.html#121","App\\Presentation\\Handlers\\CustomErrorHandler::addCorsHeaders","20"],[0,1,"Presentation\/Middleware\/CorsMiddleware.php.html#15","App\\Presentation\\Middleware\\CorsMiddleware::__construct","2"],[0,8,"Presentation\/Middleware\/CorsMiddleware.php.html#20","App\\Presentation\\Middleware\\CorsMiddleware::process","72"],[41.66666666666667,5,"Application\/Services\/AdminMessageService.php.html#123","App\\Application\\Services\\AdminMessageService::getMessage","9.96"],[65.625,3,"Application\/Services\/ContactFormService.php.html#32","App\\Application\\Services\\ContactFormService::processContactForm","3.37"],[69.44444444444444,7,"Application\/Controllers\/ContactController.php.html#26","App\\Application\\Controllers\\ContactController::submit","8.40"],[75,3,"Application\/Services\/AdminAuthenticationService.php.html#18","App\\Application\\Services\\AdminAuthenticationService::authenticate","3.14"],[75,3,"Application\/Services\/AdminAuthenticationService.php.html#109","App\\Application\\Services\\AdminAuthenticationService::validateSessionTimeout","3.14"],[87.5,3,"Presentation\/Middleware\/AdminAuthMiddleware.php.html#21","App\\Presentation\\Middleware\\AdminAuthMiddleware::process","3.02"],[90,2,"Domain\/ValueObjects\/MessageStatus.php.html#24","App\\Domain\\ValueObjects\\MessageStatus::ensureIsValidStatus","2.00"],[93.75,3,"Application\/Services\/AdminAuthenticationService.php.html#61","App\\Application\\Services\\AdminAuthenticationService::logout","3.00"],[100,1,"Application\/Controllers\/ContactController.php.html#18","App\\Application\\Controllers\\ContactController::__construct","1"],[100,1,"Application\/Services\/AdminAuthenticationService.php.html#13","App\\Application\\Services\\AdminAuthenticationService::__construct","1"],[100,3,"Application\/Services\/AdminAuthenticationService.php.html#29","App\\Application\\Services\\AdminAuthenticationService::isAuthenticated","3"],[100,1,"Application\/Services\/AdminMessageService.php.html#16","App\\Application\\Services\\AdminMessageService::__construct","1"],[100,1,"Application\/Services\/ContactFormService.php.html#19","App\\Application\\Services\\ContactFormService::__construct","1"],[100,1,"Application\/Services\/ContactFormService.php.html#108","App\\Application\\Services\\ContactFormService::generateMessageId","1"],[100,1,"Domain\/Entities\/Admin.php.html#16","App\\Domain\\Entities\\Admin::__construct","1"],[100,1,"Domain\/Entities\/Admin.php.html#55","App\\Domain\\Entities\\Admin::verifyPassword","1"],[100,1,"Domain\/ValueObjects\/EmailAddress.php.html#11","App\\Domain\\ValueObjects\\EmailAddress::__construct","1"],[100,2,"Domain\/ValueObjects\/EmailAddress.php.html#18","App\\Domain\\ValueObjects\\EmailAddress::ensureIsValidEmail","2"],[100,1,"Domain\/ValueObjects\/EmailAddress.php.html#25","App\\Domain\\ValueObjects\\EmailAddress::getValue","1"],[100,1,"Domain\/ValueObjects\/EmailAddress.php.html#30","App\\Domain\\ValueObjects\\EmailAddress::getDomain","1"],[100,1,"Domain\/ValueObjects\/MessageStatus.php.html#18","App\\Domain\\ValueObjects\\MessageStatus::__construct","1"],[100,1,"Domain\/ValueObjects\/MessageStatus.php.html#40","App\\Domain\\ValueObjects\\MessageStatus::pending","1"],[100,1,"Domain\/ValueObjects\/MessageStatus.php.html#75","App\\Domain\\ValueObjects\\MessageStatus::getValue","1"],[100,1,"Presentation\/Middleware\/AdminAuthMiddleware.php.html#16","App\\Presentation\\Middleware\\AdminAuthMiddleware::__construct","1"]]</script>
+  <script type="text/javascript" defer>
+  const barLabels = [
+    '0%',
+    '0-10%',
+    '10-20%',
+    '20-30%',
+    '30-40%',
+    '40-50%',
+    '50-60%',
+    '60-70%',
+    '70-80%',
+    '80-90%',
+    '90-100%',
+    '100%'
+  ];
+  const barConfig = (name, fullName, values) => ({
+    axis: {
+      x: {
+        type: "category",
+        categories: barLabels,
+      },
+      y: {
+        label: {
+          text: `#${name}`,
+          position: 'outer-top',
+        },
+      },
+    },
+    bindto: `#${name}CoverageDistribution`,
+    data: {
+      columns: [
+        [fullName].concat(values),
+      ],
+      colors: {
+        [fullName]: "rgba(69, 114, 167, 0.75)",
+      },
+      type: "bar",
+    },
+    bar: {
+      width: {
+        ratio: 0.9,
+      },
+    },
+    grid: {
+      focus: {
+        show: false,
+      },
+      x: {
+        show: true,
+      },
+      y: {
+        show: true,
+      },
+    },
+    legend: {
+      show: false,
+    },
+    tooltip: {
+      contents: function (data) {
+        return `<table class="bb-tooltip"><tbody>
+            <tr><th colspan="2">Coverage ${barLabels[data[0].x]}</th></tr>
+            <tr><td class="value">${data[0].value} ${name}</td></tr>
+          </tbody></table>`;
+      },
+      grouped: false,
+    },
+  });
+  bb.generate(
+    barConfig('classes', "Class Coverage", [12,1,0,0,1,1,3,0,1,1,0,4])
+  );
+  bb.generate(
+    barConfig('methods', "Method Coverage", [119,0,0,0,0,1,0,2,2,1,2,16])
+  );
+
+  const scatterConfig = (name, complexityData) => ({
+    axis: {
+      x: {
+        label: {
+          text: 'Code Coverage (in percent)',
+          position: 'outer-right',
+        },
+        tick: {
+          values: [0, 20, 40, 60, 80, 100],
+        },
+      },
+      y: {
+        label: {
+          text: 'Cyclomatic Complexity',
+          position: 'outer-top',
+        },
+        min: 0,
+        padding: {
+          bottom: 0,
+          top: 5,
+        },
+      },
+    },
+    bindto: `#${name}Complexity`,
+    data: {
+      columns: [
+        ["complexity_x"].concat(complexityData.map(d => d[0])),
+        ["complexity"].concat(complexityData.map(d => d[1])),
+      ],
+      onclick: function(data, element) {
+        window.location = complexityData[data.index][2];
+      },
+      type: "scatter",
+      xs: {
+        "complexity": "complexity_x",
+      },
+    },
+    grid: {
+      focus: {
+        show: true,
+        y: true,
+      },
+      x: {
+        show: true,
+      },
+      y: {
+        show: true,
+      },
+    },
+    legend: {
+      show: false,
+    },
+    tooltip: {
+      contents: function (data) {
+        const coverage = Math.round(data[0].x);
+        const complexity = data[0].value;
+        const targetName = complexityData[data[0].index][3];
+        const crap = complexityData[data[0].index][4];
+        return `<table class="bb-tooltip"><tbody>
+            <tr><th colspan="2">${targetName}</th></tr>
+            <tr class="bb-tooltip-name-complexity"><td>Coverage</td><td class="name">${coverage}%</td></tr>
+            <tr class="bb-tooltip-name-complexity"><td>Complexity</td><td class="value">${complexity}</td></tr>
+            <tr class="bb-tooltip-name-complexity"><td>Crap</td><td class="value">${crap}</td></tr>
+          </tbody></table>`;
+      },
+      grouped: false,
+    },
+  });
+  const classComplexityData = JSON.parse(document.getElementById('complexity_class').textContent);
+  bb.generate(
+    scatterConfig("class", classComplexityData)
+  );
+  const methodComplexityData = JSON.parse(document.getElementById('complexity_method').textContent);
+  bb.generate(
+    scatterConfig("method", methodComplexityData),
+  );
+  </script>
+ </body>
+</html>

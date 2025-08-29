@@ -72,7 +72,7 @@ class RequestValidator implements ValidationInterface
 
         try {
             $validator = v::key('action', v::in(['mark_read', 'mark_unread', 'delete']))
-                ->key('ids', v::arrayType()->each(v::intType()->positive()));
+                ->key('ids', v::arrayType()->notEmpty()->each(v::intType()->positive()));
 
             $validator->assert($data);
 
@@ -104,7 +104,7 @@ class RequestValidator implements ValidationInterface
 
             // Validate limit if present (allow up to 10000 for large datasets)
             if (isset($processedParams['limit'])) {
-                $validator = $validator->key('limit', v::intType()->min(1)->max(10001));
+                $validator = $validator->key('limit', v::intType()->min(1)->max(10000));
             }
 
             // Validate sort if present

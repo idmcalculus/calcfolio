@@ -92,7 +92,7 @@
 	{
 		title: "Word Game Challenge",
 		description: "An open-source word-guessing game using vanilla JavaScript and a modular architecture, ensuring responsiveness. To enhance the user experience, I implemented real-time letter validation and an interactive colour-coded feedback system. I integrated the Datamuse API with custom filtering algorithms to create an adaptive word dictionary with appropriate difficulty levels for words of varying lengths. Additionally, I built a performance-optimized game state management system with local storage integration, which included real-time scoring, game statistics tracking, and persistent high-score functionality.",
-		fallbackImage: "https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?q=80&w=800&auto=format",
+		fallbackImage: "https://res.cloudinary.com/idmcalculus/image/upload/w_1000,ar_16:9,c_fill,g_auto,e_sharpen/v1756435214/wordgamechallengess.png",
 		tags: ["HTML", "CSS", "JavaScript", "APIs", "state management", "modular design", "responsive design", "interactive feedback"],
 		link: "https://word-game-challenge.vercel.app/",
 		github: "https://github.com/idmcalculus/wordGameChallenge"

@@ -1,0 +1,14 @@
+
+
+Code Coverage Report:
+  2025-08-29 09:20:04
+
+ Summary:
+  Classes:  0.00% (0/20)
+  Methods:  3.50% (5/143)
+  Lines:    2.29% (38/1657)
+
+App\Application\Services\ContactFormService
+  Methods:  50.00% ( 2/ 4)   Lines:  51.02% ( 25/ 49)
+App\Domain\ValueObjects\MessageStatus
+  Methods:  16.67% ( 3/18)   Lines:  46.43% ( 13/ 28)

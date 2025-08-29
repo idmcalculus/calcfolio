@@ -1,7 +1,6 @@
 User-agent: *
 Allow: /
 Disallow: /admin/
-Disallow: /_nuxt/
 Disallow: /api/
 
 # Allow access to CSS, JS, and image files
