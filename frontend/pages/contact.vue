@@ -73,6 +73,14 @@
   const toast = useToast()
   const config = useRuntimeConfig()
 
+  // Set SEO meta tags for the contact page
+  useSEO({
+    title: 'Contact',
+    description: 'Get in touch with Damilola Michael Ige. I\'m always interested in new opportunities and collaborations. Let\'s discuss how we can work together.',
+    keywords: ['contact', 'hire', 'collaboration', 'freelance', 'consulting'],
+    url: '/contact'
+  })
+
   const form = ref({
     name: '',
     email: '',

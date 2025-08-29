@@ -1,0 +1,14 @@
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /_nuxt/
+Disallow: /api/
+
+# Allow access to CSS, JS, and image files
+Allow: /_nuxt/*.css
+Allow: /_nuxt/*.js
+Allow: /assets/
+Allow: /favicon/
+
+# Sitemap
+Sitemap: https://idmcalculus.cv/sitemap.xml

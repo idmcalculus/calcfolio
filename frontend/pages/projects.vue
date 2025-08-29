@@ -31,10 +31,12 @@ import AOS from 'aos'
 import ProjectSection from '~/components/ProjectSection.vue'
 import SectionDivider from '~/components/SectionDivider.vue'
 
-// Set page meta
-definePageMeta({
-  title: 'Projects - Damilola Michael Ige',
-  description: 'Explore my complete portfolio of projects, from web applications to mobile apps and everything in between.'
+// Set SEO meta tags for the projects page
+useSEO({
+  title: 'Projects',
+  description: 'Explore my complete portfolio of projects, from web applications to mobile apps and everything in between. See my work in full-stack development, mobile apps, and cloud solutions.',
+  keywords: ['projects', 'portfolio', 'web development', 'mobile apps', 'full-stack', 'showcase'],
+  url: '/projects'
 })
 
 onMounted(() => {

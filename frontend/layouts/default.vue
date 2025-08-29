@@ -1,38 +1,83 @@
 <template>
   <div :class="{ dark: isDark }">
+    <!-- Skip to main content link for accessibility -->
+    <a
+      href="#main-content"
+      class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-primary text-white px-4 py-2 rounded-md z-50 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+    >
+      Skip to main content
+    </a>
+
     <div class="min-h-screen bg-light-bg text-black dark:bg-dark-bg dark:text-white flex flex-col">
 
         <!-- Header -->
-        <header class="sticky top-0 z-50 bg-white dark:bg-dark-bg w-full">
+        <header class="sticky top-0 z-50 bg-white dark:bg-dark-bg w-full" role="banner">
           <div class="container mx-auto max-w-(--breakpoint-xl) px-6 py-4 flex items-center justify-between">
-            <NuxtLink to="/" class="font-bold text-xl">IDM</NuxtLink>
+            <NuxtLink
+              to="/"
+              class="font-bold text-xl focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded-md px-2 py-1"
+              aria-label="Damilola Michael Ige - Home"
+            >
+              IDM
+            </NuxtLink>
             <div class="flex gap-6 items-center">
-              <nav class="hidden md:flex gap-6 items-center">
-                  <NuxtLink to="/" exact-active-class="nav-link-active" class="hover:text-primary transition-colors">About</NuxtLink>
-                  <NuxtLink to="/projects" active-class="nav-link-active" class="hover:text-primary transition-colors">Project</NuxtLink>
-                  <NuxtLink to="/contact" active-class="nav-link-active" class="hover:text-primary transition-colors">Contact</NuxtLink>
+              <nav
+                class="hidden md:flex gap-6 items-center"
+                role="navigation"
+                aria-label="Main navigation"
+              >
+                  <NuxtLink
+                    to="/"
+                    exact-active-class="nav-link-active"
+                    class="hover:text-primary transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded-md px-2 py-1"
+                    aria-label="About section"
+                  >
+                    About
+                  </NuxtLink>
+                  <NuxtLink
+                    to="/projects"
+                    active-class="nav-link-active"
+                    class="hover:text-primary transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded-md px-2 py-1"
+                    aria-label="Projects section"
+                  >
+                    Project
+                  </NuxtLink>
+                  <NuxtLink
+                    to="/contact"
+                    active-class="nav-link-active"
+                    class="hover:text-primary transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded-md px-2 py-1"
+                    aria-label="Contact section"
+                  >
+                    Contact
+                  </NuxtLink>
               </nav>
 
               <DownloadCV class="hidden md:block" width="40" button-text="Download CV" aos="" />
 
               <button
-                class="flex p-2 rounded-full hover:text-primary hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+                class="flex p-2 rounded-full hover:text-primary hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
                 aria-label="Toggle dark mode"
                 @click="toggleDark"
               >
-                <ClientOnly> 
+                <ClientOnly>
                   <Icon v-if="isDark" name="lucide:sun" size="20" />
                   <Icon v-else name="lucide:moon" size="20" />
                   <!-- Provide a fallback for SSR/initial load if desired, though often unnecessary for icons -->
                   <template #fallback>
                     <!-- Optional: You could put a placeholder here, but an empty span is fine -->
-                    <span class="inline-block w-[20px] h-[20px]"/> 
+                    <span class="inline-block w-[20px] h-[20px]"/>
                   </template>
                 </ClientOnly>
               </button>
 
               <!--  Mobile menu toggle -->
-              <button class="md:hidden flex items-center z-10" @click="showMenu = !showMenu">
+              <button
+                class="md:hidden flex items-center z-10 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded-md p-1"
+                :aria-expanded="showMenu"
+                aria-controls="mobile-menu"
+                :aria-label="showMenu ? 'Close mobile menu' : 'Open mobile menu'"
+                @click="showMenu = !showMenu"
+              >
                   <Icon v-if="showMenu" :name="'lucide:x'" size="24" />
                   <Icon v-else :name="'lucide:menu'" size="24" />
               </button>
@@ -44,12 +89,19 @@
       <Transition name="slide">
         <MobileMenuDrawer
           v-if="showMenu"
+          id="mobile-menu"
+          role="navigation"
+          aria-label="Mobile navigation"
           @close="showMenu = false"
         />
       </Transition>
 
       <!-- Main Content -->
-      <main class="flex-1 w-full">
+      <main
+        id="main-content"
+        class="flex-1 w-full"
+        role="main"
+      >
           <slot /> <!-- NuxtPage content will be rendered here by the layout system -->
       </main>
 
