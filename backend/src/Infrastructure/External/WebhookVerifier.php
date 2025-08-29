@@ -21,16 +21,37 @@ class WebhookVerifier
             return true; // Skip verification if no secret configured
         }
 
-        // Remove 'whsec_' prefix if present
-        $cleanSignature = str_starts_with($signature, 'whsec_')
-            ? substr($signature, 6)
-            : $signature;
+        // Parse Resend signature format: "t=timestamp,v1=signature"
+        $parts = [];
+        foreach (explode(',', $signature) as $part) {
+            if (str_contains($part, '=')) {
+                [$key, $value] = explode('=', $part, 2);
+                $parts[$key] = $value;
+            }
+        }
 
-        // Generate expected signature
-        $expectedSignature = hash_hmac('sha256', $payload, $this->secret);
+        // Extract timestamp and signature
+        $timestamp = $parts['t'] ?? '';
+        $receivedSignature = $parts['v1'] ?? '';
+
+        if (empty($timestamp) || empty($receivedSignature)) {
+            error_log('Invalid signature format from Resend');
+            return false;
+        }
+
+        // Create signed payload: timestamp.payload
+        $signedPayload = $timestamp . '.' . $payload;
+
+        // Remove 'whsec_' prefix from secret if present (it should be there)
+        $cleanSecret = str_starts_with($this->secret, 'whsec_')
+            ? substr($this->secret, 6)
+            : $this->secret;
+
+        // Generate expected signature using base64 decoded secret
+        $expectedSignature = hash_hmac('sha256', $signedPayload, base64_decode($cleanSecret));
 
         // Use hash_equals for timing-safe comparison
-        return hash_equals($expectedSignature, $cleanSignature);
+        return hash_equals($expectedSignature, $receivedSignature);
     }
 
     /**
