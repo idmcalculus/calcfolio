@@ -40,6 +40,14 @@ class DatabaseSetupService
                 $table->string('message_id')->unique()->nullable();
                 $table->boolean('is_read')->default(0);
                 $table->timestamps();
+
+                // Add indexes for search performance
+                $table->index('name');
+                $table->index('email');
+                $table->index('subject');
+                $table->index('is_read');
+                $table->index('status');
+                $table->index(['created_at', 'is_read']); // For sorting and filtering
             });
         }
     }

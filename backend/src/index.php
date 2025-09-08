@@ -83,9 +83,9 @@ $errorMiddleware = $app->addErrorMiddleware($isDevelopment, $isDevelopment, $isD
 // Add CORS middleware
 $app->add($container->get(\App\Presentation\Middleware\CorsMiddleware::class));
 
-// Setup database and create tables
-$databaseSetupService = $container->get(\App\Infrastructure\Database\DatabaseSetupService::class);
-$databaseSetupService->createTablesIfNotExist();
+// Database tables are assumed to be created via migration or initial setup
+// Removed createTablesIfNotExist() call to improve performance
+// If tables need creation, run setup script separately
 
 // Setup Eloquent pagination
 \Illuminate\Pagination\Paginator::currentPageResolver(function ($pageName = 'page') {
