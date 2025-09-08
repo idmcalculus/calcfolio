@@ -11,6 +11,9 @@
       <h1 class="text-5xl md:text-6xl font-extrabold mb-1">
         <span class="text-gradient">Damilola Michael Ige</span>
       </h1>
+      <p class="text-center md:text-left text-sm md:text-base text-gray-600 dark:text-gray-400 my-3">
+        <strong>{{ leadText }}: <span class="text-gradient skill-typing">{{ displaySkill }}</span> </strong>
+      </p>
       <SectionDivider />
       <p class="text-base md:text-lg text-gray-700 dark:text-gray-300 leading-relaxed">
         I'm the tech equivalent of a Swiss Army knife—sharp, versatile, and always ready for the next challenge. My journey started with math competitions, and now I thrive at the intersection of data, code, and clouds (both the fluffy and AWS kind).
@@ -69,12 +72,25 @@ const languages = [
   { greeting: "नमस्ते, मैं हूं" }
 ]
 
+const skillTexts = [
+  "Full Stack (Node/TypeScript/React/Python/Java/PHP/AWS/GCP)",
+  "iOS (Swift/SwiftUI/UIKit)",
+  "Data (Excel, Power BI, Tableau, SQL, ELT, ETL, Apache Spark, Apache Airflow)"
+]
+
 const currentIndex = ref(0)
 const displayText = ref('')
 const targetText = ref(languages[0].greeting)
 
+const currentSkillIndex = ref(0)
+const displaySkill = ref('')
+const targetSkill = ref(skillTexts[0])
+const leadText = ref('Targeting')
+
 let intervalId
 let typingIntervalId
+let skillIntervalId
+let skillTypingIntervalId
 
 const typeText = () => {
   if (displayText.value.length < targetText.value.length) {
@@ -86,29 +102,62 @@ const startNewText = () => {
   displayText.value = ''
   currentIndex.value = (currentIndex.value + 1) % languages.length
   targetText.value = languages[currentIndex.value].greeting
-  
+
   // Clear any existing typing interval
   if (typingIntervalId) clearInterval(typingIntervalId)
-  
+
   // Start typing the new text
   typingIntervalId = setInterval(() => {
     typeText()
   }, 100) // Adjust typing speed here
 }
 
+const typeSkill = () => {
+  if (displaySkill.value.length < targetSkill.value.length) {
+    displaySkill.value = targetSkill.value.slice(0, displaySkill.value.length + 1)
+  }
+}
+
+const startNewSkill = () => {
+  displaySkill.value = ''
+  currentSkillIndex.value = (currentSkillIndex.value + 1) % skillTexts.length
+  targetSkill.value = skillTexts[currentSkillIndex.value]
+
+  // Update lead text based on skill index
+  leadText.value = currentSkillIndex.value === 0 ? 'Targeting' : 'Open To'
+
+  // Clear any existing skill typing interval
+  if (skillTypingIntervalId) clearInterval(skillTypingIntervalId)
+
+  // Start typing the new skill
+  skillTypingIntervalId = setInterval(() => {
+    typeSkill()
+  }, 50) // Faster typing for skills
+}
+
 onMounted(() => {
-  // Start initial typing
+  // Start initial typing for greeting
   typingIntervalId = setInterval(() => {
     typeText()
   }, 100)
 
   // Change language every 20 seconds
   intervalId = setInterval(startNewText, 10000)
+
+  // Start initial skill typing
+  skillTypingIntervalId = setInterval(() => {
+    typeSkill()
+  }, 50)
+
+  // Change skill every 15 seconds
+  skillIntervalId = setInterval(startNewSkill, 8000)
 })
 
 onUnmounted(() => {
   if (intervalId) clearInterval(intervalId)
   if (typingIntervalId) clearInterval(typingIntervalId)
+  if (skillIntervalId) clearInterval(skillIntervalId)
+  if (skillTypingIntervalId) clearInterval(skillTypingIntervalId)
 })
 </script>
 
@@ -135,6 +184,13 @@ onUnmounted(() => {
 }
 
 .typing-text {
+  display: inline-block;
+  border-right: 2px solid currentColor;
+  padding-right: 3px;
+  animation: blink 0.7s steps(1) infinite;
+}
+
+.skill-typing {
   display: inline-block;
   border-right: 2px solid currentColor;
   padding-right: 3px;

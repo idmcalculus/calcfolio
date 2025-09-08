@@ -6,26 +6,72 @@
     </div>
 
     <!-- Category Selection -->
-    <div class="flex flex-wrap gap-3 mt-6 mb-8 justify-center md:justify-start">
-      <button
-        v-for="(category, categoryName) in skillCategories"
-        :key="categoryName"
-        :class="[
-          'category-button',
-          {
-            'active': activeCategory === categoryName,
-            'hovered': hoveredCategory === categoryName && !isMobile
-          }
-        ]"
-        class="px-4 py-2 rounded-lg font-medium transition-all duration-300 ease-in-out transform border-2"
-        @click="selectCategory(categoryName)"
-        @mouseenter="handleCategoryHover(categoryName)"
-        @mouseleave="handleCategoryLeave"
-      >
-        <Icon :name="category.icon" class="w-4 h-4 mr-2 inline-block" />
-        {{ category.name }}
-        <span class="category-count ml-1 text-xs opacity-75">({{ category.skills.length }})</span>
-      </button>
+    <div class="mt-6 mb-8">
+      <!-- Dropdown for small screens (<= 768px) -->
+      <div v-if="isSmallScreen" class="relative dropdown-container">
+        <button
+          class="w-full px-4 py-3 bg-white dark:bg-gray-800 border-2 border-gray-300 dark:border-gray-600 rounded-lg font-medium transition-all duration-300 ease-in-out flex items-center justify-between hover:border-blue-500 dark:hover:border-blue-400"
+          :class="{ 'border-blue-500 dark:border-blue-400': dropdownOpen }"
+          @click="toggleDropdown"
+        >
+          <div class="flex items-center">
+            <Icon :name="currentCategoryData?.icon || 'lucide:code'" class="w-5 h-5 mr-3 text-blue-600 dark:text-blue-400" />
+            <span>{{ currentCategoryData?.name || 'Select Category' }}</span>
+            <span class="ml-2 text-xs opacity-75 bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded">({{ currentCategoryData?.skills?.length || 0 }})</span>
+          </div>
+          <Icon :name="dropdownOpen ? 'lucide:chevron-up' : 'lucide:chevron-down'" class="w-5 h-5 transition-transform duration-200" />
+        </button>
+
+        <!-- Dropdown Menu -->
+        <transition
+          enter-active-class="transition ease-out duration-200"
+          enter-from-class="opacity-0 transform scale-95"
+          enter-to-class="opacity-100 transform scale-100"
+          leave-active-class="transition ease-in duration-150"
+          leave-from-class="opacity-100 transform scale-100"
+          leave-to-class="opacity-0 transform scale-95"
+        >
+          <div
+            v-if="dropdownOpen"
+            class="absolute z-50 w-full mt-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg shadow-lg max-h-60 overflow-y-auto"
+          >
+            <div
+              v-for="(category, categoryName) in skillCategories"
+              :key="categoryName"
+              class="flex items-center px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer transition-colors duration-150"
+              :class="{ 'bg-blue-50 dark:bg-blue-900/20': activeCategory === categoryName }"
+              @click="selectCategory(categoryName)"
+            >
+              <Icon :name="category.icon" class="w-4 h-4 mr-3 text-gray-600 dark:text-gray-400" />
+              <span class="flex-1">{{ category.name }}</span>
+              <span class="text-xs opacity-75 bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded">({{ category.skills.length }})</span>
+            </div>
+          </div>
+        </transition>
+      </div>
+
+      <!-- Buttons for larger screens (> 768px) -->
+      <div v-else class="flex flex-wrap gap-3 justify-center md:justify-start">
+        <button
+          v-for="(category, categoryName) in skillCategories"
+          :key="categoryName"
+          :class="[
+            'category-button',
+            {
+              'active': activeCategory === categoryName,
+              'hovered': hoveredCategory === categoryName && !isMobile
+            }
+          ]"
+          class="px-4 py-2 rounded-lg font-medium transition-all duration-300 ease-in-out transform border-2"
+          @click="selectCategory(categoryName)"
+          @mouseenter="handleCategoryHover(categoryName)"
+          @mouseleave="handleCategoryLeave"
+        >
+          <Icon :name="category.icon" class="w-4 h-4 mr-2 inline-block" />
+          {{ category.name }}
+          <span class="category-count ml-1 text-xs opacity-75">({{ category.skills.length }})</span>
+        </button>
+      </div>
     </div>
 
     <!-- Skills Display -->
@@ -83,19 +129,24 @@
   const hoveredCategory = ref('')
   const showAllSkills = ref(false)
   const isMobile = ref(false)
+  const isSmallScreen = ref(false)
+  const dropdownOpen = ref(false)
 
-  // Detect mobile device
+  // Detect mobile device and small screen
   const checkIsMobile = () => {
     isMobile.value = window.innerWidth < 768 || !window.matchMedia('(pointer: fine)').matches
+    isSmallScreen.value = window.innerWidth <= 768
   }
 
   onMounted(() => {
     checkIsMobile()
     window.addEventListener('resize', checkIsMobile)
+    document.addEventListener('click', handleClickOutside)
   })
 
   onUnmounted(() => {
     window.removeEventListener('resize', checkIsMobile)
+    document.removeEventListener('click', handleClickOutside)
   })
 
   // Categorized skills data
@@ -110,7 +161,13 @@
       name: 'Frontend Frameworks',
       icon: 'lucide:monitor',
       description: 'Modern frontend frameworks and libraries for building user interfaces.',
-      skills: ['React', 'Vue', 'Angular', 'Next.js', 'Nuxt.js', 'SwiftUI', 'UIKit']
+      skills: ['React', 'Vue', 'Angular', 'Next.js', 'Nuxt.js']
+    },
+    mobile: {
+      name: 'Mobile Development (iOS)',
+      icon: 'lucide:smartphone',
+      description: 'iOS development frameworks, tools, and technologies for building native mobile applications.',
+      skills: ['SwiftUI', 'UIKit', 'Swift Data', 'Core Data', 'SQLite', 'TestFlight', 'Combine', 'CocoaPods', 'Swift Package Manager', 'Storyboards', 'Xcode', 'Swift Testing', 'XCTest', 'XCUITest', 'Core Location', 'Core Animation', 'AVFoundation', 'MapKit', 'HealthKit', 'WatchKit', 'WidgetKit', 'CloudKit', 'StoreKit', 'MVVM-C']
     },
     backend: {
       name: 'Backend & APIs',
@@ -123,6 +180,12 @@
       icon: 'lucide:database',
       description: 'Database systems and Object-Relational Mapping tools I work with.',
       skills: ['PostgreSQL', 'MySQL', 'MongoDB', 'DynamoDB', 'Redis', 'SQLite', 'TypeORM', 'Sequelize', 'Mongoose', 'Prisma', 'Knex.js', 'EloquentORM', 'SQLAlchemy', 'DjangoORM', 'Hibernate', 'Spring Data JPA']
+    },
+    data_bi: {
+      name: 'Data & BI',
+      icon: 'lucide:bar-chart-3',
+      description: 'Data science, business intelligence, and data engineering tools for analysis and visualization.',
+      skills: ['Excel', 'Power BI', 'Tableau', 'SQL', 'Pandas', 'NumPy', 'Seaborn', 'Matplotlib', 'Plotly', 'ELT', 'ETL', 'Apache Spark', 'Apache Airflow', 'BigQuery', 'Redshift', 'Snowflake', 'Data Studio', 'Looker', 'dbt', 'Airbyte', 'Fivetran']
     },
     testing: {
       name: 'Testing & Quality',
@@ -179,6 +242,19 @@
   const selectCategory = (categoryName: string) => {
     activeCategory.value = categoryName
     showAllSkills.value = false
+    dropdownOpen.value = false // Close dropdown when category is selected
+  }
+
+  const toggleDropdown = () => {
+    dropdownOpen.value = !dropdownOpen.value
+  }
+
+  // Close dropdown when clicking outside
+  const handleClickOutside = (event: Event) => {
+    const target = event.target as HTMLElement
+    if (dropdownOpen.value && !target.closest('.dropdown-container')) {
+      dropdownOpen.value = false
+    }
   }
 
   const handleCategoryHover = (categoryName: string) => {
@@ -289,6 +365,47 @@
     'DynamoDB': 'https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Introduction.html',
     'Redis': 'https://redis.io/documentation',
     'SQLite': 'https://www.sqlite.org/docs.html',
+    'Excel': 'https://www.microsoft.com/en-us/microsoft-365/excel',
+    'Power BI': 'https://powerbi.microsoft.com/',
+    'Tableau': 'https://www.tableau.com/',
+    'SQL': 'https://www.w3schools.com/sql/',
+    'Pandas': 'https://pandas.pydata.org/',
+    'NumPy': 'https://numpy.org/',
+    'Seaborn': 'https://seaborn.pydata.org/',
+    'Matplotlib': 'https://matplotlib.org/',
+    'Plotly': 'https://plotly.com/',
+    'ELT': 'https://www.stitchdata.com/resources/elt-vs-etl/',
+    'ETL': 'https://www.talend.com/resources/what-is-etl/',
+    'Apache Spark': 'https://spark.apache.org/',
+    'Apache Airflow': 'https://airflow.apache.org/',
+    'BigQuery': 'https://cloud.google.com/bigquery',
+    'Redshift': 'https://aws.amazon.com/redshift/',
+    'Snowflake': 'https://www.snowflake.com/',
+    'Data Studio': 'https://datastudio.google.com/',
+    'Looker': 'https://looker.com/',
+    'dbt': 'https://www.getdbt.com/',
+    'Airbyte': 'https://airbyte.com/',
+    'Fivetran': 'https://fivetran.com/',
+    'Swift Data': 'https://developer.apple.com/documentation/swiftdata/',
+    'Core Data': 'https://developer.apple.com/documentation/coredata/',
+    'TestFlight': 'https://developer.apple.com/testflight/',
+    'Combine': 'https://developer.apple.com/documentation/combine/',
+    'CocoaPods': 'https://cocoapods.org/',
+    'Swift Package Manager': 'https://swift.org/package-manager/',
+    'Storyboards': 'https://developer.apple.com/library/archive/documentation/General/Conceptual/Devpedia-CocoaApp/Storyboard.html',
+    'Xcode': 'https://developer.apple.com/xcode/',
+    'Swift Testing': 'https://developer.apple.com/documentation/testing/',
+    'XCUITest': 'https://developer.apple.com/documentation/xctest/xcuielement/',
+    'Core Location': 'https://developer.apple.com/documentation/corelocation/',
+    'Core Animation': 'https://developer.apple.com/documentation/quartzcore/',
+    'AVFoundation': 'https://developer.apple.com/documentation/avfoundation/',
+    'MapKit': 'https://developer.apple.com/documentation/mapkit/',
+    'HealthKit': 'https://developer.apple.com/documentation/healthkit/',
+    'WatchKit': 'https://developer.apple.com/documentation/watchkit/',
+    'WidgetKit': 'https://developer.apple.com/documentation/widgetkit/',
+    'CloudKit': 'https://developer.apple.com/documentation/cloudkit/',
+    'StoreKit': 'https://developer.apple.com/documentation/storekit/',
+    'MVVM-C': 'https://developer.apple.com/documentation/uikit/mvc',
     'TypeORM': 'https://typeorm.io/#/',
     'Sequelize': 'https://sequelize.org/master/manual/getting-started.html',
     'Mongoose': 'https://mongoosejs.com/docs/index.html',
@@ -421,6 +538,47 @@
     'Vitest': 'simple-icons:vitest',
     'Vite': 'simple-icons:vite',
     'Webpack': 'simple-icons:webpack',
+    'Excel': 'simple-icons:microsoftexcel',
+    'Power BI': 'simple-icons:powerbi',
+    'Tableau': 'simple-icons:tableau',
+    'SQL': 'lucide:database',
+    'Pandas': 'simple-icons:pandas',
+    'NumPy': 'simple-icons:numpy',
+    'Seaborn': 'lucide:bar-chart',
+    'Matplotlib': 'lucide:trending-up',
+    'Plotly': 'simple-icons:plotly',
+    'ELT': 'lucide:arrow-right-left',
+    'ETL': 'lucide:refresh-cw',
+    'Apache Spark': 'simple-icons:apachespark',
+    'Apache Airflow': 'simple-icons:apacheairflow',
+    'BigQuery': 'simple-icons:googlecloud',
+    'Redshift': 'simple-icons:amazonaws',
+    'Snowflake': 'simple-icons:snowflake',
+    'Data Studio': 'simple-icons:google',
+    'Looker': 'simple-icons:looker',
+    'dbt': 'simple-icons:dbt',
+    'Airbyte': 'lucide:cloud',
+    'Fivetran': 'lucide:zap',
+    'Swift Data': 'simple-icons:apple',
+    'Core Data': 'simple-icons:apple',
+    'TestFlight': 'simple-icons:apple',
+    'Combine': 'simple-icons:apple',
+    'CocoaPods': 'simple-icons:cocoapods',
+    'Swift Package Manager': 'simple-icons:apple',
+    'Storyboards': 'simple-icons:apple',
+    'Xcode': 'simple-icons:xcode',
+    'Swift Testing': 'simple-icons:apple',
+    'XCUITest': 'simple-icons:apple',
+    'Core Location': 'simple-icons:apple',
+    'Core Animation': 'simple-icons:apple',
+    'AVFoundation': 'simple-icons:apple',
+    'MapKit': 'simple-icons:apple',
+    'HealthKit': 'simple-icons:apple',
+    'WatchKit': 'simple-icons:apple',
+    'WidgetKit': 'simple-icons:apple',
+    'CloudKit': 'simple-icons:apple',
+    'StoreKit': 'simple-icons:apple',
+    'MVVM-C': 'lucide:layers',
     'Generative AI': '',
     'Monoliths': '',
     'Microservices': '',

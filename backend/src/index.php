@@ -103,17 +103,17 @@ $adminAuthMiddleware = $container->get(\App\Presentation\Middleware\AdminAuthMid
 
 // Routes
 
-// Diagnostic route (temporary for debugging)
-$app->get('/diagnostic', function ($request, $response) {
-    $diagnosticPath = __DIR__ . '/diagnostic.php';
-    if (file_exists($diagnosticPath)) {
-        ob_start();
-        include $diagnosticPath;
-        $output = ob_get_clean();
-        $response->getBody()->write($output);
-        return $response->withHeader('Content-Type', 'application/json');
-    }
-    throw new \Slim\Exception\HttpNotFoundException($request);
+
+
+// Health check endpoint to prevent Railway from sleeping
+$app->get('/health', function ($request, $response) {
+    $data = json_encode([
+        'status' => 'healthy',
+        'timestamp' => date('c'),
+        'service' => 'portfolio-backend'
+    ]);
+    $response->getBody()->write($data);
+    return $response->withHeader('Content-Type', 'application/json');
 });
 
 // Public routes

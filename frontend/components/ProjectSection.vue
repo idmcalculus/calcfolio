@@ -68,7 +68,7 @@
 	},
 	{
 		title: "Catch The Ghost App",
-		description: "A productivity app built with React Native and Firebase. I designed the user interface and implemented the real-time data synchronization feature using Firebase.",
+		description: "A gamified Pomodoro timer that transforms focus sessions into an engaging game, helping users beat phone addiction through rewards and historical figure collections. Contributed to modular iOS app using Swift, UIKit, MVVM-C with leaderboard mechanics and XP tracking for >10k users. Built complete auth module with multi-provider sign-in, profile management, and privacy-compliant settings.",
 		imageUrl: "/assets/images/ctg.png",
 		tags: ["Swift", "SwiftUI", "UIKit", "CoreData", "Firebase", "Xcode", "iOS", "Swift Package Manager", "Combine", "AVFoundation", "StoreKit", "App Store Connect", "Git", "TestFlight"],
 		link: "https://www.aeeiee.com/catch-the-ghost/"
@@ -90,16 +90,16 @@
 	},
 	{
 		title: "Dress Measurement App",
-		description: "Mobile-first e-commerce application for a dress boutique",
+		description: "Mobile app for taking, storing, and sharing clothing measurements with PDF/CSV export functionality. Designed for both individual users and fashion entrepreneurs to manage customer measurements with cloud sync. Fixed persistent iCloud sync issues using CloudKit, reducing related complaints by 75%.",
 		imageUrl: "/assets/images/dm.png",
 		tags: ["Swift", "UIKit", "SQLite", "Xcode", "iOS", "CocoaPods", "CloudKit", "App Store Connect", "Git", "TestFlight"],
 		link: "https://www.aeeiee.com/dress-measurement/"
 	},
 	{
 		title: "Iridium Go Exec Product Page",
-		description: "A professional, modern and responsive website for Aeeiee Inc, showcasing their products, services and more. I led the development of the custom WordPress theme and implemented various interactive features using React and PHP.",
-		imageUrl: "https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?q=80&w=800&auto=format",
-		tags: ["Vue.js", "Node.js", "MongoDB"],
+		description: "Developed a flexible page builder system using WordPress APIs and ACF Flexible Content, enabling clients to rapidly create and customize unique web pages for products, services, or information. The Iridium Go Exec page showcases one of their satellite communication products, built using this scalable content management system.",
+		imageUrl: "/assets/images/goexec.png",
+		tags: ["PHP", "HTML5", "CSS3", "SCSS", "Bootstrap", "WordPress", "ACF", "jQuery"],
 		link: "https://www.iridium.com/go-exec/"
 	}
   ])
