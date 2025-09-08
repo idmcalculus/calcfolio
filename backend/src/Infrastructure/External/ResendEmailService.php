@@ -141,6 +141,7 @@ class ResendEmailService implements EmailServiceInterface
         $replacements = [
             '{{name}}' => htmlspecialchars($contactData['name']),
             '{{subject}}' => htmlspecialchars($contactData['subject']),
+            '{{theme}}' => htmlspecialchars($contactData['theme_preference'] ?? 'light'),
             '{{portfolio_url}}' => $_ENV['PORTFOLIO_URL'] ?? getenv('PORTFOLIO_URL') ?? 'https://www.idmcalculus.cv',
             '{{linkedin_url}}' => $_ENV['LINKEDIN_URL'] ?? getenv('LINKEDIN_URL') ?? 'https://linkedin.com/in/damilola-michael-ige',
             '{{github_url}}' => $_ENV['GITHUB_URL'] ?? getenv('GITHUB_URL') ?? 'https://github.com/idmcalculus',
@@ -179,24 +180,31 @@ Damilola Michael Ige";
         $name = htmlspecialchars($contactData['name']);
         $subject = htmlspecialchars($contactData['subject']);
 
+        $theme = htmlspecialchars($contactData['theme_preference'] ?? 'light');
+
         return "
         <!DOCTYPE html>
         <html>
         <head>
             <meta charset='UTF-8'>
             <style>
-                body { font-family: 'Manrope', Arial, sans-serif; line-height: 1.6; color: #333; margin: 0; padding: 0; }
-                .container { max-width: 600px; margin: 0 auto; background: #fff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); }
+                body { font-family: 'Manrope', Arial, sans-serif; line-height: 1.6; margin: 0; padding: 0; }
+                .container { max-width: 600px; margin: 0 auto; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); }
                 .header { background: linear-gradient(135deg, #9845E8 0%, #33D2FF 50%, #DD5789 100%); color: white; padding: 30px; text-align: center; }
-                .content { padding: 30px; background: #fff; }
-                .highlight { background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%); border: 1px solid #bfdbfe; border-radius: 8px; padding: 20px; margin: 20px 0; }
-                .highlight h3 { color: #1d4ed8; margin: 0 0 10px 0; font-size: 18px; }
-                .highlight p { color: #1e40af; margin: 0; }
+
+                /* Theme-based styles */
+                body { background-color: " . ($theme === 'dark' ? '#0f172a' : '#ffffff') . "; color: " . ($theme === 'dark' ? '#f1f5f9' : '#1f2937') . "; }
+                .container { background: " . ($theme === 'dark' ? '#0f172a' : '#ffffff') . "; }
+                .content { padding: 30px; background: " . ($theme === 'dark' ? '#0f172a' : '#ffffff') . "; }
+                .highlight { background: " . ($theme === 'dark' ? 'linear-gradient(135deg, #1e293b 0%, #334155 100%)' : 'linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%)') . "; border: 1px solid " . ($theme === 'dark' ? '#475569' : '#bfdbfe') . "; border-radius: 8px; padding: 20px; margin: 20px 0; }
+                .highlight h3 { color: " . ($theme === 'dark' ? '#60a5fa' : '#1d4ed8') . "; margin: 0 0 10px 0; font-size: 18px; }
+                .highlight p { color: " . ($theme === 'dark' ? '#93c5fd' : '#1e40af') . "; margin: 0; }
                 .cta-button { display: inline-block; background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%); color: white; text-decoration: none; padding: 12px 24px; border-radius: 6px; font-weight: 600; margin: 20px 0; }
-                .footer { background: #f9fafb; padding: 20px; text-align: center; border-top: 1px solid #e5e7eb; }
+                .footer { background: " . ($theme === 'dark' ? '#1e293b' : '#f9fafb') . "; padding: 20px; text-align: center; border-top: 1px solid " . ($theme === 'dark' ? '#334155' : '#e5e7eb') . "; }
+                .footer p { color: " . ($theme === 'dark' ? '#cbd5e1' : '#6b7280') . "; }
             </style>
         </head>
-        <body>
+        <body data-theme='{$theme}'>
             <div class='container'>
                 <div class='header'>
                     <h1>Thank You for Reaching Out!</h1>

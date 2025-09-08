@@ -45,6 +45,7 @@ export interface ContactFormRequest {
   subject: string
   message: string
   recaptcha_token: string
+  theme_preference?: string
 }
 
 export interface BulkActionRequest {

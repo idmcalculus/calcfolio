@@ -82,6 +82,7 @@
   const { contact } = useApi()
   const toast = useToast()
   const config = useRuntimeConfig()
+  const { isDark } = useDarkMode()
 
   // Set SEO meta tags for the contact page
   useSEO({
@@ -146,7 +147,8 @@
 
       const responseData = await contact.submit({
         ...form.value,
-        recaptcha_token: recaptchaToken || ''
+        recaptcha_token: recaptchaToken || '',
+        theme_preference: isDark.value ? 'dark' : 'light'
       })
       // Use toast for feedback
       if (responseData.success) {
