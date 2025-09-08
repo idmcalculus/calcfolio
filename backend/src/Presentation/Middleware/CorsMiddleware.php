@@ -19,14 +19,21 @@ class CorsMiddleware implements MiddlewareInterface
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
+        $path = $request->getUri()->getPath();
+
+        // Skip CORS checks for health endpoint (used by monitoring services)
+        if ($path === '/health') {
+            return $handler->handle($request);
+        }
+
         $origin = $request->getHeaderLine('Origin');
-        
+
         // Log CORS debug info
         error_log('CORS Middleware - Origin: ' . $origin);
         error_log('CORS Middleware - Allowed Origins: ' . json_encode($this->allowedOrigins));
-        
+
         $originAllowed = $origin && in_array($origin, $this->allowedOrigins, true);
-        
+
         error_log('CORS Middleware - Origin Allowed: ' . ($originAllowed ? 'YES' : 'NO'));
 
         // Handle preflight OPTIONS requests
