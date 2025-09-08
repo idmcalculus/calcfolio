@@ -3,10 +3,10 @@
 // Setup script to create database tables and indexes
 // Run this once after deployment or when database is reset
 
-require __DIR__ . '/src/vendor/autoload.php';
+require __DIR__ . '/vendor/autoload.php';
 
 // Load environment variables
-$dotenvPath = __DIR__ . '/src';
+$dotenvPath = __DIR__;
 if (file_exists($dotenvPath . '/.env')) {
     $dotenv = Dotenv\Dotenv::createImmutable($dotenvPath);
     $dotenv->load();
