@@ -185,14 +185,19 @@ Damilola Michael Ige";
         <head>
             <meta charset='UTF-8'>
             <style>
-                body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
-                .header { background: linear-gradient(135deg, #9845E8 0%, #33D2FF 50%, #DD5789 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
+                body { font-family: 'Manrope', Arial, sans-serif; line-height: 1.6; color: #333; margin: 0; padding: 0; }
+                .container { max-width: 600px; margin: 0 auto; background: #fff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); }
+                .header { background: linear-gradient(135deg, #9845E8 0%, #33D2FF 50%, #DD5789 100%); color: white; padding: 30px; text-align: center; }
                 .content { padding: 30px; background: #fff; }
-                .footer { background: #f5f5f5; padding: 20px; text-align: center; border-radius: 0 0 10px 10px; }
+                .highlight { background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%); border: 1px solid #bfdbfe; border-radius: 8px; padding: 20px; margin: 20px 0; }
+                .highlight h3 { color: #1d4ed8; margin: 0 0 10px 0; font-size: 18px; }
+                .highlight p { color: #1e40af; margin: 0; }
+                .cta-button { display: inline-block; background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%); color: white; text-decoration: none; padding: 12px 24px; border-radius: 6px; font-weight: 600; margin: 20px 0; }
+                .footer { background: #f9fafb; padding: 20px; text-align: center; border-top: 1px solid #e5e7eb; }
             </style>
         </head>
         <body>
-            <div style='max-width: 600px; margin: 0 auto;'>
+            <div class='container'>
                 <div class='header'>
                     <h1>Thank You for Reaching Out!</h1>
                     <p>I've received your message and appreciate you contacting me</p>
@@ -200,6 +205,13 @@ Damilola Michael Ige";
                 <div class='content'>
                     <h2>Hi {$name},</h2>
                     <p>Thank you for taking the time to contact me. I've received your message regarding \"<strong>{$subject}</strong>\" and will get back to you soon!</p>
+                    <div class='highlight'>
+                        <h3>📧 What happens next?</h3>
+                        <p>I'll carefully review your message and craft a thoughtful response within 24-48 hours.</p>
+                    </div>
+                    <div style='text-align: center;'>
+                        <a href='" . ($_ENV['PORTFOLIO_URL'] ?? getenv('PORTFOLIO_URL') ?? 'https://www.idmcalculus.cv') . "' class='cta-button'>Visit My Portfolio</a>
+                    </div>
                     <p>Best regards,<br>Damilola Michael Ige</p>
                 </div>
                 <div class='footer'>
