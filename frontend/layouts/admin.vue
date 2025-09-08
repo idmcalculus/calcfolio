@@ -1,6 +1,16 @@
 <template>
   <!-- Apply dark class dynamically -->
-  <div :class="{ dark: isDark }" class="min-h-screen flex flex-col bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-white">
+  <div :class="{ dark: isDark }" class="min-h-screen flex flex-col bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-white relative">
+    <!-- Loading Overlay for Logout -->
+    <LoadingOverlay
+      :visible="loading"
+      title="Logging out..."
+      subtitle="Please wait while we securely log you out"
+      center-dot-class="bg-red-500"
+      overlay-class="bg-gray-100/80 dark:bg-gray-900/80"
+      position="fixed"
+    />
+
     <header class="bg-white dark:bg-gray-800 shadow-md p-4 flex justify-between items-center">
       <h1 class="text-xl font-semibold">Admin Dashboard</h1>
       <!-- Right side controls -->
@@ -59,6 +69,7 @@
 import { ref, onMounted } from 'vue';
 import { navigateTo } from '#app';
 import { useDarkMode } from '~/composables/useDarkMode';
+import LoadingOverlay from '~/components/LoadingOverlay.vue';
 
 // Dark mode state and toggle function
 const { isDark, toggleDark, initializeTheme } = useDarkMode();

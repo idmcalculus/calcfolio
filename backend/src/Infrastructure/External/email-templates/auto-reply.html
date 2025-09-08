@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thank you for contacting me</title>
+    <style>
+        /* Reset and base styles */
+        body, table, td, p, a, li, blockquote {
+            -webkit-text-size-adjust: 100%;
+            -ms-text-size-adjust: 100%;
+        }
+        table, td {
+            mso-table-lspace: 0pt;
+            mso-table-rspace: 0pt;
+        }
+        img {
+            -ms-interpolation-mode: bicubic;
+        }
+
+        /* Base styles */
+        body {
+            margin: 0 !important;
+            padding: 0 !important;
+            background-color: #ffffff;
+            font-family: 'Manrope', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        /* Container */
+        .email-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #9845E8 0%, #33D2FF 50%, #DD5789 100%);
+            padding: 40px 30px;
+            text-align: center;
+            border-radius: 12px 12px 0 0;
+        }
+
+        .header h1 {
+            color: #ffffff;
+            font-size: 28px;
+            font-weight: 700;
+            margin: 0;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .header p {
+            color: #ffffff;
+            font-size: 16px;
+            margin: 10px 0 0 0;
+            opacity: 0.9;
+        }
+
+        /* Content */
+        .content {
+            padding: 40px 30px;
+            background-color: #ffffff;
+        }
+
+        .greeting {
+            font-size: 24px;
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 20px;
+        }
+
+        .message {
+            font-size: 16px;
+            line-height: 1.6;
+            color: #4b5563;
+            margin-bottom: 30px;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+            border: 1px solid #fca5a5;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 25px 0;
+        }
+
+        .highlight-box h3 {
+            color: #dc2626;
+            font-size: 18px;
+            font-weight: 600;
+            margin: 0 0 10px 0;
+        }
+
+        .highlight-box p {
+            color: #991b1b;
+            margin: 0;
+            font-size: 15px;
+        }
+
+        /* CTA Button */
+        .cta-button {
+            display: inline-block;
+            background: linear-gradient(135deg, #f54747 0%, #dc2626 100%);
+            color: #ffffff !important;
+            text-decoration: none;
+            padding: 14px 28px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 16px;
+            text-align: center;
+            margin: 20px 0;
+            box-shadow: 0 4px 12px rgba(245, 71, 71, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .cta-button:hover {
+            background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+            box-shadow: 0 6px 16px rgba(245, 71, 71, 0.4);
+        }
+
+        /* Social links */
+        .social-links {
+            text-align: center;
+            margin: 30px 0;
+        }
+
+        .social-links a {
+            display: inline-block;
+            margin: 0 10px;
+            color: #6b7280;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        /* Footer */
+        .footer {
+            background-color: #f9fafb;
+            padding: 30px;
+            text-align: center;
+            border-radius: 0 0 12px 12px;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .footer p {
+            color: #6b7280;
+            font-size: 14px;
+            margin: 0;
+            line-height: 1.5;
+        }
+
+        .footer .signature {
+            font-weight: 600;
+            color: #374151;
+            margin-top: 15px;
+        }
+
+        /* Responsive */
+        @media only screen and (max-width: 600px) {
+            .email-container {
+                width: 100% !important;
+            }
+            .header {
+                padding: 30px 20px;
+            }
+            .header h1 {
+                font-size: 24px;
+            }
+            .content {
+                padding: 30px 20px;
+            }
+            .greeting {
+                font-size: 20px;
+            }
+        }
+
+        /* Dark mode support for some email clients */
+        @media (prefers-color-scheme: dark) {
+            .content {
+                background-color: #1f2937;
+            }
+            .greeting {
+                color: #f9fafb;
+            }
+            .message {
+                color: #d1d5db;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="email-container">
+        <!-- Header -->
+        <div class="header">
+            <h1>Thank You for Reaching Out!</h1>
+            <p>I've received your message and appreciate you contacting me</p>
+        </div>
+
+        <!-- Content -->
+        <div class="content">
+            <div class="greeting">Hi {{name}},</div>
+
+            <div class="message">
+                <p>Thank you for taking the time to contact me through my portfolio website. I truly appreciate you reaching out and I'm excited to hear from you!</p>
+
+                <p>I've received your message regarding "<strong>{{subject}}</strong>" and I wanted to personally acknowledge that I've seen it. I typically respond to all messages within 24-48 hours, though sometimes it might take a bit longer depending on my current workload.</p>
+            </div>
+
+            <!-- Highlight box -->
+            <div class="highlight-box">
+                <h3>📧 What happens next?</h3>
+                <p>I'll carefully review your message and craft a thoughtful response. Whether you're interested in collaboration, have questions about my work, or just want to connect, I'm looking forward to our conversation!</p>
+            </div>
+
+            <div class="message">
+                <p>In the meantime, feel free to explore more of my work on my portfolio or connect with me on social media.</p>
+            </div>
+
+            <!-- CTA Button -->
+            <div style="text-align: center;">
+                <a href="{{portfolio_url}}" class="cta-button">Visit My Portfolio</a>
+            </div>
+
+            <!-- Social Links -->
+            <div class="social-links">
+                <a href="{{linkedin_url}}">LinkedIn</a> |
+                <a href="{{github_url}}">GitHub</a> |
+                <a href="{{twitter_url}}">Twitter</a>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p>This is an automated response to confirm I've received your message. Please don't reply to this email directly.</p>
+            <p>If you need immediate assistance, feel free to reach out through my social channels.</p>
+            <p class="signature">Best regards,<br>Damilola Michael Ige</p>
+        </div>
+    </div>
+</body>
+</html>

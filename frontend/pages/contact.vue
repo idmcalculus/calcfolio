@@ -1,6 +1,15 @@
 <template>
-  <div class="max-w-xl mx-auto p-4 my-12">
+  <div class="max-w-xl mx-auto p-4 my-12 relative">
     <h2 class="text-2xl md:text-3xl font-bold mb-6 text-center">Contact Me</h2>
+
+    <!-- Loading Overlay -->
+    <LoadingOverlay
+      :visible="loading"
+      title="Sending your message..."
+      subtitle="Please wait while we process your request"
+      center-dot-class="bg-primary"
+      position="absolute"
+    />
 
     <form class="space-y-4" @submit.prevent="handleSubmit">
       <div class="relative">
@@ -68,6 +77,7 @@
 
 <script setup lang="ts">
   import { ref } from 'vue'
+  import LoadingOverlay from '~/components/LoadingOverlay.vue'
 
   const { contact } = useApi()
   const toast = useToast()

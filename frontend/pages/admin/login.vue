@@ -1,6 +1,16 @@
 <template>
-  <div class="flex items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900">
-    <div class="w-full max-w-md p-8 space-y-6 bg-white dark:bg-gray-800 rounded-lg shadow-md">
+  <div class="flex items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900 relative">
+    <div class="w-full max-w-md p-8 space-y-6 bg-white dark:bg-gray-800 rounded-lg shadow-md relative">
+      <!-- Loading Overlay -->
+      <LoadingOverlay
+        :visible="loading"
+        title="Authenticating..."
+        subtitle="Please wait while we verify your credentials"
+        center-dot-class="bg-primary"
+        overlay-class="bg-white/90 dark:bg-gray-800/90"
+        position="absolute"
+      />
+
       <h2 class="text-2xl font-bold text-center text-gray-900 dark:text-white">Admin Login</h2>
       <form class="space-y-4" @submit.prevent="handleLogin">
         <div class="relative">
@@ -59,6 +69,7 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue' // Import computed
 import { navigateTo } from '#app'
+import LoadingOverlay from '~/components/LoadingOverlay.vue'
 
 // Define page meta to use a different layout if needed, or disable auth middleware for this page
 definePageMeta({
