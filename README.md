@@ -14,6 +14,7 @@ This is my personal portfolio website that combines a robust PHP backend with a 
 - RESTful API built with Slim Framework 4
 - PSR-7 HTTP message interfaces
 - Dependency injection with PHP-DI
+- 
 - Comprehensive error handling and logging
 
 **Contact Management**
