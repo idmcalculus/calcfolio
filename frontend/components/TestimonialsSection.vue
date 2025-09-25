@@ -72,7 +72,7 @@ const testimonials = ref<Testimonial[]>([
     role: 'Founder and CEO, Aeeiee Inc., Atlanta, GA',
     message: `Damilola is an inquisitive and thorough Full Stack Software Engineer. He is particularly proficient in iOS Development with Swift, UIKit, and Swift UI. He would make a great addition to your team!`,
     source: 'linkedin',
-    avatar: 'https://media.licdn.com/dms/image/v2/C5103AQFVVn-wyfe0tg/profile-displayphoto-shrink_800_800/profile-displayphoto-shrink_800_800/0/1517566998788?e=1791782400&v=beta&t=RpxHVQWvmME2FJBRu8GkPW58Zndfsy8_zI7LpuOcD-A',
+    avatar: 'https://media.licdn.com/dms/image/v2/C5103AQFVVn-wyfe0tg/profile-displayphoto-shrink_800_800/profile-displayphoto-shrink_800_800/0/1517566998788?e=1761782400&v=beta&t=RpxHVQWvmME2FJBRu8GkPW58Zndfsy8_zI7LpuOcD-A',
     url: 'https://www.linkedin.com/in/ovienmhada'
   },
   {
@@ -84,7 +84,7 @@ What stands out about Damilola is his ability to quickly pick up new technologie
 
 Damilola is not only a talented and fast-learning engineer, but also a fantastic teammate—always positive, collaborative, and open to tackling new challenges. I highly recommend him for any software engineering role.`,
     source: 'linkedin',
-    avatar: 'https://media.licdn.com/dms/image/v2/D4E03AQEHmiaaeY8ETA/profile-displayphoto-shrink_800_800/B4EZO2JHDtHsAc-/0/1733927662321?e=1791782400&v=beta&t=lFD4pw17RKMAN8NMvMn4SyqNSWoqDairh_ieWEcqQHU',
+    avatar: 'https://media.licdn.com/dms/image/v2/D4E03AQEHmiaaeY8ETA/profile-displayphoto-shrink_800_800/B4EZO2JHDtHsAc-/0/1733927662321?e=1761782400&v=beta&t=lFD4pw17RKMAN8NMvMn4SyqNSWoqDairh_ieWEcqQHU',
     url: 'https://www.linkedin.com/in/omkartotade'
   },
   {
@@ -98,7 +98,7 @@ Beyond his technical skills, Damilola is a fantastic team player. He communicate
 
 I highly recommend Damilola for any role he chooses to pursue. His work ethic, technical acumen, and ability to drive results make him a standout professional; any team would be lucky to have him.`,
     source: 'linkedin',
-    avatar: 'https://media.licdn.com/dms/image/v2/C5603AQH3olw6ZduFZw/profile-displayphoto-shrink_800_800/profile-displayphoto-shrink_800_800/0/1646503267395?e=1791782400&v=beta&t=vooixcxIincb6TF9GDnGmLDa6GdI04fx9o-RaOnnmG8',
+    avatar: 'https://media.licdn.com/dms/image/v2/C5603AQH3olw6ZduFZw/profile-displayphoto-shrink_800_800/profile-displayphoto-shrink_800_800/0/1646503267395?e=1761782400&v=beta&t=vooixcxIincb6TF9GDnGmLDa6GdI04fx9o-RaOnnmG8',
     url: 'https://www.linkedin.com/in/oloruntobiawoderu/'
   },
   {
@@ -106,7 +106,7 @@ I highly recommend Damilola for any role he chooses to pursue. His work ethic, t
     role: 'Lead UI/UX Designer, Aeeiee Inc., Atlanta, GA',
     message: 'I worked with Damilola for a few years and can confidently say he’s an excellent software engineer. He consistently delivers high-quality work and meets deadlines. His technical expertise is solid, and he’s always reliable in completing tasks. One of the things that stands him out is how approachable and easy he is to work with—his friendly and collaborative nature makes any team better. He’s someone you would want on your team or project.',
     source: 'linkedin',
-    avatar: 'https://media.licdn.com/dms/image/v2/D4D03AQF7DVlv_qbcxg/profile-displayphoto-shrink_800_800/profile-displayphoto-shrink_800_800/0/1697040829676?e=1791782400&v=beta&t=RGXEa9esN19knPfmSKVxwnjewavH-l4XX3Qfb1p5ds4',
+    avatar: 'https://media.licdn.com/dms/image/v2/D4D03AQF7DVlv_qbcxg/profile-displayphoto-shrink_800_800/profile-displayphoto-shrink_800_800/0/1697040829676?e=1761782400&v=beta&t=RGXEa9esN19knPfmSKVxwnjewavH-l4XX3Qfb1p5ds4',
     url: 'https://www.linkedin.com/in/adekemiborode/'
   },
   {
@@ -122,7 +122,7 @@ His dedication to the project extended beyond coding; he played a key role in br
 
 In short, Damilola is not only a highly skilled iOS developer but also a team player who adds significant value to any project he’s a part of. His technical expertise, creative problem-solving, and collaborative nature make him an asset to any team. I highly recommend him for any future endeavours.`,
     source: 'linkedin',
-    avatar: 'https://media.licdn.com/dms/image/v2/D4D03AQF_hlLsIASWrQ/profile-displayphoto-crop_800_800/B4DZlKNDZ6H4AI-/0/1757886562184?e=1791782400&v=beta&t=AjLD6Jda7RF4kEOfzI8tm9RuT7rEaDC7fT-EXPH3QdM',
+    avatar: 'https://media.licdn.com/dms/image/v2/D4D03AQF_hlLsIASWrQ/profile-displayphoto-crop_800_800/B4DZlKNDZ6H4AI-/0/1757886562184?e=1761782400&v=beta&t=AjLD6Jda7RF4kEOfzI8tm9RuT7rEaDC7fT-EXPH3QdM',
     url: 'https://www.linkedin.com/in/anesi-igebu/'
   },
   {
@@ -132,7 +132,7 @@ In short, Damilola is not only a highly skilled iOS developer but also a team pl
 
 What stands out about Damilola is his eagerness for quickly mastering new technologies. This adaptability, combined with his communication skills, makes him a great teammate. His strong foundation in fullstack development, coupled with his growing expertise in mobile development, positions him as a versatile engineer who can contribute significantly to a wide range of projects, and any organization would be fortunate to have him on their team.`,
     source: 'linkedin',
-    avatar: 'https://media.licdn.com/dms/image/v2/D4D03AQGBoGLkLcWjiw/profile-displayphoto-shrink_800_800/profile-displayphoto-shrink_800_800/0/1689161163754?e=1791782400&v=beta&t=ocFYAINp76WL4GjvSDsNl45SYtG7TXFf8KBXyutSS1I',
+    avatar: 'https://media.licdn.com/dms/image/v2/D4D03AQGBoGLkLcWjiw/profile-displayphoto-shrink_800_800/profile-displayphoto-shrink_800_800/0/1689161163754?e=1761782400&v=beta&t=ocFYAINp76WL4GjvSDsNl45SYtG7TXFf8KBXyutSS1I',
     url: 'https://www.linkedin.com/in/itunuraimi/'
   },
   {
@@ -146,7 +146,7 @@ What sets Damilola apart is not just his technical ability but his collaborative
 
 Damilola’s combination of technical expertise, problem-solving skills, and team-first attitude makes him an invaluable asset to any team. I highly recommend him for future endeavors, as I am confident he will excel in any role he takes on.`,
     source: 'linkedin',
-    avatar: 'https://media.licdn.com/dms/image/v2/D4D03AQEMkaP8TyxIjg/profile-displayphoto-shrink_800_800/profile-displayphoto-shrink_800_800/0/1720646770162?e=1791782400&v=beta&t=_5oeONGN6kNRox09dHbRapMGUEMkaXU2vvXZhc7umUk',
+    avatar: 'https://media.licdn.com/dms/image/v2/D4D03AQEMkaP8TyxIjg/profile-displayphoto-shrink_800_800/profile-displayphoto-shrink_800_800/0/1720646770162?e=1761782400&v=beta&t=_5oeONGN6kNRox09dHbRapMGUEMkaXU2vvXZhc7umUk',
     url: 'https://www.linkedin.com/in/osuobiem/'
   },
 ])
