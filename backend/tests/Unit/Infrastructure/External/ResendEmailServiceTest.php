@@ -75,6 +75,7 @@ class ResendEmailServiceTest extends TestCase
         $expected = "Hi John Doe,\n\nThanks for reaching out. I'll get back to you soon!\n\nBest,\nDamilola";
         $this->assertEquals($expected, $body);
     }
+    
 
     public function testSanitizeTagValueHandlesSpecialCharacters(): void
     {

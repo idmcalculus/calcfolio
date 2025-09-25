@@ -143,9 +143,9 @@ class ResendEmailService implements EmailServiceInterface
             '{{subject}}' => htmlspecialchars($contactData['subject']),
             '{{theme}}' => htmlspecialchars($contactData['theme_preference'] ?? 'light'),
             '{{portfolio_url}}' => $_ENV['PORTFOLIO_URL'] ?? getenv('PORTFOLIO_URL') ?? 'https://www.idmcalculus.cv',
-            '{{linkedin_url}}' => $_ENV['LINKEDIN_URL'] ?? getenv('LINKEDIN_URL') ?? 'https://linkedin.com/in/damilola-michael-ige',
+            '{{linkedin_url}}' => $_ENV['LINKEDIN_URL'] ?? getenv('LINKEDIN_URL') ?? 'https://linkedin.com/in/idmcalculus',
             '{{github_url}}' => $_ENV['GITHUB_URL'] ?? getenv('GITHUB_URL') ?? 'https://github.com/idmcalculus',
-            '{{twitter_url}}' => $_ENV['TWITTER_URL'] ?? getenv('TWITTER_URL') ?? 'https://twitter.com/idmcalculus',
+            '{{twitter_url}}' => $_ENV['TWITTER_URL'] ?? getenv('TWITTER_URL') ?? 'https://twitter.com/calculus_codes',
         ];
 
         return str_replace(array_keys($replacements), array_values($replacements), $template);
@@ -158,21 +158,22 @@ class ResendEmailService implements EmailServiceInterface
 
         return "Hi {$name},
 
-Thank you for contacting me through my portfolio website. I truly appreciate you reaching out!
+            Thank you for contacting me through my portfolio website. I truly appreciate you reaching out!
 
-I've received your message regarding \"{$subject}\" and I wanted to personally acknowledge that I've seen it. I typically respond to all messages within 24-48 hours, though sometimes it might take a bit longer depending on my current workload.
+            I've received your message regarding \"{$subject}\" and I wanted to personally acknowledge that I've seen it. I typically respond to all messages within 24-48 hours, though sometimes it might take a bit longer depending on my current workload.
 
-What happens next?
-I'll carefully review your message and craft a thoughtful response. Whether you're interested in collaboration, have questions about my work, or just want to connect, I'm looking forward to our conversation!
+            What happens next?
+            I'll carefully review your message and craft a thoughtful response. Whether you're interested in collaboration, have questions about my work, or just want to connect, I'm looking forward to our conversation!
 
-In the meantime, feel free to explore more of my work on my portfolio or connect with me on social media.
+            In the meantime, feel free to explore more of my work on my portfolio or connect with me on social media.
 
-Visit my portfolio: https://your-portfolio-url.com
+            Visit my portfolio: https://your-portfolio-url.com
 
-This is an automated response to confirm I've received your message. Please don't reply to this email directly.
+            This is an automated response to confirm I've received your message. Please don't reply to this email directly.
 
-Best regards,
-Damilola Michael Ige";
+            Best regards,
+            Damilola Michael Ige
+        ";
     }
 
     private function buildFallbackHtmlBody(array $contactData): string
