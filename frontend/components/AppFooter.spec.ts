@@ -26,7 +26,7 @@ describe('AppFooter.vue', () => {
     expect(wrapper.exists()).toBe(true)
   })
 
-  it('displays the copyright text', () => {
+  it('displays current year copyright text', () => {
     const wrapper = mount(AppFooter, {
       global: {
         components: {
@@ -35,8 +35,22 @@ describe('AppFooter.vue', () => {
         }
       }
     })
-    expect(wrapper.text()).toContain('© 2025 iDM Portfolio')
+    const currentYear = new Date().getFullYear()
+    expect(wrapper.text()).toContain(`© ${currentYear} iDM Portfolio`)
   })
 
-  // Add more tests later for social links, designer link, etc.
+  it('renders primary navigation links', () => {
+    const wrapper = mount(AppFooter, {
+      global: {
+        components: {
+          NuxtLink: NuxtLinkStub,
+          Icon: IconStub
+        }
+      }
+    })
+
+    expect(wrapper.text()).toContain('About')
+    expect(wrapper.text()).toContain('Projects')
+    expect(wrapper.text()).toContain('Contact')
+  })
 })
