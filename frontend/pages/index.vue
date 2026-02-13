@@ -37,6 +37,7 @@
  		title: 'Home',
  		description: 'Welcome to my professional portfolio. Discover my journey as a software engineer, explore my projects, and get in touch to discuss opportunities.',
  		keywords: ['home', 'portfolio', 'software engineer', 'projects', 'contact'],
- 		type: 'profile'
+ 		type: 'profile',
+ 		url: '/'
  	})
 </script>

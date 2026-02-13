@@ -61,7 +61,9 @@ export const useSEO = (data: SEOData = {}) => {
     // Open Graph
     ogTitle: fullTitle,
     ogDescription: description,
+    ogUrl: canonicalUrl,
     ogImage: imageUrl,
+    ogImageAlt: `${fullTitle} preview image`,
     ogType: data.type || 'website',
     ogSiteName: defaultTitle,
     ogLocale: 'en_US',
@@ -71,6 +73,7 @@ export const useSEO = (data: SEOData = {}) => {
     twitterTitle: fullTitle,
     twitterDescription: description,
     twitterImage: imageUrl,
+    twitterImageAlt: `${fullTitle} preview image`,
     twitterCreator: '@calculus_codes',
     twitterSite: '@calculus_codes'
   })
@@ -78,11 +81,13 @@ export const useSEO = (data: SEOData = {}) => {
   // Set head tags for links and scripts
   useHead({
     link: [
-      { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
-      { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: '' }
+      { key: 'canonical', rel: 'canonical', href: canonicalUrl },
+      { key: 'preconnect-google-fonts', rel: 'preconnect', href: 'https://fonts.googleapis.com' },
+      { key: 'preconnect-google-fonts-static', rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: '' }
     ],
     script: [
       {
+        key: 'person-structured-data',
         type: 'application/ld+json',
         innerHTML: JSON.stringify({
           '@context': 'https://schema.org',
