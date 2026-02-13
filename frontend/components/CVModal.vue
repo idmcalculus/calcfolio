@@ -36,7 +36,7 @@
                 <p class="text-gray-600 dark:text-gray-300 mb-4">PDF preview may not be available on some mobile devices.</p>
                 <a
                   href="/resumes/Damilola Michael Ige Software Engineer CV.pdf?embedded=true&"
-                  class="bg-primary text-white px-4 py-2 rounded hover:bg-red-600 transition"
+                  class="bg-primary text-white px-4 py-2 rounded hover:bg-red-700 transition"
                   target="_blank"
                 >
                   Open PDF
@@ -50,7 +50,7 @@
             <a
               href="/resumes/Damilola Michael Ige Software Engineer CV.pdf?embedded=true&"
               download
-              class="bg-primary text-white px-4 py-2 rounded text-center hover:bg-red-600 transition"
+              class="bg-primary text-white px-4 py-2 rounded text-center hover:bg-red-700 transition"
             >
               Download PDF
             </a>

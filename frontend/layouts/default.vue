@@ -11,25 +11,28 @@
     <div class="min-h-screen bg-light-bg text-black dark:bg-dark-bg dark:text-white flex flex-col">
 
         <!-- Header -->
-        <header class="sticky top-0 z-50 bg-white dark:bg-dark-bg w-full" role="banner">
-          <div class="container mx-auto max-w-(--breakpoint-xl) px-6 py-4 flex items-center justify-between">
+        <header
+          class="sticky top-0 z-50 w-full border-b border-gray-200/80 dark:border-zinc-800/80 bg-white/90 dark:bg-dark-bg/90 backdrop-blur supports-[backdrop-filter]:bg-white/80 supports-[backdrop-filter]:dark:bg-dark-bg/80"
+          role="banner"
+        >
+          <div class="container mx-auto max-w-(--breakpoint-xl) px-6 py-3 flex items-center justify-between">
             <NuxtLink
               to="/"
-              class="font-bold text-xl focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded-md px-2 py-1"
+              class="font-extrabold text-xl tracking-tight focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded-md px-2 py-1"
               aria-label="Damilola Michael Ige - Home"
             >
               IDM
             </NuxtLink>
-            <div class="flex gap-6 items-center">
+            <div class="flex items-center gap-3 md:gap-6">
               <nav
-                class="hidden md:flex gap-6 items-center"
+                class="hidden md:flex gap-1 items-center"
                 role="navigation"
                 aria-label="Main navigation"
               >
                   <NuxtLink
                     to="/"
                     exact-active-class="nav-link-active"
-                    class="hover:text-primary transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded-md px-2 py-1"
+                    class="text-sm font-semibold hover:text-primary transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded-md px-3 py-2"
                     aria-label="About section"
                   >
                     About
@@ -37,25 +40,25 @@
                   <NuxtLink
                     to="/projects"
                     active-class="nav-link-active"
-                    class="hover:text-primary transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded-md px-2 py-1"
+                    class="text-sm font-semibold hover:text-primary transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded-md px-3 py-2"
                     aria-label="Projects section"
                   >
-                    Project
+                    Projects
                   </NuxtLink>
                   <NuxtLink
                     to="/contact"
                     active-class="nav-link-active"
-                    class="hover:text-primary transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded-md px-2 py-1"
+                    class="text-sm font-semibold hover:text-primary transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded-md px-3 py-2"
                     aria-label="Contact section"
                   >
                     Contact
                   </NuxtLink>
               </nav>
 
-              <DownloadCV class="hidden md:block" width="40" button-text="Download CV" aos="" />
+              <DownloadCV class="hidden md:block" width="42" button-text="Download CV" aos="" />
 
               <button
-                class="flex p-2 rounded-full hover:text-primary hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+                class="flex p-2 rounded-full border border-gray-200 dark:border-zinc-700 hover:text-primary hover:bg-gray-100 dark:hover:bg-zinc-800 transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
                 aria-label="Toggle dark mode"
                 @click="toggleDark"
               >
@@ -72,7 +75,7 @@
 
               <!--  Mobile menu toggle -->
               <button
-                class="md:hidden flex items-center z-10 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded-md p-1"
+                class="md:hidden flex items-center z-10 border border-gray-200 dark:border-zinc-700 hover:bg-gray-100 dark:hover:bg-zinc-800 transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded-md p-2"
                 :aria-expanded="showMenu"
                 aria-controls="mobile-menu"
                 :aria-label="showMenu ? 'Close mobile menu' : 'Open mobile menu'"
@@ -144,14 +147,5 @@ provide('showCVModal', showCVModal)
 <style>
 html {
   scroll-behavior: smooth;
-}
-/* Ensure slide transition is defined if used */
-.slide-enter-active,
-.slide-leave-active {
-  transition: transform 0.3s ease;
-}
-.slide-enter-from,
-.slide-leave-to {
-  transform: translateX(100%);
 }
 </style>

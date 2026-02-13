@@ -17,7 +17,7 @@
   --color-primary-800: #991b1b;
   --color-primary-900: #7f1d1d;
   --color-primary-950: #450a0a;
-  --color-primary: #f54747;
+  --color-primary: #dc2626;
 
   --color-accent: #6c63ff;
   --color-dark-bg: #0d0d0d;
@@ -123,17 +123,6 @@ html {
   50% {
     border-color: transparent;
   }
-}
-
-/* Slide transition styles */
-.slide-enter-active,
-.slide-leave-active {
-  transition: transform 0.3s ease;
-}
-
-.slide-enter-from,
-.slide-leave-to {
-  transform: translateX(100%);
 }
 
 /* Ensure Nuxt UI doesn't override our custom colors */

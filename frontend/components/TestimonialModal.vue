@@ -34,12 +34,22 @@
               </button>
 
               <!-- Avatar -->
-              <NuxtImg 
-                v-if="avatar" 
-                :src="avatar" 
-                alt="Avatar" 
-                class="w-32 h-32 rounded-full mb-4 object-cover"
-              />
+              <div class="mb-4">
+                <NuxtImg
+                  v-if="avatarUrl && !imageLoadFailed"
+                  :src="avatarUrl"
+                  :alt="`Profile photo of ${name}`"
+                  class="w-32 h-32 rounded-full object-cover"
+                  @error="imageLoadFailed = true"
+                />
+                <div
+                  v-else
+                  class="w-32 h-32 rounded-full bg-gray-200 text-gray-700 dark:bg-zinc-700 dark:text-gray-200 flex items-center justify-center text-3xl font-bold"
+                  :aria-label="`Initials avatar for ${name}`"
+                >
+                  {{ avatarInitials }}
+                </div>
+              </div>
 
               <p class="text-base text-gray-700 dark:text-gray-300 mb-6 whitespace-pre-line italic">
                 "{{ message }}"
@@ -67,7 +77,7 @@
 
 <script setup lang="ts">
 import { Dialog, DialogPanel, TransitionChild, TransitionRoot } from '@headlessui/vue'
-import { computed } from 'vue'
+import { computed, ref, watch } from 'vue'
 
 interface Props {
   isOpen: boolean
@@ -83,10 +93,41 @@ const props = defineProps<Props>()
 const emit = defineEmits<{
   (e: 'close'): void
 }>()
+const imageLoadFailed = ref(false)
 
 const closeModal = () => {
   emit('close')
 }
+
+const avatarUrl = computed(() => {
+  if (!props.avatar) {
+    return `https://ui-avatars.com/api/?name=${encodeURIComponent(props.name)}&background=1f2937&color=ffffff&size=256&rounded=true`
+  }
+
+  // LinkedIn image URLs in testimonials are time-bound and regularly expire.
+  // Use a stable generated avatar to avoid repeated client-side 403 errors.
+  if (props.avatar.includes('media.licdn.com')) {
+    return `https://ui-avatars.com/api/?name=${encodeURIComponent(props.name)}&background=1f2937&color=ffffff&size=256&rounded=true`
+  }
+
+  return props.avatar
+})
+
+const avatarInitials = computed(() => {
+  return props.name
+    .split(/\s+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map(part => part.charAt(0).toUpperCase())
+    .join('')
+})
+
+watch(
+  () => [props.avatar, props.name],
+  () => {
+    imageLoadFailed.value = false
+  }
+)
 
 const sourceIcon = computed(() => {
   switch (props.source) {

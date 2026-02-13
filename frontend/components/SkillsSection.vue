@@ -10,12 +10,12 @@
       <!-- Dropdown for small screens (<= 768px) -->
       <div v-if="isSmallScreen" class="relative dropdown-container">
         <button
-          class="w-full px-4 py-3 bg-white dark:bg-gray-800 border-2 border-gray-300 dark:border-gray-600 rounded-lg font-medium transition-all duration-300 ease-in-out flex items-center justify-between hover:border-blue-500 dark:hover:border-blue-400"
-          :class="{ 'border-blue-500 dark:border-blue-400': dropdownOpen }"
+          class="w-full px-4 py-3 bg-white dark:bg-gray-800 border-2 border-gray-300 dark:border-gray-600 rounded-lg font-medium transition-all duration-300 ease-in-out flex items-center justify-between hover:border-primary"
+          :class="{ 'border-primary': dropdownOpen }"
           @click="toggleDropdown"
         >
           <div class="flex items-center">
-            <Icon :name="currentCategoryData?.icon || 'lucide:code'" class="w-5 h-5 mr-3 text-blue-600 dark:text-blue-400" />
+            <Icon :name="currentCategoryData?.icon || 'lucide:code'" class="w-5 h-5 mr-3 text-primary" />
             <span>{{ currentCategoryData?.name || 'Select Category' }}</span>
             <span class="ml-2 text-xs opacity-75 bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded">({{ currentCategoryData?.skills?.length || 0 }})</span>
           </div>
@@ -39,7 +39,7 @@
               v-for="(category, categoryName) in skillCategories"
               :key="categoryName"
               class="flex items-center px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer transition-colors duration-150"
-              :class="{ 'bg-blue-50 dark:bg-blue-900/20': activeCategory === categoryName }"
+              :class="{ 'bg-primary/10 dark:bg-primary/20': activeCategory === categoryName }"
               @click="selectCategory(categoryName)"
             >
               <Icon :name="category.icon" class="w-4 h-4 mr-3 text-gray-600 dark:text-gray-400" />
@@ -77,9 +77,9 @@
     <!-- Skills Display -->
     <div class="relative overflow-visible">
       <!-- Category Description -->
-      <div v-if="currentCategoryData" class="mb-6 p-4 bg-linear-to-r from-blue-50 to-purple-50 dark:from-gray-800 dark:to-gray-700 rounded-lg border border-blue-200 dark:border-gray-600">
+      <div v-if="currentCategoryData" class="mb-6 p-4 bg-red-50/80 dark:bg-zinc-800 rounded-lg border border-red-100 dark:border-zinc-700">
         <h3 class="text-lg font-semibold text-gray-800 dark:text-white mb-2">
-          <Icon :name="currentCategoryData.icon" class="w-5 h-5 mr-2 inline-block text-blue-600 dark:text-blue-400" />
+          <Icon :name="currentCategoryData.icon" class="w-5 h-5 mr-2 inline-block text-primary" />
           {{ currentCategoryData.name }}
         </h3>
         <p class="text-gray-600 dark:text-gray-300 text-sm">{{ currentCategoryData.description }}</p>
@@ -109,7 +109,7 @@
       <!-- Show All Skills Toggle -->
       <div class="text-center mt-8">
         <button
-          class="inline-flex items-center px-6 py-2 bg-linear-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-medium rounded-lg transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
+          class="inline-flex items-center px-6 py-2 bg-primary hover:bg-red-700 text-white font-medium rounded-lg border border-primary transition-colors duration-200"
           @click="toggleShowAll"
         >
           <Icon :name="showAllSkills ? 'lucide:eye-off' : 'lucide:eye'" class="w-4 h-4 mr-2" />
@@ -603,100 +603,64 @@
 </script>
 
 <style scoped>
-
-@keyframes gradientMove {
-  0% {
-    background-position: 0% 0%;
-  }
-  50% {
-    background-position: 100% 100%;
-  }
-  100% {
-    background-position: 0% 0%;
-  }
-}
-
 .category-button {
-  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
-  border-color: #cbd5e1;
-  color: #475569;
-  position: relative;
-  overflow: hidden;
+  background: rgb(255 255 255);
+  border-color: rgb(209 213 219);
+  color: rgb(55 65 81);
 }
 
 .category-button:hover {
-  background: 
-    linear-gradient(#f8fafc, #f8fafc) padding-box,
-    linear-gradient(45deg, #3b82f6, #8b5cf6, #ec4899, #f59e0b, #3b82f6) border-box;
-  border: 2px solid transparent;
-  background-size: 300% 300%;
-  animation: gradientMove 3s ease infinite;
+  background: rgb(255 255 255);
+  border-color: rgb(244 63 94 / 0.5);
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 6px 12px rgb(0 0 0 / 0.08);
 }
 
 .category-button.active {
-  background: 
-    linear-gradient(#3b82f6, #1d4ed8) padding-box,
-    linear-gradient(45deg, #3b82f6, #8b5cf6, #ec4899, #f59e0b, #3b82f6) border-box;
-  border: 2px solid transparent;
-  background-size: 300% 300%;
-  animation: gradientMove 3s ease infinite;
+  background: var(--color-primary);
+  border-color: var(--color-primary);
   color: white;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 16px rgba(59, 130, 246, 0.3);
+  box-shadow: 0 6px 14px rgb(245 71 71 / 0.28);
 }
 
 .category-button.hovered {
-  background: 
-    linear-gradient(#ddd6fe, #c4b5fd) padding-box,
-    linear-gradient(45deg, #8b5cf6, #3b82f6, #ec4899, #f59e0b, #8b5cf6) border-box;
-  border: 2px solid transparent;
-  background-size: 300% 300%;
-  animation: gradientMove 3s ease infinite;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.2);
+  border-color: rgb(244 63 94 / 0.4);
+  background: rgb(254 242 242);
 }
 
 .category-count {
-  background: rgba(255, 255, 255, 0.2);
+  background: rgb(249 250 251);
+  color: rgb(75 85 99);
   border-radius: 0.375rem;
   padding: 0.125rem 0.375rem;
   font-weight: 600;
 }
 
 .dark .category-button {
-  background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
-  border-color: #374151;
-  color: #d1d5db;
+  background: rgb(24 24 27);
+  border-color: rgb(63 63 70);
+  color: rgb(212 212 216);
 }
 
 .dark .category-button:hover {
-  background: 
-    linear-gradient(#1f2937, #1f2937) padding-box,
-    linear-gradient(45deg, #3b82f6, #8b5cf6, #ec4899, #f59e0b, #3b82f6) border-box;
-  border: 2px solid transparent;
-  background-size: 300% 300%;
-  animation: gradientMove 3s ease infinite;
+  background: rgb(24 24 27);
+  border-color: rgb(245 71 71 / 0.7);
 }
 
 .dark .category-button.active {
-  background: 
-    linear-gradient(#3b82f6, #1d4ed8) padding-box,
-    linear-gradient(45deg, #3b82f6, #8b5cf6, #ec4899, #f59e0b, #3b82f6) border-box;
-  border: 2px solid transparent;
-  background-size: 300% 300%;
-  animation: gradientMove 3s ease infinite;
+  background: var(--color-primary);
+  border-color: var(--color-primary);
   color: white;
 }
 
 .dark .category-button.hovered {
-  background: 
-    linear-gradient(#581c87, #7c3aed) padding-box,
-    linear-gradient(45deg, #8b5cf6, #3b82f6, #ec4899, #f59e0b, #8b5cf6) border-box;
-  border: 2px solid transparent;
-  background-size: 300% 300%;
-  animation: gradientMove 3s ease infinite;
+  background: rgb(63 18 18);
+  border-color: rgb(185 28 28);
+}
+
+.dark .category-count {
+  background: rgb(39 39 42);
+  color: rgb(212 212 216);
 }
 
 .skill-fade-enter-active {
@@ -727,53 +691,34 @@
   gap: 0.5rem;
   justify-content: center;
   padding: 1rem 0.25rem;
-  border-radius: 0.5rem;
-  border: 2px solid #e5e7eb;
-  background-color: #fff;
+  border-radius: 0.65rem;
+  border: 1px solid rgb(229 231 235);
+  background-color: rgb(255 255 255);
   cursor: pointer;
-  position: relative;
-  transition: all 0.3s ease;
-  animation: slideInUp 0.3s ease forwards;
+  transition: all 0.2s ease;
+  animation: slideInUp 0.2s ease forwards;
   opacity: 0;
-  transform: translateY(10px);
-}
-
-.skill-pill::before {
-  content: '';
-  position: absolute;
-  top: -2px;
-  left: -2px;
-  right: -2px;
-  bottom: -2px;
-  background: linear-gradient(45deg, #3b82f6, #8b5cf6, #ec4899, #f59e0b, #3b82f6);
-  background-size: 300% 300%;
-  border-radius: 0.5rem;
-  z-index: -1;
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
-
-.skill-pill:hover::before {
-  opacity: 0.25;
-  animation: gradientMove 3s ease infinite;
+  transform: translateY(6px);
 }
 
 .skill-pill:hover {
-  background: #fafafa;
+  border-color: rgb(245 71 71 / 0.5);
+  background: rgb(254 250 250);
   transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 8px 16px rgb(0 0 0 / 0.12);
   z-index: 10;
 }
 
 .dark .skill-pill {
-  border-color: #3f3f46;
-  background-color: #1e1e1e;
+  border-color: rgb(63 63 70);
+  background-color: rgb(24 24 27);
 }
 
 .dark .skill-pill:hover {
-  background: #1e1e1e;
+  border-color: rgb(245 71 71 / 0.6);
+  background: rgb(39 39 42);
   transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 8px 16px rgb(0 0 0 / 0.25);
   z-index: 10;
 }
 
@@ -790,10 +735,5 @@
     opacity: 1;
     transform: translateY(0);
   }
-}
-
-.dark .skill-pill {
-  border-color: #3f3f46;
-  background-color: #1e1e1e;
 }
 </style>
