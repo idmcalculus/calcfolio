@@ -1,83 +1,93 @@
 <template>
-  <div class="max-w-xl mx-auto p-4 my-12 relative">
-    <h2 class="text-2xl md:text-3xl font-bold mb-6 text-center">Contact Me</h2>
-
-    <!-- Loading Overlay -->
-    <LoadingOverlay
-      :visible="loading"
-      title="Sending your message..."
-      subtitle="Please wait while we process your request"
-      center-dot-class="bg-primary"
-      position="absolute"
-    />
-
-    <form class="space-y-4" @submit.prevent="handleSubmit">
-      <div class="relative">
-        <input
-          id="name"
-          v-model="form.name"
-          type="text"
-          required
-          class="form-input peer"
-          placeholder=" "
-        >
-        <label for="name" class="form-label">Your Name</label>
-      </div>
-
-      <div class="relative">
-        <input
-          id="email"
-          v-model="form.email"
-          type="email"
-          required
-          class="form-input peer"
-          placeholder=" "
-        >
-        <label for="email" class="form-label">Your Email</label>
-      </div>
-
-      <div class="relative">
-        <input
-          id="subject"
-          v-model="form.subject"
-          type="text"
-          required
-          class="form-input peer"
-          placeholder=" "
-        >
-        <label for="subject" class="form-label">Subject</label>
-      </div>
-
-      <div class="relative">
-        <textarea
-          id="message"
-          v-model="form.message"
-          rows="4"
-          required
-          class="form-input peer"
-          placeholder=" "
-        />
-        <label for="message" class="form-label">Your Message</label>
-      </div>
-
-      <button
-        type="submit"
-        class="bg-primary text-white px-6 py-2 rounded hover:bg-red-600 transition disabled:opacity-50"
-        :disabled="loading"
-      >
-        {{ loading ? 'Sending...' : 'Send Message' }}
-      </button>
-
-      <p v-if="responseMsg" :class="success ? 'text-green-600' : 'text-red-500'">
-        {{ responseMsg }}
+  <div class="max-w-2xl mx-auto px-4 md:px-6 my-14">
+    <section class="text-center mb-8">
+      <p class="text-xs uppercase tracking-[0.2em] text-gray-500 dark:text-gray-400">Contact</p>
+      <h1 class="mt-3 text-3xl md:text-4xl font-extrabold text-gray-900 dark:text-white">Let&apos;s Build Something Reliable</h1>
+      <p class="mt-4 text-sm md:text-base text-gray-600 dark:text-gray-300 leading-relaxed">
+        Have a role, product, or technical challenge in mind? Send a message and I&apos;ll get back with clear next steps.
       </p>
-    </form>
+      <SectionDivider />
+    </section>
+
+    <div class="relative bg-white/80 dark:bg-zinc-900 border border-gray-200 dark:border-zinc-700 rounded-xl shadow-sm p-5 md:p-7">
+
+      <LoadingOverlay
+        :visible="loading"
+        title="Sending your message..."
+        subtitle="Please wait while we process your request"
+        center-dot-class="bg-primary"
+        position="absolute"
+      />
+
+      <form class="space-y-5" @submit.prevent="handleSubmit">
+        <div class="relative">
+          <input
+            id="name"
+            v-model="form.name"
+            type="text"
+            required
+            class="form-input peer"
+            placeholder=" "
+          >
+          <label for="name" class="form-label">Your Name</label>
+        </div>
+
+        <div class="relative">
+          <input
+            id="email"
+            v-model="form.email"
+            type="email"
+            required
+            class="form-input peer"
+            placeholder=" "
+          >
+          <label for="email" class="form-label">Your Email</label>
+        </div>
+
+        <div class="relative">
+          <input
+            id="subject"
+            v-model="form.subject"
+            type="text"
+            required
+            class="form-input peer"
+            placeholder=" "
+          >
+          <label for="subject" class="form-label">Subject</label>
+        </div>
+
+        <div class="relative">
+          <textarea
+            id="message"
+            v-model="form.message"
+            rows="5"
+            required
+            class="form-input peer"
+            placeholder=" "
+          />
+          <label for="message" class="form-label">Your Message</label>
+        </div>
+
+        <button
+          type="submit"
+          class="inline-flex items-center justify-center w-full sm:w-auto bg-primary text-white px-6 py-2.5 rounded-lg font-semibold border border-primary hover:bg-red-700 hover:border-red-700 transition-colors disabled:opacity-50"
+          :disabled="loading"
+        >
+          {{ loading ? 'Sending...' : 'Send Message' }}
+        </button>
+
+        <p v-if="responseMsg" :class="success ? 'text-green-600' : 'text-red-500'">
+          {{ responseMsg }}
+        </p>
+      </form>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
   import { ref } from 'vue'
   import LoadingOverlay from '~/components/LoadingOverlay.vue'
+  import SectionDivider from '~/components/SectionDivider.vue'
 
   const { contact } = useApi()
   const toast = useToast()
@@ -103,18 +113,50 @@
   const responseMsg = ref('') // Keep for potential inline messages if needed, or remove
   const success = ref(false)
 
+  const RECAPTCHA_SCRIPT_ID = 'google-recaptcha-script'
+
+  const loadRecaptchaScript = async () => {
+    if (!config.public.recaptchaSiteKey || !import.meta.client) return
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    if ((window as any).grecaptcha?.execute) return
+
+    const existingScript = document.getElementById(RECAPTCHA_SCRIPT_ID) as HTMLScriptElement | null
+    if (existingScript) {
+      await new Promise<void>((resolve, reject) => {
+        const onLoad = () => resolve()
+        const onError = () => reject(new Error('Failed to load reCAPTCHA script'))
+        existingScript.addEventListener('load', onLoad, { once: true })
+        existingScript.addEventListener('error', onError, { once: true })
+      })
+      return
+    }
+
+    await new Promise<void>((resolve, reject) => {
+      const script = document.createElement('script')
+      script.id = RECAPTCHA_SCRIPT_ID
+      script.src = `https://www.google.com/recaptcha/api.js?render=${config.public.recaptchaSiteKey}`
+      script.async = true
+      script.defer = true
+      script.onload = () => resolve()
+      script.onerror = () => reject(new Error('Failed to load reCAPTCHA script'))
+      document.head.appendChild(script)
+    })
+  }
+
   // --- reCAPTCHA Setup ---
   const getRecaptchaToken = async () => {
     // Skip reCAPTCHA entirely if not configured or not in client
     if (!config.public.recaptchaSiteKey || !import.meta.client) {
-      console.log('reCAPTCHA not configured or not in client');
-      return null;
+      return null
     }
 
     try {
+      await loadRecaptchaScript()
+
       // Wait for grecaptcha to be available
       let attempts = 0;
-      const maxAttempts = 50; // 5 seconds max wait
+      const maxAttempts = 40; // 4 seconds max wait
 
       while (attempts < maxAttempts) {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -189,32 +231,29 @@
 <style lang="postcss">
 .form-input {
   width: 100%;
-  padding: 0.75rem 1rem;
-  border-radius: 0.375rem;
+  padding: 0.8rem 1rem;
+  border-radius: 0.5rem;
+  border: 1px solid rgb(209 213 219);
   background-color: rgb(255 255 255);
-  color: rgb(0 0 0);
-  outline: 2px solid transparent;
-  outline-offset: 2px;
-  transition-property: all;
-  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-  transition-duration: 300ms;
-  border: 2px solid transparent;
-  background-clip: padding-box;
+  color: rgb(17 24 39);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
 }
 
 .dark .form-input {
-  background-color: rgb(31 41 55);
-  color: rgb(255 255 255);
+  background-color: rgb(24 24 27);
+  border-color: rgb(63 63 70);
+  color: rgb(244 244 245);
 }
 
 .form-input:focus {
-  border-image: linear-gradient(89.81deg, #9845E8 -1.72%, #33D2FF 54.05%, #DD5789 99.78%, #9845E8 150%) 1;
-  animation: gradient 3s ease infinite;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgb(245 71 71 / 0.2);
+  outline: none;
 }
 
 .form-label {
   position: absolute;
-  color: rgb(107 114 128);
+  color: rgb(75 85 99);
   transition-property: all;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   transition-duration: 300ms;
@@ -226,11 +265,15 @@
   transform: translateY(-50%);
 }
 
+.dark .form-label {
+  color: rgb(161 161 170);
+}
+
 .form-input:focus ~ .form-label,
 .form-input:not(:placeholder-shown) ~ .form-label {
   font-size: 0.875rem;
   line-height: 1.25rem;
-  color: rgb(59 130 246);
+  color: var(--color-primary);
   background-color: rgb(255 255 255);
   top: 0;
   transform: translateY(-50%) scale(0.85);
@@ -238,7 +281,7 @@
 
 .dark .form-input:focus ~ .form-label,
 .dark .form-input:not(:placeholder-shown) ~ .form-label {
-  background-color: rgb(31 41 55);
+  background-color: rgb(24 24 27);
 }
 
 textarea ~ .form-label {
@@ -248,11 +291,5 @@ textarea ~ .form-label {
 textarea:focus ~ .form-label,
 textarea:not(:placeholder-shown) ~ .form-label {
   top: 0;
-}
-
-@keyframes gradient {
-  0% { border-image-source: linear-gradient(89.81deg, #9845E8 -1.72%, #33D2FF 54.05%, #DD5789 99.78%, #9845E8 150%); }
-  50% { border-image-source: linear-gradient(89.81deg, #33D2FF -1.72%, #DD5789 54.05%, #9845E8 99.78%, #33D2FF 150%); }
-  100% { border-image-source: linear-gradient(89.81deg, #9845E8 -1.72%, #33D2FF 54.05%, #DD5789 99.78%, #9845E8 150%); }
 }
 </style>

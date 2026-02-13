@@ -12,7 +12,6 @@ export default defineNuxtConfig({
     '@nuxt/eslint',
     '@nuxt/icon',
     '@nuxt/image',
-    '@nuxt/test-utils',
     '@nuxt/scripts',
     'nuxt-schema-org',
     '@nuxtjs/robots',
@@ -48,9 +47,28 @@ export default defineNuxtConfig({
 
   runtimeConfig: {
     public: {
-      backendUrl: process.env.NUXT_PUBLIC_BACKEND_URL || 'http://localhost:8080', 
+      backendUrl: process.env.NUXT_PUBLIC_BACKEND_URL || 'http://localhost:8080',
       recaptchaSiteKey: process.env.NUXT_PUBLIC_RECAPTCHA_SITE_KEY || '',
+      siteUrl: process.env.NUXT_PUBLIC_SITE_URL || 'https://idmcalculus.cv',
     },
+  },
+
+  icon: {
+    serverBundle: {
+      collections: ['lucide', 'simple-icons']
+    },
+    provider: 'server',
+    fallbackToApi: true
+  },
+
+  image: {
+    format: ['webp', 'avif'],
+    quality: 80,
+    domains: ['images.unsplash.com', 'res.cloudinary.com', 'media.licdn.com', 'ui-avatars.com']
+  },
+
+  nitro: {
+    compressPublicAssets: true
   },
 
   typescript: {
@@ -109,8 +127,7 @@ export default defineNuxtConfig({
         { rel: 'icon', type: 'image/svg+xml', href: '/favicon/favicon.svg' },
         { rel: 'shortcut icon', href: '/favicon/favicon.ico' },
         { rel: 'apple-touch-icon', href: '/favicon/apple-touch-icon.png', sizes: '180x180' },
-        { rel: 'manifest', href: '/favicon/site.webmanifest' },
-        { rel: 'canonical', href: process.env.NUXT_PUBLIC_SITE_URL || 'https://idmcalculus.cv' }
+        { rel: 'manifest', href: '/favicon/site.webmanifest' }
       ]
     }
   },
