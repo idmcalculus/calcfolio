@@ -1,52 +1,117 @@
 <template>
   <section
-    class="hero-section container mx-auto max-w-(--breakpoint-xl) px-6 my-16 flex flex-col md:flex-row items-center gap-8 md:gap-16" 
+    class="hero-section container mx-auto max-w-(--breakpoint-xl) px-6 my-16 grid grid-cols-1 lg:grid-cols-5 gap-10 items-center"
     data-aos="fade-up"
   >
-    <!-- Left Column: Text Content -->
-    <div class="md:w-2/3 text-center md:text-left">
-      <p class="text-lg mb-3 text-gray-600 dark:text-gray-400">
-        <span class="typing-text">{{ displayText }}</span>
+    <div class="lg:col-span-3 text-center lg:text-left">
+      <p class="hero-eyebrow text-sm md:text-base text-gray-500 dark:text-gray-400">
+        <span class="typing-text">{{ displayGreeting }}</span>
       </p>
-      <h1 class="text-5xl md:text-6xl font-extrabold mb-1">
-        <span class="text-gradient">Damilola Michael Ige</span>
-      </h1>
-      <p class="text-center md:text-left text-sm md:text-base text-gray-600 dark:text-gray-400 my-3">
-        <strong>{{ leadText }}: <span class="text-gradient skill-typing">{{ displaySkill }}</span> </strong>
+      <p class="mt-2 inline-flex items-center gap-2 rounded-full border border-red-100 dark:border-red-900/40 bg-red-50/70 dark:bg-red-950/30 px-3 py-1 text-xs font-semibold text-red-700 dark:text-red-200">
+        <span class="status-dot h-2 w-2 rounded-full bg-primary animate-pulse" />
+        Open to senior engineering opportunities
       </p>
+      <p class="mt-3 text-2xl md:text-3xl font-bold text-primary">Damilola Michael Ige</p>
+      <p class="mt-3 text-sm md:text-base tracking-wide uppercase text-gray-500 dark:text-gray-400">
+        Senior Full-Stack &amp; Cloud Engineer
+      </p>
+
       <SectionDivider />
-      <p class="text-base md:text-lg text-gray-700 dark:text-gray-300 leading-relaxed">
-        I'm the tech equivalent of a Swiss Army knife—sharp, versatile, and always ready for the next challenge. My journey started with math competitions, and now I thrive at the intersection of data, code, and clouds (both the fluffy and AWS kind).
-        I've engineered solutions across the web, built iOS apps, and constructed robust cloud architectures. From Data Analyst to Data Engineer and Full Stack Developer, I wield a full arsenal: JavaScript, TypeScript, Swift, Python, Java, PHP, Node.js, React, AWS, GCP and every data tool under the sun. I wrangle big data into actionable insights and build pipelines sleek enough to make Excel jealous.
-        I also love sharing the fun, mentoring new talent, and championing Agile and CI/CD—because life's too short for manual deployments!
+
+      <h1 class="text-3xl md:text-5xl font-extrabold leading-tight text-gray-900 dark:text-white">
+        I engineer dependable products from interface to infrastructure.
+      </h1>
+      <p class="mt-5 text-base md:text-lg text-gray-700 dark:text-gray-300 leading-relaxed max-w-3xl">
+        I partner with teams to ship end-to-end systems across web, backend, cloud, and iOS.
       </p>
+      <p class="mt-3 text-base md:text-lg text-gray-700 dark:text-gray-300 leading-relaxed max-w-3xl">
+        You get pragmatic architecture, maintainable code, and stable delivery from first release through scale.
+      </p>
+
+      <div class="mt-5 flex flex-wrap gap-2.5 justify-center lg:justify-start">
+        <span class="hero-pill">Web Platforms</span>
+        <span class="hero-pill">Cloud Systems</span>
+        <span class="hero-pill">APIs &amp; Services</span>
+        <span class="hero-pill">iOS Development</span>
+      </div>
+
+      <div class="mt-8 flex flex-wrap gap-3 justify-center lg:justify-start">
+        <NuxtLink
+          to="/projects"
+          class="hero-btn hero-btn-primary w-full sm:w-auto"
+          aria-label="View projects"
+        >
+          View Projects
+        </NuxtLink>
+        <button
+          class="hero-btn hero-btn-secondary w-full sm:w-auto"
+          type="button"
+          aria-label="Download CV"
+          @click="openCVModal"
+        >
+          Download CV
+        </button>
+        <NuxtLink
+          to="/contact"
+          class="hero-btn hero-btn-ghost w-full sm:w-auto"
+          aria-label="Contact Damilola"
+        >
+          Contact
+        </NuxtLink>
+      </div>
+
+      <a
+        href="#experience"
+        class="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary transition-colors"
+      >
+        Explore experience
+        <Icon name="lucide:arrow-down" class="w-4 h-4" />
+      </a>
     </div>
 
-    <!-- Right Column: Image and Social Links -->
-    <div class="md:w-1/3 flex justify-end">
-      <div class="flex flex-col items-center">
-       <!-- Container for image -->
-       <div class="relative">
-          <NuxtImg
-            src="/images/profile.svg"
-            alt="Damilola Michael Ige"
-            class="object-cover object-center"
-          />
-        </div>
-        
-        <!-- Social links -->
-        <div class="flex gap-5 mt-12"> 
-          <a href="https://github.com/idmcalculus" target="_blank" rel="noopener noreferrer" aria-label="GitHub" class="text-gray-600 dark:text-gray-400 hover:text-red-500 dark:hover:text-red-400 transition">
-            <Icon name="simple-icons:github" size="28" />
+    <div class="lg:col-span-2 flex justify-center lg:justify-end">
+      <div class="hero-profile-card">
+        <NuxtImg
+          src="/images/profile.svg"
+          alt="Damilola Michael Ige"
+          class="w-56 md:w-72 object-cover object-center"
+        />
+        <div class="flex items-center justify-center gap-5 mt-7">
+          <a
+            href="https://github.com/idmcalculus"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="GitHub"
+            class="hero-social-link"
+          >
+            <Icon name="simple-icons:github" size="22" />
           </a>
-          <a href="https://x.com/calculus_codes" target="_blank" rel="noopener noreferrer" aria-label="X" class="text-gray-600 dark:text-gray-400 hover:text-red-500 dark:hover:text-red-400 transition">
-            <Icon name="simple-icons:x" size="28" />
+          <a
+            href="https://x.com/calculus_codes"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="X"
+            class="hero-social-link"
+          >
+            <Icon name="simple-icons:x" size="22" />
           </a>
-          <a href="https://instagram.com/idmcalculus" target="_blank" rel="noopener noreferrer" aria-label="Instagram" class="text-gray-600 dark:text-gray-400 hover:text-red-500 dark:hover:text-red-400 transition">
-            <Icon name="simple-icons:instagram" size="28" />
+          <a
+            href="https://instagram.com/idmcalculus"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Instagram"
+            class="hero-social-link"
+          >
+            <Icon name="simple-icons:instagram" size="22" />
           </a>
-          <a href="https://linkedin.com/in/idmcalculus" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" class="text-gray-600 dark:text-gray-400 hover:text-red-500 dark:hover:text-red-400 transition">
-            <Icon name="simple-icons:linkedin" size="28" />
+          <a
+            href="https://linkedin.com/in/idmcalculus"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="LinkedIn"
+            class="hero-social-link"
+          >
+            <Icon name="simple-icons:linkedin" size="22" />
           </a>
         </div>
       </div>
@@ -54,143 +119,200 @@
   </section>
 </template>
 
-<script setup>
-import { ref, onMounted, onUnmounted } from 'vue'
-import SectionDivider from './SectionDivider.vue';
+<script setup lang="ts">
+import type { Ref } from 'vue'
+import { inject, onMounted, onUnmounted, ref } from 'vue'
+import SectionDivider from './SectionDivider.vue'
 
-const languages = [
-  { greeting: "Hello, I'm" },
-  { greeting: "Bonjour, je suis" },
-  { greeting: "Hola, soy" },
-  { greeting: "Hallo, ich bin" },
-  { greeting: "Bawo, emi ni" },
-  { greeting: "Sannu, ni ne" },
-  { greeting: "Ndewo, ọ bụ m" },
-  { greeting: "Jambo, mimi ni" },
-  { greeting: "你好，我是" },
-  { greeting: "こんにちは、私は" },
-  { greeting: "नमस्ते, मैं हूं" }
+const greetings = [
+  "Hello, I'm",
+  'Bonjour, je suis',
+  'Hola, soy',
+  'Hallo, ich bin',
+  'Bawo, emi ni',
+  'Sannu, ni ne',
+  'Ndewo, ọ bụ m',
+  'Jambo, mimi ni',
+  '你好，我是',
+  'こんにちは、私は',
+  'नमस्ते, मैं हूं'
 ]
 
-const skillTexts = [
-  "Full Stack (Node/TypeScript/React/Python/Java/PHP/AWS/GCP)",
-  "iOS (Swift/SwiftUI/UIKit)",
-  "Data (Excel, Power BI, Tableau, SQL, ELT, ETL, Apache Spark, Apache Airflow)"
-]
+const currentGreetingIndex = ref(0)
+const displayGreeting = ref('')
+const showCVModal = inject<Ref<boolean> | undefined>('showCVModal')
 
-const currentIndex = ref(0)
-const displayText = ref('')
-const targetText = ref(languages[0].greeting)
+let greetingRotationInterval: ReturnType<typeof setInterval> | undefined
+let greetingTypingInterval: ReturnType<typeof setInterval> | undefined
 
-const currentSkillIndex = ref(0)
-const displaySkill = ref('')
-const targetSkill = ref(skillTexts[0])
-const leadText = ref('Targeting')
+const typeGreeting = () => {
+  const currentGreeting = greetings[currentGreetingIndex.value]
+  if (!currentGreeting) return
 
-let intervalId
-let typingIntervalId
-let skillIntervalId
-let skillTypingIntervalId
+  if (displayGreeting.value.length < currentGreeting.length) {
+    displayGreeting.value = currentGreeting.slice(0, displayGreeting.value.length + 1)
+    return
+  }
 
-const typeText = () => {
-  if (displayText.value.length < targetText.value.length) {
-    displayText.value = targetText.value.slice(0, displayText.value.length + 1)
+  if (greetingTypingInterval) {
+    clearInterval(greetingTypingInterval)
+    greetingTypingInterval = undefined
   }
 }
 
-const startNewText = () => {
-  displayText.value = ''
-  currentIndex.value = (currentIndex.value + 1) % languages.length
-  targetText.value = languages[currentIndex.value].greeting
-
-  // Clear any existing typing interval
-  if (typingIntervalId) clearInterval(typingIntervalId)
-
-  // Start typing the new text
-  typingIntervalId = setInterval(() => {
-    typeText()
-  }, 100) // Adjust typing speed here
+const startGreetingTyping = () => {
+  displayGreeting.value = ''
+  if (greetingTypingInterval) clearInterval(greetingTypingInterval)
+  greetingTypingInterval = setInterval(typeGreeting, 65)
 }
 
-const typeSkill = () => {
-  if (displaySkill.value.length < targetSkill.value.length) {
-    displaySkill.value = targetSkill.value.slice(0, displaySkill.value.length + 1)
-  }
+const rotateGreeting = () => {
+  currentGreetingIndex.value = (currentGreetingIndex.value + 1) % greetings.length
+  startGreetingTyping()
 }
 
-const startNewSkill = () => {
-  displaySkill.value = ''
-  currentSkillIndex.value = (currentSkillIndex.value + 1) % skillTexts.length
-  targetSkill.value = skillTexts[currentSkillIndex.value]
-
-  // Update lead text based on skill index
-  leadText.value = currentSkillIndex.value === 0 ? 'Targeting' : 'Open To'
-
-  // Clear any existing skill typing interval
-  if (skillTypingIntervalId) clearInterval(skillTypingIntervalId)
-
-  // Start typing the new skill
-  skillTypingIntervalId = setInterval(() => {
-    typeSkill()
-  }, 50) // Faster typing for skills
+const openCVModal = () => {
+  if (showCVModal) showCVModal.value = true
 }
 
 onMounted(() => {
-  // Start initial typing for greeting
-  typingIntervalId = setInterval(() => {
-    typeText()
-  }, 100)
-
-  // Change language every 20 seconds
-  intervalId = setInterval(startNewText, 10000)
-
-  // Start initial skill typing
-  skillTypingIntervalId = setInterval(() => {
-    typeSkill()
-  }, 50)
-
-  // Change skill every 15 seconds
-  skillIntervalId = setInterval(startNewSkill, 8000)
+  startGreetingTyping()
+  greetingRotationInterval = setInterval(rotateGreeting, 7000)
 })
 
 onUnmounted(() => {
-  if (intervalId) clearInterval(intervalId)
-  if (typingIntervalId) clearInterval(typingIntervalId)
-  if (skillIntervalId) clearInterval(skillIntervalId)
-  if (skillTypingIntervalId) clearInterval(skillTypingIntervalId)
+  if (greetingRotationInterval) clearInterval(greetingRotationInterval)
+  if (greetingTypingInterval) clearInterval(greetingTypingInterval)
 })
 </script>
 
 <style scoped>
-.text-gradient {
-  background: linear-gradient(
-    89.81deg,
-    #9845E8 -1.72%,
-    #33D2FF 54.05%,
-    #DD5789 99.78%,
-    #9845E8 150%
-  );
-  background-size: 200% auto;
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  animation: shine 3s linear infinite;
+.hero-profile-card {
+  border: 1px solid rgb(229 231 235);
+  border-radius: 0.875rem;
+  padding: 1.25rem;
+  background: rgb(255 255 255 / 0.6);
+  backdrop-filter: blur(3px);
 }
 
-@keyframes shine {
-  to {
-    background-position: 200% center;
-  }
+.dark .hero-profile-card {
+  border-color: rgb(63 63 70);
+  background: rgb(24 24 27 / 0.8);
+}
+
+.hero-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.7rem 1.1rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.hero-btn:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgb(245 71 71 / 0.25);
+}
+
+.hero-btn-primary {
+  background-color: var(--color-primary);
+  border: 1px solid var(--color-primary);
+  color: #ffffff;
+}
+
+.hero-btn-primary:hover {
+  background-color: #b91c1c;
+  border-color: #b91c1c;
+}
+
+.hero-btn-secondary {
+  border: 1px solid rgb(209 213 219);
+  color: rgb(17 24 39);
+  background: rgb(255 255 255 / 0.8);
+}
+
+.dark .hero-btn-secondary {
+  border-color: rgb(82 82 91);
+  color: rgb(243 244 246);
+  background: rgb(24 24 27 / 0.8);
+}
+
+.hero-btn-secondary:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+.hero-btn-ghost {
+  color: rgb(55 65 81);
+  border: 1px solid transparent;
+}
+
+.hero-btn-ghost:hover {
+  color: var(--color-primary);
+  background: rgb(254 242 242);
+}
+
+.dark .hero-btn-ghost {
+  color: rgb(212 212 216);
+}
+
+.dark .hero-btn-ghost:hover {
+  background: rgb(63 18 18);
+}
+
+.hero-pill {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 9999px;
+  border: 1px solid rgb(229 231 235);
+  background: rgb(255 255 255 / 0.7);
+  color: rgb(75 85 99);
+  padding: 0.25rem 0.65rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.dark .hero-pill {
+  border-color: rgb(63 63 70);
+  background: rgb(24 24 27 / 0.8);
+  color: rgb(212 212 216);
+}
+
+.hero-social-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.4rem;
+  height: 2.4rem;
+  border-radius: 9999px;
+  color: rgb(107 114 128);
+  border: 1px solid rgb(229 231 235);
+  transition: all 0.2s ease;
+}
+
+.hero-social-link:hover {
+  color: var(--color-primary);
+  border-color: var(--color-primary);
+  background: rgb(254 242 242);
+}
+
+.hero-social-link:focus-visible {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgb(245 71 71 / 0.25);
+}
+
+.dark .hero-social-link {
+  color: rgb(163 163 163);
+  border-color: rgb(63 63 70);
+}
+
+.dark .hero-social-link:hover {
+  background: rgb(63 18 18);
 }
 
 .typing-text {
-  display: inline-block;
-  border-right: 2px solid currentColor;
-  padding-right: 3px;
-  animation: blink 0.7s steps(1) infinite;
-}
-
-.skill-typing {
   display: inline-block;
   border-right: 2px solid currentColor;
   padding-right: 3px;
@@ -203,27 +325,20 @@ onUnmounted(() => {
   }
 }
 
-.gradient-border {
-  position: relative;
-  background: linear-gradient(to right, #EC4899, #A855F7);
-  padding: 3px;
-  border-radius: 9999px;
-  width: fit-content;
-  height: fit-content;
+@media (prefers-reduced-motion: reduce) {
+  .status-dot {
+    animation: none;
+  }
+
+  .typing-text {
+    animation: none;
+    border-right: none;
+  }
 }
 
-.gradient-border::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: 9999px;
-  padding: 3px;
-  background: linear-gradient(to right, #EC4899, #A855F7);
-  -webkit-mask: 
-    linear-gradient(#fff 0 0) content-box, 
-    linear-gradient(#fff 0 0);
-  -webkit-mask-composite: xor;
-  mask-composite: exclude;
-  pointer-events: none;
+@media (max-width: 640px) {
+  .hero-btn {
+    width: 100%;
+  }
 }
 </style>
