@@ -103,6 +103,7 @@
 				date: 'September 2020 – September 2022',
 				highlights: [
 					'Optimised Laravel APIs and MySQL data models, reducing response latency by 50%.',
+                    'Architected bespoke WordPress solutions, enhancing workflow efficiency by 80% through custom themes and plugins.',
 					'Migrated and remodelled over 100k production records, reducing storage footprint by 83%.',
 					'Built analytics dashboards and CRM integrations, increasing lead conversion rates by 50%.'
 				]

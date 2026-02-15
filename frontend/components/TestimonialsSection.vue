@@ -77,7 +77,7 @@ const testimonials = ref<Testimonial[]>([
     role: 'Founder and CEO, Aeeiee Inc., Atlanta, GA',
     message: `Damilola is an inquisitive and thorough Full Stack Software Engineer. He is particularly proficient in iOS Development with Swift, UIKit, and Swift UI. He would make a great addition to your team!`,
     source: 'linkedin',
-    avatar: 'https://res.cloudinary.com/idmcalculus/image/upload/v1771013219/1517566998755_sy41px.jpg',
+    avatar: 'https://res.cloudinary.com/idmcalculus/image/upload/v1771013219/Testimonials%20Images/David%20Ovienmhada.jpg',
     url: 'https://www.linkedin.com/in/ovienmhada'
   },
   {
@@ -89,7 +89,7 @@ What stands out about Damilola is his ability to quickly pick up new technologie
 
 Damilola is not only a talented and fast-learning engineer, but also a fantastic teammate—always positive, collaborative, and open to tackling new challenges. I highly recommend him for any software engineering role.`,
     source: 'linkedin',
-    avatar: 'https://res.cloudinary.com/idmcalculus/image/upload/v1771013182/1733927662260_z5zkro.jpg',
+    avatar: 'https://res.cloudinary.com/idmcalculus/image/upload/v1771013182/Testimonials%20Images/Omkar%20Totade.jpg',
     url: 'https://www.linkedin.com/in/omkartotade'
   },
   {
@@ -103,7 +103,7 @@ Beyond his technical skills, Damilola is a fantastic team player. He communicate
 
 I highly recommend Damilola for any role he chooses to pursue. His work ethic, technical acumen, and ability to drive results make him a standout professional; any team would be lucky to have him.`,
     source: 'linkedin',
-    avatar: 'https://res.cloudinary.com/idmcalculus/image/upload/v1771013125/1765273187365_vf58us.jpg',
+    avatar: 'https://res.cloudinary.com/idmcalculus/image/upload/v1771013125/Testimonials%20Images/Oloruntobi%20Awoderu.jpg',
     url: 'https://www.linkedin.com/in/oloruntobiawoderu/'
   },
   {
@@ -111,7 +111,7 @@ I highly recommend Damilola for any role he chooses to pursue. His work ethic, t
     role: 'Lead UI/UX Designer, Aeeiee Inc., Atlanta, GA',
     message: 'I worked with Damilola for a few years and can confidently say he’s an excellent software engineer. He consistently delivers high-quality work and meets deadlines. His technical expertise is solid, and he’s always reliable in completing tasks. One of the things that stands him out is how approachable and easy he is to work with—his friendly and collaborative nature makes any team better. He’s someone you would want on your team or project.',
     source: 'linkedin',
-    avatar: 'https://res.cloudinary.com/idmcalculus/image/upload/v1771013227/1697040829676_tptlmd.jpg',
+    avatar: 'https://res.cloudinary.com/idmcalculus/image/upload/v1771013227/Testimonials%20Images/Adekemi%20Borode.jpg',
     url: 'https://www.linkedin.com/in/adekemiborode/'
   },
   {
@@ -127,7 +127,7 @@ His dedication to the project extended beyond coding; he played a key role in br
 
 In short, Damilola is not only a highly skilled iOS developer but also a team player who adds significant value to any project he’s a part of. His technical expertise, creative problem-solving, and collaborative nature make him an asset to any team. I highly recommend him for any future endeavours.`,
     source: 'linkedin',
-    avatar: 'https://res.cloudinary.com/idmcalculus/image/upload/v1771013380/1768932875818_bswrdm.jpg',
+    avatar: 'https://res.cloudinary.com/idmcalculus/image/upload/v1771013380/Testimonials%20Images/Anesi%20Igebu.jpg',
     url: 'https://www.linkedin.com/in/anesi-igebu/'
   },
   {
@@ -137,7 +137,7 @@ In short, Damilola is not only a highly skilled iOS developer but also a team pl
 
 What stands out about Damilola is his eagerness for quickly mastering new technologies. This adaptability, combined with his communication skills, makes him a great teammate. His strong foundation in fullstack development, coupled with his growing expertise in mobile development, positions him as a versatile engineer who can contribute significantly to a wide range of projects, and any organization would be fortunate to have him on their team.`,
     source: 'linkedin',
-    avatar: 'https://res.cloudinary.com/idmcalculus/image/upload/v1771013386/1689161163754_j4naht.jpg',
+    avatar: 'https://res.cloudinary.com/idmcalculus/image/upload/v1771013386/Testimonials%20Images/Itunu%20Raimi.jpg',
     url: 'https://www.linkedin.com/in/itunuraimi/'
   },
   {
@@ -151,7 +151,7 @@ What sets Damilola apart is not just his technical ability but his collaborative
 
 Damilola’s combination of technical expertise, problem-solving skills, and team-first attitude makes him an invaluable asset to any team. I highly recommend him for future endeavors, as I am confident he will excel in any role he takes on.`,
     source: 'linkedin',
-    avatar: 'https://res.cloudinary.com/idmcalculus/image/upload/v1771013016/1720646770134_rixplq.jpg',
+    avatar: 'https://res.cloudinary.com/idmcalculus/image/upload/v1771013016/Testimonials%20Images/Gabriel%20Osuobiem.jpg',
     url: 'https://www.linkedin.com/in/osuobiem/'
   },
 ])

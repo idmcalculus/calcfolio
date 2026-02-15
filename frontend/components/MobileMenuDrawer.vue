@@ -47,6 +47,14 @@
           Projects
         </NuxtLink>
         <NuxtLink
+          to="/credentials"
+          class="drawer-link"
+          active-class="drawer-link-active"
+          @click="emit('close')"
+        >
+          Credentials
+        </NuxtLink>
+        <NuxtLink
           to="/contact"
           class="drawer-link"
           active-class="drawer-link-active"

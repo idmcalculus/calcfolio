@@ -60,6 +60,7 @@
       <nav class="flex items-center justify-center gap-6 text-sm font-semibold text-gray-700 dark:text-gray-300" aria-label="Footer navigation">
         <NuxtLink to="/" class="footer-nav-link">About</NuxtLink>
         <NuxtLink to="/projects" class="footer-nav-link">Projects</NuxtLink>
+        <NuxtLink to="/credentials" class="footer-nav-link">Credentials</NuxtLink>
         <NuxtLink to="/contact" class="footer-nav-link">Contact</NuxtLink>
       </nav>
 

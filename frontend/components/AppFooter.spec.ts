@@ -51,6 +51,7 @@ describe('AppFooter.vue', () => {
 
     expect(wrapper.text()).toContain('About')
     expect(wrapper.text()).toContain('Projects')
+    expect(wrapper.text()).toContain('Credentials')
     expect(wrapper.text()).toContain('Contact')
   })
 })
