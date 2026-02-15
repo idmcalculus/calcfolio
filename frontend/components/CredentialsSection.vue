@@ -533,10 +533,10 @@ const syncFiltersToRouteQuery = () => {
   } as Record<string, string | string[] | null | undefined>
 
   if (nextSearch) nextQuery[props.querySearchKey] = nextSearch
-  else delete nextQuery[props.querySearchKey]
+  else nextQuery[props.querySearchKey] = undefined
 
   if (nextProvider) nextQuery[props.queryProviderKey] = nextProvider
-  else delete nextQuery[props.queryProviderKey]
+  else nextQuery[props.queryProviderKey] = undefined
 
   router.replace({ query: nextQuery })
 }

@@ -56,7 +56,9 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
+// @ts-expect-error IDE couldn't resolve the types
 import { Splide, SplideSlide } from '@splidejs/vue-splide'
+// @ts-expect-error IDE couldn't resolve the types
 import '@splidejs/splide/css'
 
 import TestimonialCard from './TestimonialCard.vue'
